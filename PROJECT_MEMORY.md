@@ -313,13 +313,35 @@ Phase 5.2 TraceForge hydration repair and final case-study acceptance has been c
 - Case-study sections should prefer narrative copy, editorial rows, definition matrices, and vertical sequences over excessive small bordered tiles.
 - The homepage remains frozen during Phase 5.2; changes are limited to Work detail presentation, shared case-study components, and documentation.
 
+Phase 6.0 Stateful Agentic AI Assistant repository evidence audit has been completed:
+
+- The public repository `https://github.com/rit2001/Agentic-Chatbot-AWS` was audited at commit `b1b19d0a68894a2392a32566df255c76776a2fc7`.
+- The audit is documentation-only and does not add a public case-study route.
+- Evidence is recorded in `docs/research/agentic-ai-assistant-evidence.md`.
+- The future case study must distinguish verified code evidence, inference, historical/conflicting claims, unverifiable claims, and planned improvements.
+- Current public repository evidence supports a Streamlit + LangGraph + Groq + SQLite checkpointing + HuggingFace embeddings + FAISS + Docker/GitHub Actions/EC2 deployment story.
+- The existing RITWIK OS project data currently says `Google Embeddings`, but the audited repository uses `HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")`; Phase 6.1 should correct public wording unless historical evidence proves both.
+- Do not claim multi-agent architecture, real stock trading, permanent cross-container cloud memory, zero-downtime deployment, automated lint/test coverage, high availability, or continuously available demo for this project unless new evidence is provided.
+
+Phase 6.1 Stateful Agentic AI Assistant public case study has been completed:
+
+- `/work/stateful-agentic-ai-assistant` is the second real Work case study.
+- The homepage and Work Registry now link the Stateful Agentic AI Assistant project to its internal case study and preserve GitHub as a secondary external action.
+- Public project data was corrected from `Google Embeddings` to `HuggingFace Embeddings` to match the audited repository.
+- The case study presents the project as a completed implementation with qualified deployment status, not a continuously hosted SaaS product.
+- The page documents LangGraph control flow, thread-scoped SQLite checkpointing, HuggingFace/FAISS RAG, six verified tools, simulated stock-purchase HITL, Streamlit streaming, LangSmith tracing configuration, Docker packaging, GitHub Actions, Docker Hub, and EC2 container replacement.
+- Deployment wording must remain qualified: Docker image publishing, EC2 container replacement, and health verification are implemented, while lint/unit-test steps are placeholders and no zero-downtime or high-availability claim is supported.
+- Memory wording must remain qualified: SQLite checkpoints and FAISS are container-local under the audited deployment because no persistent volume is mounted.
+- Completed-system case studies may use implemented execution-flow diagrams, state-transition diagrams, and reliability reviews rather than TraceForge-style proposed architecture/open-question patterns.
+
 ## Next Expected Phase
 
-The next implementation phase should review the Phase 5 content pipeline and then add the next real project case study only when explicitly requested:
+The next implementation phase should review the Stateful Agentic AI Assistant case study for visual acceptance and evidence accuracy:
 
-1. Review `/work`, `/work/traceforge`, and `npm run content:check`.
-2. Add the next Work entry only when real metadata and truthful case-study content are ready.
-3. Keep homepage changes limited to links for real content.
-4. Do not create placeholder routes, fake URLs, fake metrics, or unfinished collections.
+1. Review `/work/stateful-agentic-ai-assistant` across desktop, laptop, tablet, and mobile.
+2. Confirm no unsupported claims remain.
+3. Add screenshots only after review/redaction in a separate approved milestone.
+4. Keep homepage changes limited to truthful links and corrected metadata for real content.
+5. Do not create fake demos, fake metrics, placeholder routes, or unsupported deployment claims.
 
 Do not start implementation until the user explicitly asks for it.

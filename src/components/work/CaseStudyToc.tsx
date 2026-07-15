@@ -2,25 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-export type CaseStudyTocItem = {
-  href: string;
-  label: string;
-};
-
-export const traceforgeTocItems = [
-  { href: "#overview", label: "Overview" },
-  { href: "#problem", label: "Problem" },
-  { href: "#goals-and-scope", label: "Goals and Scope" },
-  { href: "#current-milestone", label: "Current Milestone" },
-  { href: "#proposed-architecture", label: "Proposed Architecture" },
-  { href: "#service-boundaries", label: "Service Boundaries" },
-  { href: "#engineering-decisions", label: "Engineering Decisions" },
-  { href: "#open-questions", label: "Trade-offs and Open Questions" },
-  { href: "#observability", label: "Observability" },
-  { href: "#load-testing", label: "Load Testing" },
-  { href: "#current-status", label: "Current Status" },
-  { href: "#roadmap", label: "Roadmap" },
-] as const satisfies readonly CaseStudyTocItem[];
+import { traceforgeTocItems, type CaseStudyTocItem } from "./caseStudyTocItems";
 
 export function CaseStudyToc({
   items = traceforgeTocItems,

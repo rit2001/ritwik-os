@@ -64,6 +64,12 @@ function TagList({ items }: Readonly<{ items: readonly string[] }>) {
   );
 }
 
+const projectInternalActionClassName =
+  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-accent hover:decoration-current focus-visible:text-accent focus-visible:decoration-current sm:self-auto";
+
+const projectExternalActionClassName =
+  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-secondary uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-foreground focus-visible:text-foreground sm:self-auto";
+
 export default function Home() {
   const github = getSocialLink("github");
   const linkedIn = getSocialLink("linkedin");
@@ -245,13 +251,22 @@ export default function Home() {
               <StaggerItem key={project.title}>
                 <ProjectCard
                   ariaLabel={
-                    project.caseStudyPath
+                    project.caseStudyPath && !project.githubUrl
                       ? `Open ${project.title} build case study`
-                      : project.githubUrl
+                      : project.githubUrl && !project.caseStudyPath
                         ? `Open ${project.title} repository on GitHub`
                         : undefined
                   }
-                  href={project.caseStudyPath ?? project.githubUrl}
+                  href={
+                    project.caseStudyPath && !project.githubUrl
+                      ? project.caseStudyPath
+                      : project.githubUrl && !project.caseStudyPath
+                        ? project.githubUrl
+                        : null
+                  }
+                  interactive={Boolean(
+                    project.caseStudyPath || project.githubUrl,
+                  )}
                 >
                   <StaggerGroup>
                     <StaggerItem y={12}>
@@ -293,21 +308,50 @@ export default function Home() {
                             <p>Repository: Not published yet</p>
                           ) : null}
                         </div>
-                        {project.caseStudyPath ? (
-                          <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
+                        {project.caseStudyPath && project.githubUrl ? (
+                          <div className="flex shrink-0 flex-wrap gap-3">
+                            <a
+                              className={projectInternalActionClassName}
+                              href={project.caseStudyPath}
+                            >
+                              View Case Study{" "}
+                              <span
+                                className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-within:translate-x-1.5"
+                                aria-hidden="true"
+                              >
+                                →
+                              </span>
+                            </a>
+                            <a
+                              className={projectExternalActionClassName}
+                              href={project.githubUrl}
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >
+                              GitHub{" "}
+                              <span
+                                className="ml-1 inline-block transition-transform duration-[var(--duration-base)] hover:translate-x-1.5 focus-visible:translate-x-1.5"
+                                aria-hidden="true"
+                              >
+                                →
+                              </span>
+                            </a>
+                          </div>
+                        ) : project.caseStudyPath ? (
+                          <span className={projectInternalActionClassName}>
                             View Build Case Study{" "}
                             <span
-                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5"
+                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-within:translate-x-1.5 group-focus-visible:translate-x-1.5"
                               aria-hidden="true"
                             >
                               →
                             </span>
                           </span>
                         ) : project.githubUrl ? (
-                          <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
+                          <span className={projectExternalActionClassName}>
                             GitHub{" "}
                             <span
-                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5"
+                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-within:translate-x-1.5 group-focus-visible:translate-x-1.5"
                               aria-hidden="true"
                             >
                               →

@@ -1,3 +1,4 @@
+import StatefulAgenticAiAssistantContent from "../../content/work/stateful-agentic-ai-assistant.mdx";
 import TraceForgeContent from "../../content/work/traceforge.mdx";
 import type { WorkEntry, WorkMeta } from "../../types/content";
 
@@ -8,6 +9,10 @@ const workModules = [
   {
     meta: workMetaEntries[0].meta,
     Content: TraceForgeContent,
+  },
+  {
+    meta: workMetaEntries[1].meta,
+    Content: StatefulAgenticAiAssistantContent,
   },
 ] satisfies readonly WorkEntry[];
 

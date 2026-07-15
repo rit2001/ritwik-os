@@ -111,6 +111,8 @@ Ongoing entries must use `in-development`. Repository and demo URLs must be omit
 
 TraceForge is the first registered Work entry. It is an ongoing build case study, not a completed-project page. Its metadata must continue to omit repository and demo URLs until real destinations exist.
 
+Stateful Agentic AI Assistant is the second registered Work entry. It is a completed implemented-system case study with a real public GitHub repository and no continuously hosted demo. Its public metadata must use `HuggingFace Embeddings`, not `Google Embeddings`, unless future historical evidence supports both.
+
 ### Builds
 
 The `builds` collection contains ongoing engineering work, progress logs, experiments, and implementation notes.
@@ -341,6 +343,15 @@ Ongoing-project truthfulness rules:
 - Present planned-versus-implemented distinctions in section labels and body copy.
 - Give enough technical detail for engineers
 - Give enough summary clarity for recruiters
+
+Completed-system truthfulness rules:
+
+- Distinguish implemented behavior from operational hardening that remains future work.
+- Qualify deployment claims when a project is deployed on demand or not continuously hosted.
+- Do not treat placeholder CI steps as real linting or tests.
+- Document persistence scope when storage is local to a container filesystem.
+- Use repository links only when they point to a real project-specific repository.
+- Avoid turning tool-using agent workflows into unsupported multi-agent claims.
 
 Each flagship case study should be understandable at two levels:
 
