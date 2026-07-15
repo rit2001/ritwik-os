@@ -304,6 +304,15 @@ Phase 5.1 TraceForge editorial and case-study presentation refinement has been c
 - Architecture flow must remain semantic HTML, readable without animation, and labelled as proposed when implementation is not complete.
 - Roadmaps for ongoing work use Current, Next, and Planned groups without percentages, fake completion dates, or completed-state indicators.
 
+Phase 5.2 TraceForge hydration repair and final case-study acceptance has been completed:
+
+- MDX wrapper components that accept arbitrary block children must use block-safe structural elements, not paragraph wrappers. `CaseStudyCopy` uses a `<div>` wrapper so MDX paragraphs remain valid and hydration-safe.
+- `npm run mdx:check` validates representative MDX wrapper output for nested paragraph and nested anchor regressions.
+- Case-study detail pages use a laptop-first article layout: the main reading column remains dominant, while the "On This Page" navigation is a compact rail on wide screens and an inline disclosure on smaller screens.
+- TraceForge uses a vertical proposed-architecture pipeline instead of a cramped multi-column node layout.
+- Case-study sections should prefer narrative copy, editorial rows, definition matrices, and vertical sequences over excessive small bordered tiles.
+- The homepage remains frozen during Phase 5.2; changes are limited to Work detail presentation, shared case-study components, and documentation.
+
 ## Next Expected Phase
 
 The next implementation phase should review the Phase 5 content pipeline and then add the next real project case study only when explicitly requested:

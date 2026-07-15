@@ -44,10 +44,10 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
 
   return (
     <article className="py-16 sm:py-20">
-      <div className="mx-auto w-full max-w-[var(--layout-wide-content-width)] px-page-gutter">
+      <div className="mx-auto w-full max-w-[72rem] px-page-gutter">
         <CaseStudyHeader meta={meta} />
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[16rem_minmax(0,var(--layout-reading-width))] lg:justify-between xl:grid-cols-[18rem_minmax(0,var(--layout-reading-width))]">
+        <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,47rem)_13.75rem] lg:items-start lg:justify-between xl:gap-16">
           <aside className="lg:order-2">
             <CaseStudyToc />
           </aside>

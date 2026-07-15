@@ -155,6 +155,14 @@ Work routes use route-aware global navigation. The homepage keeps its anchor nav
 
 Case-study pages may use structured MDX components for table-of-contents navigation, milestone callouts, architecture flows, decision grids, open questions, planned metrics, load-testing stages, and status-based roadmaps. These components must preserve semantic HTML, responsive layout, and planned-versus-implemented language.
 
+Case-study layout standards:
+
+- Keep the main article column dominant at laptop and desktop widths.
+- Use a compact "On This Page" rail on wide screens and an inline disclosure on smaller screens.
+- Use vertical architecture pipelines when stage labels are long enough to make multi-column diagrams cramped.
+- Prefer editorial rows, definition matrices, and staged sequences over repeating small cards for every technical section.
+- Do not wrap arbitrary MDX block children in paragraph elements; run `npm run mdx:check` before build validation.
+
 To add a Work entry:
 
 1. Add `src/content/work/<slug>.meta.ts`.

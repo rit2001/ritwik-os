@@ -290,6 +290,12 @@ Block-safe wrapper rule:
 - Let the global MDX paragraph mapping own paragraph semantics.
 - Run `npm run mdx:check` to catch nested paragraph and nested anchor regressions.
 
+Case-study presentation rule:
+
+- Long-form case studies should keep a comfortable technical reading column and a compact supporting TOC; the TOC must not compete with the article.
+- Architecture flows with long labels should use semantic vertical pipelines before horizontal or multi-column diagrams.
+- Prefer editorial rows, definition-list patterns, and staged sequences over excessive mini-card grids for planned boundaries, open questions, metrics, load testing, and roadmap content.
+
 ## Asset Standards
 
 Project assets should be:

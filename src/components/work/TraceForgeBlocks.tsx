@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 
 type Pair = {
-  label: string;
-  text: string;
+  status: "Decided" | "Provisional" | "Open";
+  title: string;
+  context: string;
 };
 
 type Decision = {
@@ -145,16 +146,63 @@ const decisions = [
 ] as const satisfies readonly Decision[];
 
 const openQuestions = [
-  { label: "OPEN", text: "Storage backend selection" },
-  { label: "PROVISIONAL", text: "Event-schema evolution strategy" },
-  { label: "OPEN", text: "Kafka partition-key strategy" },
-  { label: "OPEN", text: "Retention policy" },
-  { label: "OPEN", text: "Sampling strategy" },
-  { label: "OPEN", text: "Backpressure behavior" },
-  { label: "OPEN", text: "Retries and dead-letter handling" },
-  { label: "OPEN", text: "Trace-query model" },
-  { label: "OPEN", text: "Infrastructure cost envelope" },
-  { label: "PROVISIONAL", text: "Minimum meaningful benchmark definition" },
+  {
+    status: "Open",
+    title: "Storage backend selection",
+    context:
+      "The persistence model still needs query, retention, and cost evidence.",
+  },
+  {
+    status: "Provisional",
+    title: "Event-schema evolution strategy",
+    context: "Contracts should support change without breaking consumers.",
+  },
+  {
+    status: "Open",
+    title: "Kafka partition-key strategy",
+    context:
+      "Ordering, hot partitions, and trace locality still need validation.",
+  },
+  {
+    status: "Open",
+    title: "Retention policy",
+    context:
+      "Trace value, storage cost, and operational needs need a clear boundary.",
+  },
+  {
+    status: "Open",
+    title: "Sampling strategy",
+    context: "The system needs a truthful way to balance fidelity and volume.",
+  },
+  {
+    status: "Open",
+    title: "Backpressure behavior",
+    context:
+      "Failure modes should be explicit when ingestion outpaces processing.",
+  },
+  {
+    status: "Open",
+    title: "Retries and dead-letter handling",
+    context:
+      "Error handling needs policies that are observable and recoverable.",
+  },
+  {
+    status: "Open",
+    title: "Trace-query model",
+    context:
+      "Diagnostics requirements should drive what the storage layer exposes.",
+  },
+  {
+    status: "Open",
+    title: "Infrastructure cost envelope",
+    context: "Deployment experiments should stay bounded and reproducible.",
+  },
+  {
+    status: "Provisional",
+    title: "Minimum meaningful benchmark definition",
+    context:
+      "Measurements should be published only after repeatable test conditions exist.",
+  },
 ] as const satisfies readonly Pair[];
 
 const metrics = [
@@ -298,10 +346,10 @@ export function MilestoneCallout() {
             In Development
           </span>
         </div>
-        <h3 className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground uppercase">
-          Architecture and repository bootstrap
+        <h3 className="mt-5 max-w-2xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] font-semibold text-foreground sm:text-[length:var(--text-heading-3-size)] sm:leading-[var(--text-heading-3-line-height)]">
+          Architecture &amp; repository bootstrap
         </h3>
-        <dl className="mt-6 grid gap-5 border-t border-border pt-5">
+        <dl className="mt-6 grid gap-5 border-t border-border pt-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div>
             <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
               Current work
@@ -411,23 +459,52 @@ export function DecisionGrid() {
 }
 
 export function OpenQuestionGrid() {
+  const groups = ["Decided", "Provisional", "Open"] as const;
+
   return (
-    <div className="grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
-      {openQuestions.map((question) => (
-        <article className="bg-surface/55 p-4" key={question.text}>
-          <p
-            className={[
-              "font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] uppercase",
-              question.label === "OPEN" ? "text-warning" : "text-accent",
-            ].join(" ")}
+    <div className="overflow-hidden rounded-md border border-border bg-surface/45">
+      {groups.map((group) => {
+        const items = openQuestions.filter(
+          (question) => question.status === group,
+        );
+
+        if (items.length === 0) {
+          return null;
+        }
+
+        return (
+          <section
+            className="grid gap-4 border-t border-border p-5 first:border-t-0 md:grid-cols-[9rem_minmax(0,1fr)]"
+            key={group}
+            aria-labelledby={`open-question-${group.toLowerCase()}`}
           >
-            {question.label}
-          </p>
-          <p className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {question.text}
-          </p>
-        </article>
-      ))}
+            <h3
+              className={[
+                "font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] uppercase",
+                group === "Open" ? "text-warning" : "text-accent",
+              ].join(" ")}
+              id={`open-question-${group.toLowerCase()}`}
+            >
+              {group}
+            </h3>
+            <div className="grid gap-4">
+              {items.map((question) => (
+                <article
+                  className="border-t border-border pt-4 first:border-t-0 first:pt-0"
+                  key={question.title}
+                >
+                  <h4 className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] font-semibold text-foreground">
+                    {question.title}
+                  </h4>
+                  <p className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+                    {question.context}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -438,31 +515,37 @@ export function MetricsMatrix() {
       <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
         Planned Signals
       </p>
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
+      <dl className="mt-5 grid gap-x-8 md:grid-cols-2">
         {metrics.map((metric) => (
-          <article className="border-t border-border pt-4" key={metric.signal}>
-            <h3 className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] font-semibold text-foreground">
+          <div
+            className="border-t border-border py-4 first:pt-0 md:[&:nth-child(2)]:pt-0"
+            key={metric.signal}
+          >
+            <dt className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] font-semibold text-foreground">
               {metric.signal}
-            </h3>
-            <p className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+            </dt>
+            <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
               {metric.diagnostic}
-            </p>
-          </article>
+            </dd>
+          </div>
         ))}
-      </div>
+      </dl>
     </div>
   );
 }
 
 export function LoadTestPlan() {
   return (
-    <ol className="grid gap-3">
+    <ol className="rounded-md border border-border bg-surface/45 p-5">
       {loadTestStages.map((stage, index) => (
         <li
-          className="grid gap-3 rounded-md border border-border bg-surface/45 p-4 sm:grid-cols-[2.5rem_minmax(0,1fr)] sm:items-center"
+          className="relative grid gap-3 border-l border-border-strong pb-5 pl-6 last:pb-0"
           key={stage}
         >
-          <span className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-accent">
+          <span
+            className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full border border-accent/55 bg-background font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-accent"
+            aria-hidden="true"
+          >
             {String(index + 1).padStart(2, "0")}
           </span>
           <span className="text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
@@ -476,10 +559,10 @@ export function LoadTestPlan() {
 
 export function RoadmapTimeline() {
   return (
-    <div className="grid gap-4">
+    <div className="overflow-hidden rounded-md border border-border bg-surface/45">
       {roadmap.map((group) => (
         <section
-          className="rounded-md border border-border bg-surface/45 p-5"
+          className="grid gap-4 border-t border-border p-5 first:border-t-0 md:grid-cols-[8rem_minmax(0,1fr)]"
           key={group.label}
           aria-labelledby={`roadmap-${group.label.toLowerCase()}`}
         >
@@ -489,7 +572,7 @@ export function RoadmapTimeline() {
           >
             {group.label}
           </h3>
-          <ol className="mt-4 grid gap-3">
+          <ol className="grid gap-3">
             {group.items.map((item) => (
               <li
                 className="border-l border-border-strong pl-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
@@ -511,18 +594,21 @@ export function StatusSummary() {
       <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
         Build Status
       </p>
-      <dl className="mt-5 grid gap-4 sm:grid-cols-2">
+      <dl className="mt-5 divide-y divide-border">
         {[
           ["Current phase", "Architecture and repository bootstrap"],
           ["Repository", "Not published yet"],
           ["Public demo", "Not available"],
           ["Performance results", "Not measured yet"],
         ].map(([label, value]) => (
-          <div className="border-t border-border pt-3" key={label}>
+          <div
+            className="grid gap-2 py-3 first:pt-0 sm:grid-cols-[12rem_minmax(0,1fr)]"
+            key={label}
+          >
             <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
               {label}
             </dt>
-            <dd className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+            <dd className="text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
               {value}
             </dd>
           </div>
