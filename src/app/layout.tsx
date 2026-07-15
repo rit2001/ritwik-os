@@ -1,10 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+
+import { SiteShell } from "@/components/layout/SiteShell";
+import { siteConfig } from "@/data/site";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RITWIK OS",
-  description: "Engineering Intelligence into Production.",
+  title: siteConfig.name,
+  description: siteConfig.tagline,
 };
 
 export const viewport: Viewport = {
@@ -20,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SiteShell>{children}</SiteShell>
+      </body>
     </html>
   );
 }

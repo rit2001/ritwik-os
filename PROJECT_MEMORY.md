@@ -205,14 +205,26 @@ The initial app contains only a restrained temporary foundation shell. It is not
 
 No authentication, database, API routes, MDX pipeline, Framer Motion, analytics, testing framework, final navigation, project cards, personal links, or invented content has been added.
 
+Phase 2 repository structure and design-system foundation has been completed:
+
+- Semantic CSS tokens in `src/styles/tokens.css`
+- Global base styling in `src/styles/base.css`
+- `src/app/globals.css` as the Tailwind and global style entry point
+- Minimal layout primitives in `src/components/layout/`
+- Minimal UI primitives in `src/components/ui/`
+- Shared brand constants in `src/data/site.ts`
+- Root application shell with header, main landmark, footer, skip link, focus styles, reduced-motion handling, and responsive gutters
+
+The home page remains a temporary foundation screen and is not the final homepage.
+
 ## Next Expected Phase
 
-The next implementation phase should be repository structure and design-system foundation work only when explicitly requested:
+The next implementation phase should be content-model preparation and static content pipeline work only when explicitly requested:
 
-1. Refine durable component/layout boundaries.
-2. Expand design tokens intentionally.
-3. Add approved base UI primitives.
-4. Prepare the content directory structure for future MDX.
-5. Add architectural decision documentation if implementation decisions diverge from the plan.
+1. Add MDX support only when approved for that phase.
+2. Define validated content schemas.
+3. Prepare content collections without placeholder personal content.
+4. Add build-time content validation.
+5. Keep routes and navigation limited until real content exists.
 
 Do not start implementation until the user explicitly asks for it.

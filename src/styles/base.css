@@ -1,0 +1,87 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--ritwik-color-canvas);
+  color: var(--ritwik-color-foreground-primary);
+  font-family: var(--ritwik-font-sans);
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: clip;
+  background:
+    linear-gradient(
+      180deg,
+      var(--ritwik-color-background-elevated) 0%,
+      var(--ritwik-color-canvas) 46%
+    ),
+    var(--ritwik-color-canvas);
+  color: var(--ritwik-color-foreground-primary);
+  font-family: var(--ritwik-font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.18em;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--ritwik-color-selection);
+  color: var(--ritwik-color-canvas);
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: var(--border-width-strong) solid var(--ritwik-color-focus-ring);
+  outline-offset: 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the planning foundation and the Phase 1 Next.js project foundation.
+This repository contains the planning foundation, the Phase 1 Next.js project foundation, and the Phase 2 repository/design-system foundation.
 
 ## What This Project Is
 
@@ -47,8 +47,29 @@ Current status:
 - Documentation foundation exists.
 - Next.js has been initialized with App Router and TypeScript.
 - Tailwind CSS, ESLint, and Prettier are configured.
-- The app currently renders a restrained temporary foundation shell.
+- Semantic CSS design tokens and base global styles are implemented.
+- Minimal layout primitives and the global application shell are implemented.
+- The app currently renders a restrained temporary foundation screen.
 - The final website, content system, navigation, MDX pipeline, motion system, and project pages have not been implemented yet.
+
+## Source Structure
+
+Current implemented structure:
+
+```text
+src/
+  app/
+  components/
+    layout/
+    ui/
+  content/
+  data/
+  lib/
+  styles/
+  types/
+```
+
+The `content/`, `lib/`, and `types/` directories are reserved boundaries from the initial structure and currently contain no implementation logic. Additional directories such as `docs/` and `tests/` should be added only when they contain real implementation files for an approved phase.
 
 ## Documentation Map
 

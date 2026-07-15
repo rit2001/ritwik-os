@@ -58,34 +58,33 @@ The design should elevate case studies, diagrams, code, decisions, and writing. 
 
 Use semantic design tokens rather than raw color names in components.
 
-Recommended token categories:
+Implemented Phase 2 token files:
 
-- `background`
-- `background-muted`
-- `surface`
-- `surface-raised`
-- `surface-subtle`
-- `border`
-- `border-strong`
-- `text-primary`
-- `text-secondary`
-- `text-muted`
-- `accent`
-- `accent-muted`
-- `success`
-- `warning`
-- `danger`
-- `focus`
+- `src/styles/tokens.css` defines semantic color, typography, spacing, layout, radius, border, elevation, motion, and z-index tokens.
+- `src/styles/base.css` applies global box sizing, font stacks, color defaults, focus visibility, selection styling, reduced-motion handling, and overflow protection.
+- `src/app/globals.css` remains the single global style entry point and imports Tailwind CSS plus the project token/base files.
 
-Additional token systems:
+Implemented source color tokens:
 
-- Spacing
-- Typography
-- Border radius
-- Shadows
-- Motion duration
-- Motion easing
-- Z-index layers
+- `--ritwik-color-canvas`
+- `--ritwik-color-background-elevated`
+- `--ritwik-color-surface`
+- `--ritwik-color-surface-muted`
+- `--ritwik-color-foreground-primary`
+- `--ritwik-color-foreground-secondary`
+- `--ritwik-color-foreground-muted`
+- `--ritwik-color-border-subtle`
+- `--ritwik-color-border-strong`
+- `--ritwik-color-accent`
+- `--ritwik-color-accent-muted`
+- `--ritwik-color-success`
+- `--ritwik-color-warning`
+- `--ritwik-color-focus-ring`
+
+Tailwind utility tokens are mapped in `@theme inline` with semantic names such as `background`, `background-elevated`, `surface`, `foreground-secondary`, `border-strong`, `accent`, `success`, `warning`, and `focus-ring`.
+
+The current palette is a dark neutral foundation with graphite, charcoal, soft white, controlled gray, and one restrained blue accent. No gradients beyond a quiet page background treatment, neon effects, or glow-heavy styling are part of the foundation.
+
 - Layout widths
 
 ## Color Direction
@@ -126,6 +125,13 @@ Typography should support:
 - Code-heavy content
 - Recruiter-friendly summaries
 
+Phase 2 uses system font stacks only:
+
+- `--ritwik-font-sans` for interface and prose.
+- `--ritwik-font-mono` for technical labels and metadata.
+
+Remote fonts are intentionally not loaded yet.
+
 ## Layout Principles
 
 Use structured, responsive layouts.
@@ -157,26 +163,17 @@ Build components in layers:
 4. Page sections
 5. Route-level compositions
 
-Core components:
+Phase 2 implements only foundation primitives:
 
-- Button
-- IconButton
-- Badge
-- Tag
-- Card
-- LinkCard
-- SectionHeader
-- ProjectCard
-- ArticleCard
-- BuildEntryCard
-- Timeline
-- Metric
-- Callout
-- CodeBlock
-- CopyButton
-- Tabs
-- Table
-- Tooltip
+- `SiteShell`
+- `SiteHeader`
+- `SiteFooter`
+- `SkipLink`
+- `Container`
+- `Section`
+- `SectionHeader`
+
+Larger UI components such as cards, buttons, badges, project cards, article cards, callouts, code blocks, tabs, and tables are deferred until real content and route needs exist.
 
 Specialized content components:
 

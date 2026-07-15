@@ -1,0 +1,120 @@
+:root {
+  color-scheme: dark;
+
+  --ritwik-color-canvas: #08090b;
+  --ritwik-color-background-elevated: #0d0f13;
+  --ritwik-color-surface: #111419;
+  --ritwik-color-surface-muted: #181c22;
+  --ritwik-color-foreground-primary: #f5f7fa;
+  --ritwik-color-foreground-secondary: #c8d0da;
+  --ritwik-color-foreground-muted: #8f9aa8;
+  --ritwik-color-border-subtle: #242a33;
+  --ritwik-color-border-strong: #3a424e;
+  --ritwik-color-accent: #8fb8ff;
+  --ritwik-color-accent-muted: #1c2a44;
+  --ritwik-color-success: #78d9a3;
+  --ritwik-color-warning: #e3c16f;
+  --ritwik-color-focus-ring: #9dc2ff;
+  --ritwik-color-selection: #d8e6ff;
+
+  --ritwik-font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --ritwik-font-mono:
+    "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --text-display-size: clamp(3rem, 10vw, 7.5rem);
+  --text-display-line-height: 0.9;
+  --text-heading-1-size: clamp(2.5rem, 7vw, 5.5rem);
+  --text-heading-1-line-height: 0.95;
+  --text-heading-2-size: clamp(2rem, 5vw, 3.5rem);
+  --text-heading-2-line-height: 1;
+  --text-heading-3-size: clamp(1.375rem, 3vw, 2rem);
+  --text-heading-3-line-height: 1.12;
+  --text-body-large-size: 1.125rem;
+  --text-body-large-line-height: 1.7;
+  --text-body-size: 1rem;
+  --text-body-line-height: 1.65;
+  --text-body-small-size: 0.875rem;
+  --text-body-small-line-height: 1.55;
+  --text-label-size: 0.75rem;
+  --text-label-line-height: 1.35;
+  --text-technical-size: 0.8125rem;
+  --text-technical-line-height: 1.5;
+
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  --layout-content-width: 72rem;
+  --layout-wide-content-width: 88rem;
+  --layout-reading-width: 44rem;
+  --layout-page-gutter: clamp(1rem, 4vw, 3rem);
+  --layout-header-height: 4.5rem;
+
+  --radius-none: 0;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 999rem;
+
+  --border-width-hairline: 1px;
+  --border-width-strong: 2px;
+
+  --shadow-elevation-1: 0 1px 2px rgb(0 0 0 / 0.24);
+  --shadow-elevation-2: 0 16px 40px rgb(0 0 0 / 0.26);
+
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 260ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --z-base: 0;
+  --z-header: 20;
+  --z-skip-link: 50;
+  --z-overlay: 80;
+}
+
+@theme inline {
+  --color-background: var(--ritwik-color-canvas);
+  --color-background-elevated: var(--ritwik-color-background-elevated);
+  --color-surface: var(--ritwik-color-surface);
+  --color-surface-muted: var(--ritwik-color-surface-muted);
+  --color-foreground: var(--ritwik-color-foreground-primary);
+  --color-foreground-secondary: var(--ritwik-color-foreground-secondary);
+  --color-foreground-muted: var(--ritwik-color-foreground-muted);
+  --color-border: var(--ritwik-color-border-subtle);
+  --color-border-strong: var(--ritwik-color-border-strong);
+  --color-accent: var(--ritwik-color-accent);
+  --color-accent-muted: var(--ritwik-color-accent-muted);
+  --color-success: var(--ritwik-color-success);
+  --color-warning: var(--ritwik-color-warning);
+  --color-focus-ring: var(--ritwik-color-focus-ring);
+
+  --font-sans: var(--ritwik-font-sans);
+  --font-mono: var(--ritwik-font-mono);
+
+  --spacing-page-gutter: var(--layout-page-gutter);
+  --spacing-header-height: var(--layout-header-height);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+
+  --shadow-elevation-1: var(--shadow-elevation-1);
+  --shadow-elevation-2: var(--shadow-elevation-2);
+}
