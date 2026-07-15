@@ -55,6 +55,8 @@ Current status:
 - The official Next.js MDX pipeline is implemented for local Work content.
 - `/work` and `/work/traceforge` are implemented as static-first App Router routes.
 - TraceForge is the first validated Work case study and remains documented as an in-development build with no public repository or demo.
+- Stateful Agentic AI Assistant is the second validated Work case study and remains documented as a completed implementation with qualified deployment status.
+- Production-hardening foundations are implemented: centralized launch metadata, generated Open Graph image, JSON-LD, robots, sitemap, custom 404, route integrity checks, and launch checklist.
 - Screenshots, Writing, Builds, Architecture, and additional case studies have not been implemented yet.
 
 ## Source Structure
@@ -281,6 +283,18 @@ Validate MDX wrapper semantics:
 npm run mdx:check
 ```
 
+Validate route/content integrity:
+
+```bash
+npm run routes:check
+```
+
+Run the complete launch verification gate:
+
+```bash
+npm run verify
+```
+
 Format files:
 
 ```bash
@@ -300,10 +314,12 @@ npm run dev
 npm run build
 npm run mdx:check
 npm run content:check
+npm run routes:check
 npm run lint
 npm run typecheck
 npm run format
 npm run format:check
+npm run verify
 npm run validate
 ```
 
@@ -371,6 +387,14 @@ Expected future tools:
 The intended deployment target is Vercel.
 
 The site should be static-first and CDN-friendly. Preview deployments should be used to review changes before production releases.
+
+Set `NEXT_PUBLIC_SITE_URL` to the real preview or production URL before launch verification. The app must not use fake canonical domains. If no public URL is configured, sitemap generation remains safe for local development, but production SEO review should wait until a real URL exists.
+
+Manual launch checks are tracked in:
+
+```text
+docs/LAUNCH_CHECKLIST.md
+```
 
 ## Roadmap Summary
 
