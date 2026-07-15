@@ -378,12 +378,37 @@ Implementation notes:
 
 Future implementation should not be considered complete unless:
 
+- `npm run verify` passes.
 - TypeScript passes.
 - Linting passes.
 - Build passes.
 - Content validation passes.
+- Route integrity validation passes.
 - Core routes render.
 - Mobile layout is checked.
 - Keyboard navigation is checked.
 - Reduced motion behavior is checked.
 - Important pages have metadata.
+
+## Production Hardening Sprint
+
+Goal:
+
+Prepare the existing homepage and Work case studies for a production preview without adding new content routes or redesigning existing pages.
+
+Status:
+
+Completed on branch `feat/production-hardening`.
+
+Implemented scope:
+
+- Centralized launch identity in `src/config/site.ts`.
+- Safe public URL resolution in `src/lib/site-url.ts`.
+- Production-quality root metadata, generated Open Graph image, conservative JSON-LD, robots, sitemap, and custom not-found page.
+- Permanent route integrity validation through `npm run routes:check`.
+- Permanent full quality gate through `npm run verify`.
+- Launch checklist in `docs/LAUNCH_CHECKLIST.md`.
+
+Production URL rule:
+
+Set `NEXT_PUBLIC_SITE_URL` to the real preview or production URL before launch validation. Do not use fake canonical domains.

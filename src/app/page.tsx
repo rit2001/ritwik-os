@@ -1,5 +1,6 @@
 import { ActionLink } from "@/components/ui/ActionLink";
 import { Container } from "@/components/ui/Container";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { AlgorithmProfileCard } from "@/components/motion/AlgorithmProfileCard";
 import { CapabilityMatrix } from "@/components/motion/CapabilityMatrix";
 import {
@@ -23,6 +24,7 @@ import { profile } from "@/data/profile";
 import { selectedProjects } from "@/data/projects";
 import { recruiterBrief } from "@/data/recruiter-brief";
 import { getSocialLink } from "@/data/social-links";
+import { getHomeStructuredData } from "@/lib/structured-data";
 
 function SectionIntro({
   eyebrow,
@@ -79,6 +81,7 @@ export default function Home() {
 
   return (
     <>
+      <JsonLd data={getHomeStructuredData()} />
       <Container
         className="grid min-h-[calc(100dvh-var(--layout-header-height))] scroll-mt-32 items-center gap-10 py-14 sm:py-16 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-14"
         id="overview"

@@ -238,6 +238,12 @@ Phase 5.1 case-study presentation patterns:
 
 - Work and case-study routes use route-aware global navigation instead of homepage anchor navigation.
 - Long-form case studies may use a compact "On This Page" rail with stable heading anchors on wide screens and an inline nav on smaller screens.
+
+Production hardening rules:
+
+- Social preview imagery should remain typography-led, dark, and restrained; no profile photo, fake terminal, screenshot, or decorative AI imagery is part of the launch Open Graph system.
+- Skip navigation remains global, visible on focus, and targets the real main landmark.
+- Clean-browser QA is required before launch because DOM-modifying extensions can create false hydration warnings.
 - Case-study pages should vary composition with structured editorial blocks, matrices, and timelines rather than rendering as one uninterrupted Markdown document.
 - Proposed architecture flows should communicate direction through semantic ordered HTML with decorative connectors, not canvas or images.
 - Informational case-study panels must not lift, show pointer cursors, or behave like links unless they contain a real action.

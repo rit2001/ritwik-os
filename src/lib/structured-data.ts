@@ -1,0 +1,96 @@
+import { launchSiteConfig } from "@/config/site";
+import type { WorkMeta } from "@/types/content";
+
+import { createSiteUrl } from "./site-url";
+
+export function getHomeStructuredData() {
+  const siteUrl = createSiteUrl("/");
+  const sameAs = [
+    launchSiteConfig.links.github,
+    launchSiteConfig.links.linkedIn,
+    launchSiteConfig.links.leetCode,
+    launchSiteConfig.links.codeforces,
+  ];
+
+  const person = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: launchSiteConfig.owner,
+    email: `mailto:${launchSiteConfig.email}`,
+    jobTitle: launchSiteConfig.compactTitle,
+    description: launchSiteConfig.headline,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: launchSiteConfig.location,
+    },
+    alumniOf: {
+      "@type": "CollegeOrUniversity",
+      name: "Indian Institute of Technology Kharagpur",
+      description:
+        "Dual Degree graduate in Mechanical Engineering from IIT Kharagpur.",
+    },
+    sameAs,
+  };
+
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: launchSiteConfig.brand,
+    description: launchSiteConfig.metadata.description,
+    ...(siteUrl ? { url: siteUrl } : {}),
+    publisher: {
+      "@type": "Person",
+      name: launchSiteConfig.owner,
+    },
+  };
+
+  const profilePage = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    name: launchSiteConfig.metadata.defaultTitle,
+    description: launchSiteConfig.metadata.description,
+    ...(siteUrl ? { url: siteUrl } : {}),
+    about: {
+      "@type": "Person",
+      name: launchSiteConfig.owner,
+    },
+  };
+
+  return [person, website, profilePage] as const;
+}
+
+export function getWorkStructuredData(meta: WorkMeta) {
+  const workUrl = createSiteUrl(meta.caseStudyPath);
+  const base = {
+    "@context": "https://schema.org",
+    "@type": meta.repositoryUrl ? "SoftwareSourceCode" : "CreativeWork",
+    name: meta.title,
+    headline: meta.seoTitle,
+    description: meta.seoDescription,
+    genre: meta.category,
+    datePublished: meta.publishedDate,
+    dateModified: meta.updatedDate ?? meta.publishedDate,
+    creator: {
+      "@type": "Person",
+      name: launchSiteConfig.owner,
+    },
+    keywords: meta.stack,
+    ...(workUrl ? { url: workUrl } : {}),
+  };
+
+  if (meta.slug === "traceforge") {
+    return {
+      ...base,
+      about:
+        "Ongoing engineering case study for a distributed tracing and telemetry pipeline.",
+      creativeWorkStatus: "InDevelopment",
+    };
+  }
+
+  return {
+    ...base,
+    ...(meta.repositoryUrl ? { codeRepository: meta.repositoryUrl } : {}),
+    about:
+      "Completed engineering case study for a stateful LangGraph assistant implementation.",
+  };
+}

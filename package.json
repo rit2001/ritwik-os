@@ -8,11 +8,13 @@
     "build": "next build",
     "content:check": "tsx scripts/validate-content.ts",
     "mdx:check": "tsx scripts/validate-mdx-semantics.tsx",
+    "routes:check": "tsx scripts/validate-routes.ts",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run mdx:check && npm run content:check && npm run lint && npm run typecheck && npm run format:check && npm run build"
+    "verify": "npm run mdx:check && npm run content:check && npm run routes:check && npm run lint && npm run typecheck && npm run format:check && npm run build",
+    "validate": "npm run verify"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

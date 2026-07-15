@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { JsonLd } from "@/components/seo/JsonLd";
 import { CaseStudyHeader } from "@/components/work/CaseStudyHeader";
 import { CaseStudyNavigation } from "@/components/work/CaseStudyNavigation";
 import { CaseStudyToc } from "@/components/work/CaseStudyToc";
 import { getCaseStudyTocItems } from "@/components/work/caseStudyTocItems";
 import { getWorkEntryBySlug, getWorkSlugs } from "@/lib/content/work";
+import { getWorkStructuredData } from "@/lib/structured-data";
 
 type WorkDetailPageProps = {
   params: Promise<{
@@ -30,6 +32,25 @@ export async function generateMetadata({
   return {
     title: entry.meta.seoTitle,
     description: entry.meta.seoDescription,
+    openGraph: {
+      title: entry.meta.seoTitle,
+      description: entry.meta.seoDescription,
+      type: "article",
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: `${entry.meta.title} case study on RITWIK OS`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: entry.meta.seoTitle,
+      description: entry.meta.seoDescription,
+      images: ["/opengraph-image"],
+    },
   };
 }
 
@@ -46,6 +67,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
 
   return (
     <article className="py-16 sm:py-20">
+      <JsonLd data={getWorkStructuredData(meta)} />
       <div className="mx-auto w-full max-w-[72rem] px-page-gutter">
         <CaseStudyHeader meta={meta} />
 
