@@ -283,6 +283,13 @@ Recommended MDX components:
 
 MDX components should be accessible, responsive, and visually consistent with the design system.
 
+Block-safe wrapper rule:
+
+- Components that accept arbitrary MDX block children must not render a wrapping `<p>`.
+- Use block-safe structural elements such as `<div>`, `<section>`, or `<aside>` for wrappers around MDX children.
+- Let the global MDX paragraph mapping own paragraph semantics.
+- Run `npm run mdx:check` to catch nested paragraph and nested anchor regressions.
+
 ## Asset Standards
 
 Project assets should be:

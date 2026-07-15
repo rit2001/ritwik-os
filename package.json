@@ -7,11 +7,12 @@
     "dev": "next dev",
     "build": "next build",
     "content:check": "tsx scripts/validate-content.ts",
+    "mdx:check": "tsx scripts/validate-mdx-semantics.tsx",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run content:check && npm run lint && npm run typecheck && npm run format:check && npm run build"
+    "validate": "npm run mdx:check && npm run content:check && npm run lint && npm run typecheck && npm run format:check && npm run build"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

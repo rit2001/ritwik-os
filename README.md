@@ -255,6 +255,12 @@ Validate registered content:
 npm run content:check
 ```
 
+Validate MDX wrapper semantics:
+
+```bash
+npm run mdx:check
+```
+
 Format files:
 
 ```bash
@@ -272,6 +278,7 @@ npm run format:check
 ```bash
 npm run dev
 npm run build
+npm run mdx:check
 npm run content:check
 npm run lint
 npm run typecheck

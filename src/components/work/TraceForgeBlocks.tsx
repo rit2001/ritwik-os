@@ -30,9 +30,9 @@ type RoadmapGroup = {
 
 export function CaseStudyCopy({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <p className="mt-5 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary first:mt-0">
+    <div className="mt-5 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary first:mt-0 [&>p:first-child]:mt-0 [&>p]:mt-5 [&>ul]:mt-5 [&>ol]:mt-5">
       {children}
-    </p>
+    </div>
   );
 }
 
