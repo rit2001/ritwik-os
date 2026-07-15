@@ -65,10 +65,10 @@ function TagList({ items }: Readonly<{ items: readonly string[] }>) {
 }
 
 const projectInternalActionClassName =
-  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground focus-visible:decoration-current sm:self-auto";
+  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-accent hover:decoration-current focus-visible:text-accent focus-visible:decoration-current sm:self-auto";
 
 const projectExternalActionClassName =
-  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground focus-visible:decoration-current sm:self-auto";
+  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-secondary uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-foreground focus-visible:text-foreground sm:self-auto";
 
 export default function Home() {
   const github = getSocialLink("github");
@@ -338,20 +338,20 @@ export default function Home() {
                             </a>
                           </div>
                         ) : project.caseStudyPath ? (
-                          <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
+                          <span className={projectInternalActionClassName}>
                             View Build Case Study{" "}
                             <span
-                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5"
+                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-within:translate-x-1.5 group-focus-visible:translate-x-1.5"
                               aria-hidden="true"
                             >
                               →
                             </span>
                           </span>
                         ) : project.githubUrl ? (
-                          <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
+                          <span className={projectExternalActionClassName}>
                             GitHub{" "}
                             <span
-                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5"
+                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-within:translate-x-1.5 group-focus-visible:translate-x-1.5"
                               aria-hidden="true"
                             >
                               →
