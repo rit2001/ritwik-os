@@ -293,6 +293,17 @@ Phase 5 static content pipeline and TraceForge case study has been completed:
 - Proposed architecture, roadmap, service boundaries, and engineering decisions must be labelled as planned or proposed until implementation evidence exists.
 - Future case studies must use validated metadata, local MDX bodies, real links only, and evidence-backed claims.
 
+Phase 5.1 TraceForge editorial and case-study presentation refinement has been completed:
+
+- Global header navigation is route-aware. The homepage keeps its anchor navigation, while `/work` and `/work/[slug]` use Home, Work, Resume, GitHub, and LinkedIn.
+- Work is the active global navigation item on Work index and Work detail routes; homepage anchor labels must not appear on case-study routes.
+- TraceForge uses a structured article layout with an accessible "On This Page" navigation rail and stable heading anchors.
+- Case-study content should use public engineering language, not internal prompt language or repeated defensive disclaimers.
+- Ongoing-build pages should use one prominent scope/status note near the beginning, then maintain planned-versus-implemented language throughout.
+- TraceForge now uses structured case-study blocks for goals/current scope, current milestone, proposed architecture, service boundaries, decisions, open questions, planned signals, load-testing method, roadmap, and status summary.
+- Architecture flow must remain semantic HTML, readable without animation, and labelled as proposed when implementation is not complete.
+- Roadmaps for ongoing work use Current, Next, and Planned groups without percentages, fake completion dates, or completed-state indicators.
+
 ## Next Expected Phase
 
 The next implementation phase should review the Phase 5 content pipeline and then add the next real project case study only when explicitly requested:

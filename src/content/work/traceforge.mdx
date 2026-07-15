@@ -1,151 +1,143 @@
 import { ArchitectureFlow } from "@/components/work/ArchitectureFlow";
+import { CaseStudySection } from "@/components/work/CaseStudySection";
+import {
+  CaseStudyCopy,
+  DecisionGrid,
+  GoalScopeMatrix,
+  LoadTestPlan,
+  MetricsMatrix,
+  MilestoneCallout,
+  OpenQuestionGrid,
+  RoadmapTimeline,
+  ServiceBoundaryMatrix,
+  StatusScopeNote,
+  StatusSummary,
+} from "@/components/work/TraceForgeBlocks";
 
-## Executive Summary
+<CaseStudySection id="overview" title="Overview">
+  <CaseStudyCopy>
+    TraceForge is an ongoing distributed tracing and telemetry-pipeline build
+    focused on trace-context propagation, OpenTelemetry ingestion, Kafka-backed
+    event transport, service boundaries, operational visibility, and
+    reproducible deployment.
+  </CaseStudyCopy>
 
-TraceForge is being designed as an engineering exercise in distributed telemetry ingestion, event transport, service boundaries, observability, deployment automation, load testing, and capacity planning.
+<CaseStudyCopy>
+  The current phase is architecture and repository bootstrap. The immediate work
+  is to define the system boundaries and then initialize the first Go
+  trace-ingestion service.
+</CaseStudyCopy>
 
-The project is currently in the architecture and repository-bootstrap phase. The complete pipeline is not implemented yet, and this case study records the intended direction, constraints, and open engineering questions before implementation claims are made.
+  <StatusScopeNote />
+</CaseStudySection>
 
-## Problem and Motivation
+<CaseStudySection id="problem" title="Problem">
+  <CaseStudyCopy>
+    Distributed systems generate trace data across multiple services. The trace
+    context has to survive hops between services, ingestion boundaries, event
+    transport, processing consumers, and storage so diagnostics remain useful.
+  </CaseStudyCopy>
 
-Distributed systems generate traces across multiple services, and trace context has to be propagated consistently for those traces to remain useful. Telemetry ingestion should stay decoupled from downstream processing so ingestion failures, processing delays, and storage behavior can be reasoned about independently.
+  <CaseStudyCopy>
+    The system design needs to keep ingestion decoupled from downstream
+    processing, make buffering and backpressure visible, and expose enough
+    operational signal to reason about consumer lag, ingestion behavior,
+    processing latency, and end-to-end trace latency.
+  </CaseStudyCopy>
+</CaseStudySection>
 
-The design needs deliberate handling for buffering, backpressure, consumer lag, ingestion throughput, and end-to-end trace latency. Infrastructure and deployment should also be reproducible so the system can be tested, operated, and changed without relying on manual setup.
+<CaseStudySection id="goals-and-scope" title="Goals and Scope">
+  <GoalScopeMatrix />
+</CaseStudySection>
 
-## Goals
+<CaseStudySection id="current-milestone" title="Current Milestone">
+  <MilestoneCallout />
+</CaseStudySection>
 
-- Accept OpenTelemetry-compatible trace data.
-- Propagate and preserve trace context.
-- Decouple ingestion from processing through Kafka.
-- Define clear ingestion, processing, and storage boundaries.
-- Expose meaningful operational metrics.
-- Support containerized deployment.
-- Make infrastructure reproducible.
-- Create a foundation for load testing and capacity planning.
+<CaseStudySection id="proposed-architecture" title="Proposed Architecture">
+  <CaseStudyCopy>
+    The proposed flow separates instrumentation, ingestion, transport,
+    processing, storage, and diagnostics so each boundary can be evaluated and
+    tested independently as implementation proceeds.
+  </CaseStudyCopy>
 
-## Non-Goals for the Current Milestone
+  <ArchitectureFlow />
+</CaseStudySection>
 
-- No claim of production readiness.
-- No user-facing tracing dashboard yet.
-- No verified throughput target yet.
-- No public SaaS product.
-- No multi-tenant billing system.
-- No claim of production adoption.
-- No fake benchmark numbers.
+<CaseStudySection id="service-boundaries" title="Service Boundaries">
+  <CaseStudyCopy>
+    The boundaries below describe design direction and planned responsibility.
+    They are not presented as completed production services.
+  </CaseStudyCopy>
 
-## Current Milestone
+  <ServiceBoundaryMatrix />
+</CaseStudySection>
 
-### Architecture and repository bootstrap
+<CaseStudySection id="engineering-decisions" title="Engineering Decisions">
+  <CaseStudyCopy>
+    The technology choices are provisional where implementation evidence is
+    still pending. Each decision needs to survive real service implementation,
+    local operation, and repeatable measurement.
+  </CaseStudyCopy>
 
-Defining service boundaries, OpenTelemetry ingestion flow, Kafka event contracts, storage interfaces, and the initial observability and load-testing strategy.
+  <DecisionGrid />
+</CaseStudySection>
 
-## Proposed Architecture
+<CaseStudySection
+  id="open-questions"
+  title="Trade-offs and Open Questions"
+>
+  <CaseStudyCopy>
+    The most important engineering risk is not choosing tools; it is validating
+    the boundaries and operational behavior under realistic load. These
+    questions stay visible until implementation turns them into decisions.
+  </CaseStudyCopy>
 
-The architecture below is a proposed architecture, not implemented architecture.
+  <OpenQuestionGrid />
+</CaseStudySection>
 
-<ArchitectureFlow />
+<CaseStudySection id="observability" title="Observability">
+  <CaseStudyCopy>
+    TraceForge should make pipeline health visible at every boundary. These
+    planned signals define what the system should eventually report, without
+    displaying values before measurement exists.
+  </CaseStudyCopy>
 
-## Planned Service Boundaries
+  <MetricsMatrix />
+</CaseStudySection>
 
-### Trace ingestion
+<CaseStudySection id="load-testing" title="Load Testing">
+  <CaseStudyCopy>
+    The load-testing plan is intentionally staged. It starts with representative
+    payloads and baseline behavior, then increases pressure only after the
+    ingestion and transport boundaries are implemented.
+  </CaseStudyCopy>
 
-The trace-ingestion boundary is planned to receive telemetry payloads, validate required trace data, preserve context, and publish normalized events.
+  <LoadTestPlan />
+</CaseStudySection>
 
-### Kafka transport
+<CaseStudySection id="current-status" title="Current Status">
+  <StatusSummary />
 
-Kafka is planned as the asynchronous transport layer for decoupling, buffering, consumer-group processing, and observable lag.
+<CaseStudyCopy>
+  The architecture direction is documented, and the initial repository structure
+  is the next implementation step.
+</CaseStudyCopy>
 
-### Processing consumers
+  <CaseStudyCopy>
+    Exact next step: Initialize the Go repository and implement the first
+    trace-ingestion service with OpenTelemetry context propagation.
+  </CaseStudyCopy>
+</CaseStudySection>
 
-Processing consumers are expected to handle validation, transformation, enrichment where justified, and storage preparation.
+<CaseStudySection id="roadmap" title="Roadmap">
+  <RoadmapTimeline />
+</CaseStudySection>
 
-### Storage and query boundary
-
-The storage/query boundary will define persistent trace representation, future retrieval, and diagnostics. The implementation is not yet finalized.
-
-## Key Engineering Decisions
-
-### OpenTelemetry
-
-Reason: standardized instrumentation and trace-context interoperability.
-
-### Go
-
-Reason: planned lightweight ingestion services, explicit concurrency, and suitable backend service tooling.
-
-### Kafka
-
-Reason: planned asynchronous event transport, buffering, replayability, and consumer separation.
-
-### Docker
-
-Reason: repeatable service environments.
-
-### Kubernetes
-
-Reason: future orchestration and operational experimentation.
-
-### Terraform
-
-Reason: future reproducible infrastructure.
-
-These choices have not yet produced measured results. They are the current implementation direction.
-
-## Trade-Offs and Open Questions
-
-- Storage backend selection.
-- Event schema evolution.
-- Partition-key strategy.
-- Retention policy.
-- Sampling strategy.
-- Backpressure behavior.
-- Retry and dead-letter handling.
-- Trace-query model.
-- Infrastructure cost.
-- Minimum meaningful benchmark.
-
-These remain unresolved engineering questions and will be updated as implementation work produces real constraints.
-
-## Observability Strategy
-
-Planned metrics include ingestion throughput, rejected spans, Kafka producer errors, Kafka consumer lag, processing latency, end-to-end trace latency, storage write failures, and service health.
-
-No numeric values are displayed because repeatable measurement has not been performed yet.
-
-## Load-Testing and Capacity Plan
-
-The planned approach is to define representative payloads, establish baseline ingestion behavior, increase concurrency gradually, and monitor latency, CPU, memory, errors, and lag.
-
-The goal is to identify bottlenecks, document capacity assumptions, and publish measured figures only after repeatable testing exists. No benchmarks are claimed at this stage.
-
-## Current Status
-
-- Architecture direction is documented.
-- Initial repository structure is the next implementation step.
-- No public TraceForge repository exists yet.
-- No public demo exists.
-- No production deployment exists.
-- No verified performance results exist.
-
-## Next Step
-
-Initialize the Go repository and implement the first trace-ingestion service with OpenTelemetry context propagation.
-
-## Roadmap
-
-1. Repository and Go service bootstrap
-2. OpenTelemetry ingestion endpoint
-3. Trace-context validation and propagation
-4. Kafka producer integration
-5. Consumer processing service
-6. Initial storage adapter
-7. Operational metrics
-8. Containerized local environment
-9. Load-testing harness
-10. Kubernetes and Terraform deployment experiment
-
-This is a roadmap, not a completed-work list.
-
-## Engineering Journal Note
-
-This case study will evolve as real implementation decisions, measurements, failures, and architecture changes occur. Future updates should replace assumptions with evidence rather than inventing outcomes ahead of the build.
+<CaseStudySection id="journal-note" title="Engineering Journal Note">
+  <CaseStudyCopy>
+    This case study will evolve as real implementation decisions, measurements,
+    failures, and architecture changes occur. Future updates should replace
+    assumptions with evidence from the build.
+  </CaseStudyCopy>
+</CaseStudySection>

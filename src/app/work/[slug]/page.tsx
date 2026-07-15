@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { CaseStudyHeader } from "@/components/work/CaseStudyHeader";
 import { CaseStudyNavigation } from "@/components/work/CaseStudyNavigation";
+import { CaseStudyToc } from "@/components/work/CaseStudyToc";
 import { getWorkEntryBySlug, getWorkSlugs } from "@/lib/content/work";
 
 type WorkDetailPageProps = {
@@ -43,11 +44,18 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
 
   return (
     <article className="py-16 sm:py-20">
-      <div className="mx-auto w-full max-w-[var(--layout-content-width)] px-page-gutter">
+      <div className="mx-auto w-full max-w-[var(--layout-wide-content-width)] px-page-gutter">
         <CaseStudyHeader meta={meta} />
-        <div className="mx-auto mt-12 max-w-[var(--layout-reading-width)]">
-          <Content />
-          <CaseStudyNavigation />
+
+        <div className="mt-12 grid gap-8 lg:grid-cols-[16rem_minmax(0,var(--layout-reading-width))] lg:justify-between xl:grid-cols-[18rem_minmax(0,var(--layout-reading-width))]">
+          <aside className="lg:order-2">
+            <CaseStudyToc />
+          </aside>
+
+          <div className="min-w-0 lg:order-1">
+            <Content />
+            <CaseStudyNavigation />
+          </div>
         </div>
       </div>
     </article>

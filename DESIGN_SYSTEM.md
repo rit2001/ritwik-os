@@ -234,6 +234,15 @@ Specialized content components:
 - TechStackGrid
 - RecruiterBrief
 
+Phase 5.1 case-study presentation patterns:
+
+- Work and case-study routes use route-aware global navigation instead of homepage anchor navigation.
+- Long-form case studies may use a compact "On This Page" rail with stable heading anchors on wide screens and an inline nav on smaller screens.
+- Case-study pages should vary composition with structured editorial blocks, matrices, and timelines rather than rendering as one uninterrupted Markdown document.
+- Proposed architecture flows should communicate direction through semantic ordered HTML with decorative connectors, not canvas or images.
+- Informational case-study panels must not lift, show pointer cursors, or behave like links unless they contain a real action.
+- Ongoing-build status, scope, roadmap, and open-question components must distinguish planned work from implemented evidence through text labels, not color alone.
+
 ## Motion Guidelines
 
 Use the current `motion` package with React imports from `motion/react` for purposeful interaction and transitions.

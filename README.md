@@ -151,6 +151,10 @@ Routes are generated from registered Work slugs:
 - `/work/[slug]` is statically generated from known slugs.
 - Unknown slugs return not found.
 
+Work routes use route-aware global navigation. The homepage keeps its anchor navigation, while `/work` and `/work/[slug]` show Home, Work, Resume, GitHub, and LinkedIn with Work marked active.
+
+Case-study pages may use structured MDX components for table-of-contents navigation, milestone callouts, architecture flows, decision grids, open questions, planned metrics, load-testing stages, and status-based roadmaps. These components must preserve semantic HTML, responsive layout, and planned-versus-implemented language.
+
 To add a Work entry:
 
 1. Add `src/content/work/<slug>.meta.ts`.
@@ -160,6 +164,8 @@ To add a Work entry:
 5. Run the full validation sequence before committing.
 
 Ongoing projects must use `status: "in-development"` and `ongoing: true`. Do not add repository URLs, demo URLs, metrics, benchmark figures, completion claims, or production claims unless they are real and project-specific.
+
+Ongoing-project copy should use one prominent scope/status note near the beginning, then speak clearly in public engineering language. Avoid repeated defensive disclaimers or internal prompt language.
 
 The homepage is frozen after Phase 4. Homepage updates during content phases should be limited to truthful links to real content, such as the TraceForge case-study link.
 

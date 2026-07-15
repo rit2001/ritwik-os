@@ -18,26 +18,34 @@ export function ArchitectureFlow() {
         className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase"
         id="proposed-architecture-flow"
       >
-        Proposed Architecture Flow
+        Proposed Architecture
       </h3>
-      <ol className="mt-5 grid gap-3">
+      <ol className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {traceforgeFlow.map((step, index) => (
           <li
-            className="grid gap-3 rounded-sm border border-border bg-background/70 p-3 sm:grid-cols-[2rem_minmax(0,1fr)] sm:items-center"
+            className="relative rounded-sm border border-border bg-background/70 p-4"
             key={step}
           >
-            <span className="font-mono text-[length:var(--text-label-size)] font-semibold text-accent">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span className="text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-              {step}
-            </span>
+            {index < traceforgeFlow.length - 1 ? (
+              <span
+                className="absolute top-full left-5 h-4 w-px bg-border-strong md:top-1/2 md:left-full md:h-px md:w-4"
+                aria-hidden="true"
+              />
+            ) : null}
+            <div className="flex items-start gap-3">
+              <span className="font-mono text-[length:var(--text-label-size)] font-semibold text-accent">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span className="text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+                {step}
+              </span>
+            </div>
           </li>
         ))}
       </ol>
       <p className="mt-5 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
-        This diagram is a proposed implementation direction, not a claim that
-        every service currently exists.
+        Directional flow for the planned implementation. Connectors are visual
+        only; the ordered labels preserve the reading sequence.
       </p>
     </section>
   );

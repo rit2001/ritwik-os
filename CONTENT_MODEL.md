@@ -322,6 +322,10 @@ Ongoing-project truthfulness rules:
 - Label roadmap items as future work, not completed work.
 - Do not invent benchmark numbers, performance claims, users, adoption, deployments, repositories, demos, or production readiness.
 - Replace assumptions with measured evidence only after implementation produces it.
+- Use one prominent scope/status disclaimer near the beginning instead of repeating defensive limitations throughout the page.
+- Prefer confident public engineering language over internal prompt-constraint phrasing.
+- Use status-based roadmap groups such as Current, Next, and Planned for ongoing builds.
+- Present planned-versus-implemented distinctions in section labels and body copy.
 - Give enough technical detail for engineers
 - Give enough summary clarity for recruiters
 
