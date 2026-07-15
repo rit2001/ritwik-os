@@ -33,6 +33,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.theme-recruiter {
+  --ritwik-color-canvas: #f4f0e8;
+  --ritwik-color-background-elevated: #ebe5da;
+  --ritwik-color-surface: #fffaf0;
+  --ritwik-color-surface-muted: #e8dfd2;
+  --ritwik-color-foreground-primary: #15171b;
+  --ritwik-color-foreground-secondary: #343a42;
+  --ritwik-color-foreground-muted: #66707c;
+  --ritwik-color-border-subtle: #d4cabe;
+  --ritwik-color-border-strong: #9d9184;
+  --ritwik-color-selection: #cfe0ff;
+
+  background: var(--ritwik-color-canvas);
+  color: var(--ritwik-color-foreground-primary);
+}
+
 body,
 button,
 input,

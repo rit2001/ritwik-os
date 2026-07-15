@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, and the Phase 4 full homepage control plane.
+This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, the Phase 4 full homepage control plane, and the Phase 4.5 motion system.
 
 ## What This Project Is
 
@@ -23,7 +23,7 @@ The intended implementation stack is:
 - TypeScript
 - Tailwind CSS
 - MDX
-- Framer Motion
+- Motion (`motion/react`)
 - Vercel
 
 ## What This Project Is Not
@@ -51,7 +51,8 @@ Current status:
 - Minimal layout primitives and the global application shell are implemented.
 - Typed canonical identity and external link data are implemented.
 - The app currently renders a complete single-page RITWIK OS homepage control plane.
-- The MDX pipeline, additional routes, motion system, screenshots, and project detail pages have not been implemented yet.
+- A restrained Motion-powered interaction and scroll rhythm layer is implemented.
+- The MDX pipeline, additional routes, screenshots, and project detail pages have not been implemented yet.
 
 ## Source Structure
 
@@ -114,6 +115,24 @@ The Phase 4 homepage uses recruiter-friendly internal anchor navigation:
 TraceForge is the current flagship build, but its repository is not published yet. Do not add a TraceForge GitHub or demo link until a real project-specific destination exists.
 
 Project presentation is currently text-first. Screenshots are deferred until polished recaptures or case-study assets are available.
+
+## Motion System
+
+The project uses the `motion` package with React imports from `motion/react`.
+
+Motion primitives live in:
+
+```text
+src/components/motion/
+```
+
+Motion rules:
+
+- Section reveals are one-time and use opacity plus small vertical transforms.
+- Scroll-linked motion is limited to the top progress line, restrained desktop hero response, and Experience timeline progress.
+- Reduced-motion users receive immediately visible content without vertical movement, parallax, or stagger delays.
+- The site does not use scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, animated backgrounds, or continuous animation.
+- The Recruiter Brief and Contact sequence uses a single warm light editorial transition near the bottom of the homepage.
 
 ## Documentation Map
 

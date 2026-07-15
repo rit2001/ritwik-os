@@ -25,7 +25,7 @@ export function ActionLink({
   return (
     <a
       className={[
-        "inline-flex min-h-11 items-center justify-center rounded-sm border px-4 py-2 font-mono text-[length:var(--text-technical-size)] leading-none font-semibold tracking-[0.08em] uppercase transition-colors duration-[var(--duration-base)] ease-[var(--ease-standard)]",
+        "inline-flex min-h-11 items-center justify-center rounded-lg border px-4 py-2 font-mono text-[length:var(--text-technical-size)] leading-none font-semibold tracking-[0.08em] uppercase transition duration-[var(--duration-base)] ease-[var(--ease-standard)] active:translate-y-px",
         variantClassName[variant],
         className,
       ]

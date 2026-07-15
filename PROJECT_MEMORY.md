@@ -55,7 +55,7 @@ The approved implementation stack is:
 - TypeScript
 - Tailwind CSS
 - MDX
-- Framer Motion
+- Motion (`motion/react`)
 - Vercel
 
 The architecture should be static-first.
@@ -152,7 +152,7 @@ The design should be:
 - Fast
 - Content-forward
 
-Use motion sparingly and intentionally. Framer Motion should clarify hierarchy and transitions, not become the experience itself.
+Use motion sparingly and intentionally. The `motion` package should clarify hierarchy and transitions, not become the experience itself.
 
 ## Engineering Quality Bar
 
@@ -203,7 +203,7 @@ Phase 1 project initialization has been completed with a minimal Next.js foundat
 
 The initial app contains only a restrained temporary foundation shell. It is not the final homepage.
 
-No authentication, database, API routes, MDX pipeline, Framer Motion, analytics, testing framework, final navigation, project cards, personal links, or invented content has been added.
+No authentication, database, API routes, MDX pipeline, motion package, analytics, testing framework, final navigation, project cards, personal links, or invented content has been added.
 
 Phase 2 repository structure and design-system foundation has been completed:
 
@@ -241,6 +241,19 @@ Phase 4 full homepage control plane has been completed:
 - Project presentation is text-first. Screenshots and image assets are intentionally deferred until polished recaptures exist.
 - LeetCode and Codeforces are shown as algorithmic evidence. X remains stored in canonical links but is not shown in the homepage header, hero, or primary footer.
 - No MDX, additional routes, screenshots, live fetching, fake metrics, charts, new dependencies, or decorative terminal/OS gimmicks were added.
+
+Phase 4.5 motion, interaction, and scroll rhythm has been completed:
+
+- The current stable `motion` package is used with React imports from `motion/react`; the deprecated `framer-motion` package name was not installed.
+- Motion is isolated in small client components under `src/components/motion/`; the homepage remains primarily server-rendered.
+- Major homepage sections use restrained one-time reveal/stagger behavior with opacity and small vertical transforms.
+- Header anchor navigation tracks visible sections without continuously mutating the URL.
+- A transform-based scroll progress line appears at the top edge when reduced motion is not requested.
+- The hero uses subtle desktop-only scroll response with no blur, scale, 3D transform, or scroll hijacking.
+- The Experience timeline has a scroll-linked progress line and active markers while preserving the exact role order and content.
+- The recruiter brief and contact sequence intentionally transitions once into a warm light editorial theme.
+- Reduced-motion mode removes movement, parallax, stagger delays, and the scroll progress indicator while keeping all content immediately visible.
+- Scroll hijacking, decorative ripple effects, magnetic buttons, custom cursors, continuous animation, and animated backgrounds remain rejected.
 
 ## Next Expected Phase
 

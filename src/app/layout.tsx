@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
 import { SiteShell } from "@/components/layout/SiteShell";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { profile } from "@/data/profile";
 import { siteConfig } from "@/data/site";
 
@@ -28,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SiteShell>{children}</SiteShell>
+        <MotionProvider>
+          <SiteShell>{children}</SiteShell>
+        </MotionProvider>
       </body>
     </html>
   );

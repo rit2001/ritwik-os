@@ -8,7 +8,7 @@ export function SiteFooter() {
   const linkedIn = getSocialLink("linkedin");
 
   return (
-    <footer className="border-t border-border bg-background">
+    <footer className="theme-recruiter border-t border-border bg-background">
       <Container
         className="flex flex-col gap-8 py-8 sm:flex-row sm:items-center sm:justify-between"
         width="wide"

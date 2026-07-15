@@ -192,6 +192,18 @@ Phase 4 expands the homepage into a complete control-plane surface:
 - The visual rhythm varies by section: hero split layout, text-first project grid, vertical experience evidence, capability matrix, algorithm evidence panels, recruiter brief, and final contact section.
 - TraceForge is visually prominent but remains clearly marked as in development with no fake metrics, progress bars, charts, public repository link, or demo link.
 
+Phase 4.5 establishes the motion system:
+
+- Use `motion` with imports from `motion/react`.
+- Prefer scroll-triggered one-time reveals for hierarchy and narrative progression.
+- Use scroll-linked motion only for the top progress indicator, the restrained hero response, and the Experience timeline progress line.
+- Motion uses opacity and transform; layout-heavy properties, dramatic scale, excessive spring bounce, and continuous animation are avoided.
+- Reduced-motion mode must remove vertical movement, parallax, and stagger delays while preserving content visibility and simple interaction feedback.
+- Project-card hover uses small upward movement, border brightening, accent-line reveal, and directional-link movement only for genuinely interactive cards.
+- Large surfaces use restrained radius tokens around 6px; buttons use around 8px; badges and tags remain 2-4px.
+- The recruiter brief and contact sequence uses one warm off-white editorial transition; the page does not repeatedly alternate between dark and light themes.
+- Scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, sound, and animated backgrounds are not part of the RITWIK OS motion language.
+
 Specialized content components:
 
 - ArchitectureDiagram
@@ -204,7 +216,7 @@ Specialized content components:
 
 ## Motion Guidelines
 
-Use Framer Motion for purposeful interaction and transitions.
+Use the current `motion` package with React imports from `motion/react` for purposeful interaction and transitions.
 
 Appropriate motion:
 

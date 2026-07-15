@@ -1,0 +1,81 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+type HeaderSectionLink = {
+  label: string;
+  href: string;
+};
+
+export function HeaderSectionNav({
+  links,
+}: Readonly<{ links: readonly HeaderSectionLink[] }>) {
+  const [activeHref, setActiveHref] = useState(links[0]?.href ?? "");
+
+  useEffect(() => {
+    const sections = links
+      .map((link) => document.querySelector(link.href))
+      .filter((section): section is Element => Boolean(section));
+
+    if (!sections.length) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target.id) {
+          setActiveHref(`#${visible.target.id}`);
+        }
+      },
+      {
+        rootMargin: "-28% 0px -58% 0px",
+        threshold: [0.12, 0.28, 0.5],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, [links]);
+
+  return (
+    <nav
+      className="order-3 w-full lg:order-2 lg:w-auto"
+      aria-label="Homepage sections"
+    >
+      <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-1 sm:gap-x-2">
+        {links.map((link) => {
+          const isActive = activeHref === link.href;
+
+          return (
+            <li key={link.href}>
+              <a
+                className={[
+                  "relative inline-flex min-h-11 items-center rounded-sm px-2.5 py-2 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] uppercase transition-colors duration-[var(--duration-base)] sm:px-3",
+                  isActive
+                    ? "text-foreground"
+                    : "text-foreground-muted hover:text-foreground",
+                ].join(" ")}
+                href={link.href}
+                aria-current={isActive ? "location" : undefined}
+              >
+                <span
+                  className={[
+                    "absolute bottom-1 left-3 h-px w-4 origin-left bg-accent transition-transform duration-[var(--duration-base)]",
+                    isActive ? "scale-x-100" : "scale-x-0",
+                  ].join(" ")}
+                  aria-hidden="true"
+                />
+                {link.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
