@@ -218,6 +218,12 @@ export default function Home() {
                 </dd>
               </CurrentBuildItem>
             </dl>
+
+            <CurrentBuildItem className="mt-7 border-t border-border pt-6">
+              <ActionLink href="/work/traceforge" variant="primary">
+                View Build Case Study
+              </ActionLink>
+            </CurrentBuildItem>
           </CurrentBuildPanel>
         </HeroScroll>
       </Container>
@@ -239,11 +245,13 @@ export default function Home() {
               <StaggerItem key={project.title}>
                 <ProjectCard
                   ariaLabel={
-                    project.githubUrl
-                      ? `Open ${project.title} repository on GitHub`
-                      : undefined
+                    project.caseStudyPath
+                      ? `Open ${project.title} build case study`
+                      : project.githubUrl
+                        ? `Open ${project.title} repository on GitHub`
+                        : undefined
                   }
-                  href={project.githubUrl}
+                  href={project.caseStudyPath ?? project.githubUrl}
                 >
                   <StaggerGroup>
                     <StaggerItem y={12}>
@@ -285,7 +293,17 @@ export default function Home() {
                             <p>Repository: Not published yet</p>
                           ) : null}
                         </div>
-                        {project.githubUrl ? (
+                        {project.caseStudyPath ? (
+                          <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
+                            View Build Case Study{" "}
+                            <span
+                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5"
+                              aria-hidden="true"
+                            >
+                              →
+                            </span>
+                          </span>
+                        ) : project.githubUrl ? (
                           <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
                             GitHub{" "}
                             <span

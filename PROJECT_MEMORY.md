@@ -261,8 +261,8 @@ Phase 4.6 final interaction, motion, and narrative polish has been completed:
 - Shared motion values are centralized for section reveal travel, internal stagger, duration, easing, and viewport behavior.
 - Motion is progressive enhancement: reveal states begin from visible content rather than fully hidden content, so content is not dependent on animation startup.
 - Interactive surfaces and static surfaces have different rules. Real links can lift, brighten, show accent borders, and use pressed states; static information surfaces cannot use pointer-like lift or fake actions.
-- TraceForge remains non-clickable. Its current-build panel uses one-time internal sequencing, accent-line reveal, and a finite status pulse without fake progress or repository links.
-- Selected project cards with real GitHub destinations are card-level accessible anchors; TraceForge remains a static project surface.
+- TraceForge's current-build panel uses one-time internal sequencing, accent-line reveal, and a finite status pulse without fake progress or repository links.
+- Selected project cards with real destinations are card-level accessible anchors; at Phase 4 completion this meant GitHub destinations only, and Phase 5 later added the internal TraceForge case-study destination.
 - Capabilities are presented as one cohesive capability matrix with internal divisions instead of six independent floating cards.
 - LeetCode and Codeforces profile surfaces are single-destination interactive anchors with visible hover, focus, pressed, and sequential stat reveal behavior.
 - Recruiter Brief, education, Contact, and footer now remain in the dark graphite visual system; the previous warm-light zone and large transition bridge were removed.
@@ -279,14 +279,47 @@ Phase 4.7 final visual acceptance and homepage consistency has been completed:
 - Header active-section observation is tuned so Contact activates only when the Contact section is dominant.
 - Action links use one bounded dark action system across hero, recruiter brief, contact, and footer-adjacent surfaces.
 
+Phase 5 static content pipeline and TraceForge case study has been completed:
+
+- Phase 4 homepage remains frozen except for truthful TraceForge links to the new case study.
+- Local MDX support is configured through the official Next.js App Router MDX integration.
+- Long-form Work content lives in `src/content/work/`; structured metadata remains in adjacent typed TypeScript files.
+- Work metadata is validated with Zod through an explicit module registry in `src/lib/content/work.ts`.
+- `npm run content:check` validates registered Work entries and must fail on invalid metadata, duplicate slugs, malformed internal paths, invalid URLs, missing MDX modules, empty critical fields, or ongoing projects incorrectly marked completed.
+- `/work` lists only real registered Work entries. It must not contain placeholders for future projects.
+- `/work/[slug]` is statically generated from known slugs and returns not found for unknown entries.
+- TraceForge is the first complete Work case study at `/work/traceforge`.
+- TraceForge is documented truthfully as an ongoing build in architecture and repository-bootstrap phase. It has no public repository, demo, production deployment, verified performance result, throughput claim, adoption claim, or fake benchmark.
+- Proposed architecture, roadmap, service boundaries, and engineering decisions must be labelled as planned or proposed until implementation evidence exists.
+- Future case studies must use validated metadata, local MDX bodies, real links only, and evidence-backed claims.
+
+Phase 5.1 TraceForge editorial and case-study presentation refinement has been completed:
+
+- Global header navigation is route-aware. The homepage keeps its anchor navigation, while `/work` and `/work/[slug]` use Home, Work, Resume, GitHub, and LinkedIn.
+- Work is the active global navigation item on Work index and Work detail routes; homepage anchor labels must not appear on case-study routes.
+- TraceForge uses a structured article layout with an accessible "On This Page" navigation rail and stable heading anchors.
+- Case-study content should use public engineering language, not internal prompt language or repeated defensive disclaimers.
+- Ongoing-build pages should use one prominent scope/status note near the beginning, then maintain planned-versus-implemented language throughout.
+- TraceForge now uses structured case-study blocks for goals/current scope, current milestone, proposed architecture, service boundaries, decisions, open questions, planned signals, load-testing method, roadmap, and status summary.
+- Architecture flow must remain semantic HTML, readable without animation, and labelled as proposed when implementation is not complete.
+- Roadmaps for ongoing work use Current, Next, and Planned groups without percentages, fake completion dates, or completed-state indicators.
+
+Phase 5.2 TraceForge hydration repair and final case-study acceptance has been completed:
+
+- MDX wrapper components that accept arbitrary block children must use block-safe structural elements, not paragraph wrappers. `CaseStudyCopy` uses a `<div>` wrapper so MDX paragraphs remain valid and hydration-safe.
+- `npm run mdx:check` validates representative MDX wrapper output for nested paragraph and nested anchor regressions.
+- Case-study detail pages use a laptop-first article layout: the main reading column remains dominant, while the "On This Page" navigation is a compact rail on wide screens and an inline disclosure on smaller screens.
+- TraceForge uses a vertical proposed-architecture pipeline instead of a cramped multi-column node layout.
+- Case-study sections should prefer narrative copy, editorial rows, definition matrices, and vertical sequences over excessive small bordered tiles.
+- The homepage remains frozen during Phase 5.2; changes are limited to Work detail presentation, shared case-study components, and documentation.
+
 ## Next Expected Phase
 
-The next implementation phase should be content-model preparation and static content pipeline work only when explicitly requested:
+The next implementation phase should review the Phase 5 content pipeline and then add the next real project case study only when explicitly requested:
 
-1. Add MDX support only when approved for that phase.
-2. Define validated content schemas.
-3. Prepare content collections without placeholder personal content.
-4. Add build-time content validation.
-5. Keep routes and navigation limited until real content exists.
+1. Review `/work`, `/work/traceforge`, and `npm run content:check`.
+2. Add the next Work entry only when real metadata and truthful case-study content are ready.
+3. Keep homepage changes limited to links for real content.
+4. Do not create placeholder routes, fake URLs, fake metrics, or unfinished collections.
 
 Do not start implementation until the user explicitly asks for it.

@@ -164,6 +164,10 @@ Acceptance criteria:
 - Content utilities are tested.
 - MDX rendering supports code, callouts, links, tables, and images.
 
+Current implementation note:
+
+In the active product sequence, this work was delivered as Phase 5 after the Phase 4 homepage freeze. The implemented scope is intentionally narrow: official Next.js MDX integration, typed TypeScript metadata, Zod validation, an explicit Work registry, `/work`, `/work/[slug]`, and the first TraceForge case study. Writing, Builds, Architecture, and additional content collections remain deferred until real content exists.
+
 ## Phase 5: Core Routes
 
 Goal:
@@ -191,6 +195,16 @@ Acceptance criteria:
 - Engineering depth is reachable quickly.
 - Pages are statically generated where possible.
 - Metadata exists for major routes.
+
+Current route note:
+
+Only the real routes required by the content-pipeline milestone are implemented:
+
+- `/`
+- `/work`
+- `/work/traceforge`
+
+Do not add Writing, Builds, Architecture, About, Contact, or placeholder project routes until their first real content and route requirements are approved.
 
 ## Phase 6: Motion And Interaction
 

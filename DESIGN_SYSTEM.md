@@ -234,6 +234,24 @@ Specialized content components:
 - TechStackGrid
 - RecruiterBrief
 
+Phase 5.1 case-study presentation patterns:
+
+- Work and case-study routes use route-aware global navigation instead of homepage anchor navigation.
+- Long-form case studies may use a compact "On This Page" rail with stable heading anchors on wide screens and an inline nav on smaller screens.
+- Case-study pages should vary composition with structured editorial blocks, matrices, and timelines rather than rendering as one uninterrupted Markdown document.
+- Proposed architecture flows should communicate direction through semantic ordered HTML with decorative connectors, not canvas or images.
+- Informational case-study panels must not lift, show pointer cursors, or behave like links unless they contain a real action.
+- Ongoing-build status, scope, roadmap, and open-question components must distinguish planned work from implemented evidence through text labels, not color alone.
+
+Phase 5.2 case-study acceptance patterns:
+
+- Work detail pages should keep the article dominant at laptop widths. Use a compact supporting TOC rail rather than a large bordered dashboard-like panel.
+- On smaller screens, case-study TOC navigation should collapse into an inline semantic disclosure before the article body.
+- Current-milestone callouts should be wide enough for one- or two-line titles and should not use oversized all-caps text inside narrow panels.
+- Proposed architecture should use a readable vertical pipeline when labels are long. Decorative connectors may clarify direction, but the semantic ordered list carries the meaning.
+- Service boundaries, open questions, planned signals, load testing, roadmap, and status summaries should use editorial rows, definition matrices, or vertical timelines before defaulting to many small independent cards.
+- MDX wrapper components must preserve valid HTML. Do not wrap arbitrary MDX block children in `<p>`.
+
 ## Motion Guidelines
 
 Use the current `motion` package with React imports from `motion/react` for purposeful interaction and transitions.

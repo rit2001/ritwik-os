@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { HeaderSectionNav } from "@/components/motion/HeaderSectionNav";
+import { HeaderNavigation } from "@/components/layout/HeaderNavigation";
 import { Container } from "@/components/ui/Container";
 import { profile } from "@/data/profile";
 import { getSocialLink } from "@/data/social-links";
@@ -35,47 +35,12 @@ export function SiteHeader() {
           {siteConfig.name}
         </Link>
 
-        <HeaderSectionNav links={sectionLinks} />
-
-        <nav className="order-2 lg:order-3" aria-label="Primary external links">
-          <ul className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {github ? (
-              <li>
-                <a
-                  className="inline-flex min-h-11 items-center rounded-sm px-2.5 py-2 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-secondary uppercase transition-colors duration-[var(--duration-base)] hover:text-foreground sm:px-3"
-                  href={github.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open Ritwik Biswas on GitHub"
-                >
-                  {github.label}
-                </a>
-              </li>
-            ) : null}
-            {linkedIn ? (
-              <li>
-                <a
-                  className="inline-flex min-h-11 items-center rounded-sm px-2.5 py-2 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-secondary uppercase transition-colors duration-[var(--duration-base)] hover:text-foreground sm:px-3"
-                  href={linkedIn.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open Ritwik Biswas on LinkedIn"
-                >
-                  {linkedIn.label}
-                </a>
-              </li>
-            ) : null}
-            <li>
-              <a
-                className="inline-flex min-h-11 items-center rounded-sm border border-border-strong px-3 py-2 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground uppercase transition-colors duration-[var(--duration-base)] hover:border-accent hover:text-accent"
-                href={profile.resumePath}
-                aria-label="View Ritwik Biswas resume PDF"
-              >
-                Resume
-              </a>
-            </li>
-          </ul>
-        </nav>
+        <HeaderNavigation
+          github={github}
+          linkedIn={linkedIn}
+          resumePath={profile.resumePath}
+          sectionLinks={sectionLinks}
+        />
       </Container>
     </header>
   );

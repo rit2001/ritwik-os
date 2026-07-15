@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, the Phase 4 full homepage control plane, and the final Phase 4 motion/interaction polish.
+This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, the Phase 4 full homepage control plane, the final Phase 4 motion/interaction polish, and the Phase 5 static content pipeline with the first TraceForge case study.
 
 ## What This Project Is
 
@@ -52,7 +52,10 @@ Current status:
 - Typed canonical identity and external link data are implemented.
 - The app currently renders a complete single-page RITWIK OS homepage control plane.
 - A restrained Motion-powered interaction, scroll rhythm, and final homepage polish layer is implemented.
-- The MDX pipeline, additional routes, screenshots, and project detail pages have not been implemented yet.
+- The official Next.js MDX pipeline is implemented for local Work content.
+- `/work` and `/work/traceforge` are implemented as static-first App Router routes.
+- TraceForge is the first validated Work case study and remains documented as an in-development build with no public repository or demo.
+- Screenshots, Writing, Builds, Architecture, and additional case studies have not been implemented yet.
 
 ## Source Structure
 
@@ -63,15 +66,20 @@ src/
   app/
   components/
     layout/
+    motion/
     ui/
+    work/
   content/
+    work/
   data/
   lib/
+    content/
   styles/
   types/
+scripts/
 ```
 
-The `content/`, `lib/`, and `types/` directories are reserved boundaries from the initial structure and currently contain no implementation logic. Additional directories such as `docs/` and `tests/` should be added only when they contain real implementation files for an approved phase.
+Additional directories such as `docs/` and `tests/` should be added only when they contain real implementation files for an approved phase.
 
 ## Canonical Identity Data
 
@@ -116,6 +124,59 @@ TraceForge is the current flagship build, but its repository is not published ye
 
 Project presentation is currently text-first. Screenshots are deferred until polished recaptures or case-study assets are available.
 
+## Content Pipeline
+
+Phase 5 uses the official Next.js App Router MDX integration.
+
+Work entries use separated metadata and body content:
+
+```text
+src/content/work/
+  traceforge.meta.ts
+  traceforge.mdx
+
+src/lib/content/
+  schemas.ts
+  work.ts
+
+scripts/
+  validate-content.ts
+```
+
+Metadata is written in TypeScript, validated with Zod, and imported through an explicit registry. MDX files contain the long-form case-study body.
+
+Routes are generated from registered Work slugs:
+
+- `/work` lists registered, non-draft Work entries.
+- `/work/[slug]` is statically generated from known slugs.
+- Unknown slugs return not found.
+
+Work routes use route-aware global navigation. The homepage keeps its anchor navigation, while `/work` and `/work/[slug]` show Home, Work, Resume, GitHub, and LinkedIn with Work marked active.
+
+Case-study pages may use structured MDX components for table-of-contents navigation, milestone callouts, architecture flows, decision grids, open questions, planned metrics, load-testing stages, and status-based roadmaps. These components must preserve semantic HTML, responsive layout, and planned-versus-implemented language.
+
+Case-study layout standards:
+
+- Keep the main article column dominant at laptop and desktop widths.
+- Use a compact "On This Page" rail on wide screens and an inline disclosure on smaller screens.
+- Use vertical architecture pipelines when stage labels are long enough to make multi-column diagrams cramped.
+- Prefer editorial rows, definition matrices, and staged sequences over repeating small cards for every technical section.
+- Do not wrap arbitrary MDX block children in paragraph elements; run `npm run mdx:check` before build validation.
+
+To add a Work entry:
+
+1. Add `src/content/work/<slug>.meta.ts`.
+2. Add `src/content/work/<slug>.mdx`.
+3. Register both modules in `src/lib/content/work.ts`.
+4. Run `npm run content:check`.
+5. Run the full validation sequence before committing.
+
+Ongoing projects must use `status: "in-development"` and `ongoing: true`. Do not add repository URLs, demo URLs, metrics, benchmark figures, completion claims, or production claims unless they are real and project-specific.
+
+Ongoing-project copy should use one prominent scope/status note near the beginning, then speak clearly in public engineering language. Avoid repeated defensive disclaimers or internal prompt language.
+
+The homepage is frozen after Phase 4. Homepage updates during content phases should be limited to truthful links to real content, such as the TraceForge case-study link.
+
 ## Motion System
 
 The project uses the `motion` package with React imports from `motion/react`.
@@ -133,7 +194,7 @@ Motion rules:
 - Reduced-motion users receive immediately visible content without vertical movement, parallax, or stagger delays.
 - The site does not use scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, animated backgrounds, or continuous animation.
 - Content remains visible before and without JavaScript; motion progressively enhances visible content.
-- Interactive surfaces are only used for real actions. Static surfaces such as TraceForge and education do not lift or pretend to be links.
+- Interactive surfaces are only used for real actions. Static surfaces such as education and non-linked information panels do not lift or pretend to be links.
 - Project and algorithm cards with real destinations use card-level accessible anchors.
 - Capabilities are presented as one unified matrix instead of separate floating cards.
 - The Recruiter Brief, Education, Contact, and Footer sequence remains in the dark graphite RITWIK OS visual system; the previous warm-light transition bridge has been removed.
@@ -196,6 +257,18 @@ Run TypeScript checking:
 npm run typecheck
 ```
 
+Validate registered content:
+
+```bash
+npm run content:check
+```
+
+Validate MDX wrapper semantics:
+
+```bash
+npm run mdx:check
+```
+
 Format files:
 
 ```bash
@@ -213,10 +286,13 @@ npm run format:check
 ```bash
 npm run dev
 npm run build
+npm run mdx:check
+npm run content:check
 npm run lint
 npm run typecheck
 npm run format
 npm run format:check
+npm run validate
 ```
 
 There is no test script yet. Testing tools will be introduced in a later milestone.

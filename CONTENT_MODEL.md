@@ -64,6 +64,53 @@ Required case study sections:
 - Outcome
 - Lessons learned
 
+Implemented Phase 5 model:
+
+- Long-form body content lives in `src/content/work/*.mdx`.
+- Structured metadata lives beside the body in `src/content/work/*.meta.ts`.
+- Metadata is validated with Zod in `src/lib/content/schemas.ts`.
+- The metadata manifest in `src/lib/content/work-manifest.ts` identifies registered entries for validation.
+- The explicit app registry in `src/lib/content/work.ts` imports known metadata and MDX modules so static generation is bundler-visible.
+- `/work` lists only registered, non-draft Work entries.
+- `/work/[slug]` is generated from known slugs and unknown slugs must return not found.
+
+Current required Work metadata includes:
+
+- `slug`
+- `title`
+- `shortTitle` when useful
+- `category`
+- `summary`
+- `status`
+- `statusLabel`
+- `year`
+- `featured`
+- `ongoing`
+- `stack`
+- `roles`
+- optional `repositoryUrl`
+- optional `demoUrl`
+- `caseStudyPath`
+- `seoTitle`
+- `seoDescription`
+- optional `publishedDate`
+- optional `updatedDate`
+- optional truthful `readingTime`
+- `draft`
+- optional `relatedProjectSlugs`
+- optional `currentMilestone`
+
+Allowed Work status values are:
+
+- `in-development`
+- `completed`
+- `maintained`
+- `archived`
+
+Ongoing entries must use `in-development`. Repository and demo URLs must be omitted when no real project-specific destination exists.
+
+TraceForge is the first registered Work entry. It is an ongoing build case study, not a completed-project page. Its metadata must continue to omit repository and demo URLs until real destinations exist.
+
 ### Builds
 
 The `builds` collection contains ongoing engineering work, progress logs, experiments, and implementation notes.
@@ -209,6 +256,16 @@ Recommended validation:
 
 Invalid content should fail the build.
 
+Run content validation with:
+
+```bash
+npm run content:check
+```
+
+The validator must reject duplicate slugs, malformed internal case-study paths, invalid URLs, empty title/summary/category/stack values, missing MDX modules, and ongoing projects incorrectly marked completed.
+
+Do not downgrade validation failures to warnings.
+
 ## MDX Component Standards
 
 MDX content may use approved components for clarity.
@@ -225,6 +282,19 @@ Recommended MDX components:
 - `TechStackGrid`
 
 MDX components should be accessible, responsive, and visually consistent with the design system.
+
+Block-safe wrapper rule:
+
+- Components that accept arbitrary MDX block children must not render a wrapping `<p>`.
+- Use block-safe structural elements such as `<div>`, `<section>`, or `<aside>` for wrappers around MDX children.
+- Let the global MDX paragraph mapping own paragraph semantics.
+- Run `npm run mdx:check` to catch nested paragraph and nested anchor regressions.
+
+Case-study presentation rule:
+
+- Long-form case studies should keep a comfortable technical reading column and a compact supporting TOC; the TOC must not compete with the article.
+- Architecture flows with long labels should use semantic vertical pipelines before horizontal or multi-column diagrams.
+- Prefer editorial rows, definition-list patterns, and staged sequences over excessive mini-card grids for planned boundaries, open questions, metrics, load testing, and roadmap content.
 
 ## Asset Standards
 
@@ -258,6 +328,17 @@ Content should:
 - Describe tradeoffs
 - Avoid hype
 - Avoid generic marketing phrases
+
+Ongoing-project truthfulness rules:
+
+- Label proposed architecture as proposed.
+- Label roadmap items as future work, not completed work.
+- Do not invent benchmark numbers, performance claims, users, adoption, deployments, repositories, demos, or production readiness.
+- Replace assumptions with measured evidence only after implementation produces it.
+- Use one prominent scope/status disclaimer near the beginning instead of repeating defensive limitations throughout the page.
+- Prefer confident public engineering language over internal prompt-constraint phrasing.
+- Use status-based roadmap groups such as Current, Next, and Planned for ongoing builds.
+- Present planned-versus-implemented distinctions in section labels and body copy.
 - Give enough technical detail for engineers
 - Give enough summary clarity for recruiters
 

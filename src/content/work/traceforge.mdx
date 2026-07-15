@@ -1,0 +1,143 @@
+import { ArchitectureFlow } from "@/components/work/ArchitectureFlow";
+import { CaseStudySection } from "@/components/work/CaseStudySection";
+import {
+  CaseStudyCopy,
+  DecisionGrid,
+  GoalScopeMatrix,
+  LoadTestPlan,
+  MetricsMatrix,
+  MilestoneCallout,
+  OpenQuestionGrid,
+  RoadmapTimeline,
+  ServiceBoundaryMatrix,
+  StatusScopeNote,
+  StatusSummary,
+} from "@/components/work/TraceForgeBlocks";
+
+<CaseStudySection id="overview" title="Overview">
+  <CaseStudyCopy>
+    TraceForge is an ongoing distributed tracing and telemetry-pipeline build
+    focused on trace-context propagation, OpenTelemetry ingestion, Kafka-backed
+    event transport, service boundaries, operational visibility, and
+    reproducible deployment.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  The current phase is architecture and repository bootstrap. The immediate work
+  is to define the system boundaries and then initialize the first Go
+  trace-ingestion service.
+</CaseStudyCopy>
+
+  <StatusScopeNote />
+</CaseStudySection>
+
+<CaseStudySection id="problem" title="Problem">
+  <CaseStudyCopy>
+    Distributed systems generate trace data across multiple services. The trace
+    context has to survive hops between services, ingestion boundaries, event
+    transport, processing consumers, and storage so diagnostics remain useful.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The system design needs to keep ingestion decoupled from downstream
+    processing, make buffering and backpressure visible, and expose enough
+    operational signal to reason about consumer lag, ingestion behavior,
+    processing latency, and end-to-end trace latency.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="goals-and-scope" title="Goals and Scope">
+  <GoalScopeMatrix />
+</CaseStudySection>
+
+<CaseStudySection id="current-milestone" title="Current Milestone">
+  <MilestoneCallout />
+</CaseStudySection>
+
+<CaseStudySection id="proposed-architecture" title="Proposed Architecture">
+  <CaseStudyCopy>
+    The proposed flow separates instrumentation, ingestion, transport,
+    processing, storage, and diagnostics so each boundary can be evaluated and
+    tested independently as implementation proceeds.
+  </CaseStudyCopy>
+
+  <ArchitectureFlow />
+</CaseStudySection>
+
+<CaseStudySection id="service-boundaries" title="Service Boundaries">
+  <CaseStudyCopy>
+    The boundaries below describe design direction and planned responsibility.
+    They are not presented as completed production services.
+  </CaseStudyCopy>
+
+  <ServiceBoundaryMatrix />
+</CaseStudySection>
+
+<CaseStudySection id="engineering-decisions" title="Engineering Decisions">
+  <CaseStudyCopy>
+    The technology choices are provisional where implementation evidence is
+    still pending. Each decision needs to survive real service implementation,
+    local operation, and repeatable measurement.
+  </CaseStudyCopy>
+
+  <DecisionGrid />
+</CaseStudySection>
+
+<CaseStudySection
+  id="open-questions"
+  title="Trade-offs and Open Questions"
+>
+  <CaseStudyCopy>
+    The most important engineering risk is not choosing tools; it is validating
+    the boundaries and operational behavior under realistic load. These
+    questions stay visible until implementation turns them into decisions.
+  </CaseStudyCopy>
+
+  <OpenQuestionGrid />
+</CaseStudySection>
+
+<CaseStudySection id="observability" title="Observability">
+  <CaseStudyCopy>
+    TraceForge should make pipeline health visible at every boundary. These
+    planned signals define what the system should eventually report, without
+    displaying values before measurement exists.
+  </CaseStudyCopy>
+
+  <MetricsMatrix />
+</CaseStudySection>
+
+<CaseStudySection id="load-testing" title="Load Testing">
+  <CaseStudyCopy>
+    The load-testing plan is intentionally staged. It starts with representative
+    payloads and baseline behavior, then increases pressure only after the
+    ingestion and transport boundaries are implemented.
+  </CaseStudyCopy>
+
+  <LoadTestPlan />
+</CaseStudySection>
+
+<CaseStudySection id="current-status" title="Current Status">
+  <StatusSummary />
+
+<CaseStudyCopy>
+  The architecture direction is documented, and the initial repository structure
+  is the next implementation step.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Exact next step: Initialize the Go repository and implement the first
+    trace-ingestion service with OpenTelemetry context propagation.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="roadmap" title="Roadmap">
+  <RoadmapTimeline />
+</CaseStudySection>
+
+<CaseStudySection id="journal-note" title="Engineering Journal Note">
+  <CaseStudyCopy>
+    This case study will evolve as real implementation decisions, measurements,
+    failures, and architecture changes occur. Future updates should replace
+    assumptions with evidence from the build.
+  </CaseStudyCopy>
+</CaseStudySection>
