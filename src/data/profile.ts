@@ -1,8 +1,13 @@
 type CurrentBuild = {
   project: string;
+  category: string;
   description: string;
   status: "In Development";
+  currentMilestone: string;
+  milestoneExplanation: string;
+  nextStep: string;
   stackDirection: readonly string[];
+  repository: "Not published yet";
 };
 
 export type Profile = {
@@ -48,8 +53,22 @@ export const profile = {
   ],
   currentBuild: {
     project: "TraceForge",
+    category: "Distributed Tracing and Event Pipeline",
     description: "Distributed Tracing and Event Pipeline",
     status: "In Development",
-    stackDirection: ["Go", "Kafka", "OpenTelemetry", "Kubernetes", "Terraform"],
+    currentMilestone: "Architecture and repository bootstrap",
+    milestoneExplanation:
+      "Defining service boundaries, OpenTelemetry ingestion flow, Kafka event contracts, storage interfaces, and the initial observability and load-testing strategy.",
+    nextStep:
+      "Initialize the Go repository and implement the first trace-ingestion service with OpenTelemetry context propagation.",
+    stackDirection: [
+      "Go",
+      "Kafka",
+      "OpenTelemetry",
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+    ],
+    repository: "Not published yet",
   },
 } satisfies Profile;

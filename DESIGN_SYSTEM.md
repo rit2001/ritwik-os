@@ -184,6 +184,14 @@ Phase 3 adds the first public-facing brand shell:
 - The first hero does not use a profile photo, raster imagery, fake terminal, typewriter effect, particles, bright gradients, excessive glow, or decorative dashboard metrics.
 - TraceForge appears as a compact current-build panel and is presented as an ongoing build, not a finished product.
 
+Phase 4 expands the homepage into a complete control-plane surface:
+
+- Sections use stable anchors and recruiter-readable labels rather than OS-style jargon.
+- Project cards are compact text-first case-study entry points with honest repository and deployment notes.
+- Screenshots are deferred until polished recaptures exist; no empty image placeholders are used.
+- The visual rhythm varies by section: hero split layout, text-first project grid, vertical experience evidence, capability matrix, algorithm evidence panels, recruiter brief, and final contact section.
+- TraceForge is visually prominent but remains clearly marked as in development with no fake metrics, progress bars, charts, public repository link, or demo link.
+
 Specialized content components:
 
 - ArchitectureDiagram

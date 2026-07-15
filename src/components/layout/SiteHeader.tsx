@@ -8,11 +8,18 @@ import { siteConfig } from "@/data/site";
 export function SiteHeader() {
   const github = getSocialLink("github");
   const linkedIn = getSocialLink("linkedin");
+  const sectionLinks = [
+    { label: "Systems", href: "#systems" },
+    { label: "Experience", href: "#experience" },
+    { label: "Capabilities", href: "#capabilities" },
+    { label: "Algorithms", href: "#algorithms" },
+    { label: "Contact", href: "#contact" },
+  ] as const;
 
   return (
     <header className="sticky top-0 z-[var(--z-header)] border-b border-border bg-background-elevated/95 backdrop-blur-sm">
       <Container
-        className="flex min-h-header-height flex-wrap items-center justify-between gap-3 py-3"
+        className="flex min-h-header-height flex-wrap items-center justify-between gap-x-6 gap-y-3 py-3"
         width="wide"
       >
         <Link
@@ -27,7 +34,25 @@ export function SiteHeader() {
           {siteConfig.name}
         </Link>
 
-        <nav aria-label="Primary external links">
+        <nav
+          className="order-3 w-full lg:order-2 lg:w-auto"
+          aria-label="Homepage sections"
+        >
+          <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-1 sm:gap-x-2">
+            {sectionLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  className="inline-flex min-h-11 items-center rounded-sm px-2.5 py-2 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase transition-colors duration-[var(--duration-base)] hover:text-foreground sm:px-3"
+                  href={link.href}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav className="order-2 lg:order-3" aria-label="Primary external links">
           <ul className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {github ? (
               <li>

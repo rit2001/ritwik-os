@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 type ContainerWidth = "content" | "wide" | "reading";
 
@@ -12,11 +12,14 @@ export function Container({
   children,
   className,
   width = "content",
-}: Readonly<{
-  children: ReactNode;
-  className?: string;
-  width?: ContainerWidth;
-}>) {
+  ...props
+}: Readonly<
+  {
+    children: ReactNode;
+    className?: string;
+    width?: ContainerWidth;
+  } & Omit<ComponentPropsWithoutRef<"div">, "children" | "className">
+>) {
   return (
     <div
       className={[
@@ -26,6 +29,7 @@ export function Container({
       ]
         .filter(Boolean)
         .join(" ")}
+      {...props}
     >
       {children}
     </div>
