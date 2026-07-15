@@ -2,7 +2,6 @@ import { ActionLink } from "@/components/ui/ActionLink";
 import { Container } from "@/components/ui/Container";
 import { profile } from "@/data/profile";
 import { getSocialLink } from "@/data/social-links";
-import { siteConfig } from "@/data/site";
 
 export default function Home() {
   const github = getSocialLink("github");
@@ -16,7 +15,8 @@ export default function Home() {
     >
       <section aria-labelledby="hero-title" className="max-w-4xl">
         <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
-          {siteConfig.systemLabel}
+          <span className="text-foreground-muted">Engineering</span>{" "}
+          <span>Control Plane</span>
         </p>
 
         <h1
