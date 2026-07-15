@@ -569,7 +569,30 @@ export function EngineeringChallengeRows() {
 }
 
 export function ReliabilityReview() {
-  return <LayerGrid layers={reliabilityGroups} />;
+  return (
+    <div className="grid overflow-hidden rounded-md border border-border bg-border md:grid-cols-2">
+      {reliabilityGroups.map((group) => (
+        <section
+          className="border-t border-border bg-surface/55 p-5 first:border-t-0 md:border-t-0 md:border-l md:first:border-l-0"
+          key={group.title}
+        >
+          <h3 className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
+            {group.title}
+          </h3>
+          <ul className="mt-4 grid gap-3">
+            {group.items.map((item) => (
+              <li
+                className="border-l border-border-strong pl-3 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
+                key={item}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
 }
 
 export function ImprovementPriorities() {

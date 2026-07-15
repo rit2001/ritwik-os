@@ -64,6 +64,12 @@ function TagList({ items }: Readonly<{ items: readonly string[] }>) {
   );
 }
 
+const projectInternalActionClassName =
+  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground focus-visible:decoration-current sm:self-auto";
+
+const projectExternalActionClassName =
+  "inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,transform] duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground focus-visible:decoration-current sm:self-auto";
+
 export default function Home() {
   const github = getSocialLink("github");
   const linkedIn = getSocialLink("linkedin");
@@ -258,6 +264,9 @@ export default function Home() {
                         ? project.githubUrl
                         : null
                   }
+                  interactive={Boolean(
+                    project.caseStudyPath || project.githubUrl,
+                  )}
                 >
                   <StaggerGroup>
                     <StaggerItem y={12}>
@@ -302,18 +311,30 @@ export default function Home() {
                         {project.caseStudyPath && project.githubUrl ? (
                           <div className="flex shrink-0 flex-wrap gap-3">
                             <a
-                              className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground sm:self-auto"
+                              className={projectInternalActionClassName}
                               href={project.caseStudyPath}
                             >
-                              View Case Study <span aria-hidden="true">→</span>
+                              View Case Study{" "}
+                              <span
+                                className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-within:translate-x-1.5"
+                                aria-hidden="true"
+                              >
+                                →
+                              </span>
                             </a>
                             <a
-                              className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground sm:self-auto"
+                              className={projectExternalActionClassName}
                               href={project.githubUrl}
                               rel="noopener noreferrer"
                               target="_blank"
                             >
-                              GitHub <span aria-hidden="true">→</span>
+                              GitHub{" "}
+                              <span
+                                className="ml-1 inline-block transition-transform duration-[var(--duration-base)] hover:translate-x-1.5 focus-visible:translate-x-1.5"
+                                aria-hidden="true"
+                              >
+                                →
+                              </span>
                             </a>
                           </div>
                         ) : project.caseStudyPath ? (
