@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CaseStudyHeader } from "@/components/work/CaseStudyHeader";
 import { CaseStudyNavigation } from "@/components/work/CaseStudyNavigation";
 import { CaseStudyToc } from "@/components/work/CaseStudyToc";
+import { getCaseStudyTocItems } from "@/components/work/caseStudyTocItems";
 import { getWorkEntryBySlug, getWorkSlugs } from "@/lib/content/work";
 
 type WorkDetailPageProps = {
@@ -41,6 +42,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
   }
 
   const { Content, meta } = entry;
+  const tocItems = getCaseStudyTocItems(meta.slug);
 
   return (
     <article className="py-16 sm:py-20">
@@ -49,7 +51,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,47rem)_13.75rem] lg:items-start lg:justify-between xl:gap-16">
           <aside className="lg:order-2 lg:self-stretch">
-            <CaseStudyToc />
+            <CaseStudyToc items={tocItems} />
           </aside>
 
           <div className="min-w-0 lg:order-1">

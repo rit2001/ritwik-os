@@ -245,13 +245,19 @@ export default function Home() {
               <StaggerItem key={project.title}>
                 <ProjectCard
                   ariaLabel={
-                    project.caseStudyPath
+                    project.caseStudyPath && !project.githubUrl
                       ? `Open ${project.title} build case study`
-                      : project.githubUrl
+                      : project.githubUrl && !project.caseStudyPath
                         ? `Open ${project.title} repository on GitHub`
                         : undefined
                   }
-                  href={project.caseStudyPath ?? project.githubUrl}
+                  href={
+                    project.caseStudyPath && !project.githubUrl
+                      ? project.caseStudyPath
+                      : project.githubUrl && !project.caseStudyPath
+                        ? project.githubUrl
+                        : null
+                  }
                 >
                   <StaggerGroup>
                     <StaggerItem y={12}>
@@ -293,7 +299,24 @@ export default function Home() {
                             <p>Repository: Not published yet</p>
                           ) : null}
                         </div>
-                        {project.caseStudyPath ? (
+                        {project.caseStudyPath && project.githubUrl ? (
+                          <div className="flex shrink-0 flex-wrap gap-3">
+                            <a
+                              className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground sm:self-auto"
+                              href={project.caseStudyPath}
+                            >
+                              View Case Study <span aria-hidden="true">→</span>
+                            </a>
+                            <a
+                              className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground sm:self-auto"
+                              href={project.githubUrl}
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >
+                              GitHub <span aria-hidden="true">→</span>
+                            </a>
+                          </div>
+                        ) : project.caseStudyPath ? (
                           <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
                             View Build Case Study{" "}
                             <span

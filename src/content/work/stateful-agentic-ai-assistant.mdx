@@ -1,0 +1,250 @@
+import {
+  AgentArchitecture,
+  CurrentStatusSummary,
+  DeploymentPipeline,
+  EngineeringChallengeRows,
+  HitlFlow,
+  ImprovementPriorities,
+  LangGraphFlow,
+  MemoryThreadModel,
+  RagPipeline,
+  ReliabilityReview,
+  ToolInventory,
+} from "@/components/work/AgenticAssistantBlocks";
+import { CaseStudySection } from "@/components/work/CaseStudySection";
+import { CaseStudyCopy } from "@/components/work/TraceForgeBlocks";
+
+<CaseStudySection id="overview" title="Overview">
+  <CaseStudyCopy>
+    The Stateful Agentic AI Assistant is a completed tool-using AI application
+    built around Streamlit, LangGraph, Groq, SQLite checkpoints, FAISS document
+    retrieval, LangSmith tracing configuration, Docker, and GitHub Actions
+    deployment to AWS EC2.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The project demonstrates how a single stateful agent workflow can coordinate
+    conversation memory, tool selection, PDF retrieval, streamed responses, and
+    explicit Human-in-the-Loop approval for a simulated stock-purchase action.
+    It is not a multi-agent system, real trading platform, continuously hosted
+    SaaS product, or permanent cloud-memory service.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="problem" title="Problem">
+  <CaseStudyCopy>
+    A useful tool-using assistant has to coordinate more than a stateless chat
+    completion. It has conversation state, thread identity, model/tool
+    execution, document retrieval state, pending approval state, Streamlit
+    reruns, and deployment state.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Ordinary model calls do not automatically provide resumable conversations,
+    tool loops, checkpoint restoration, interrupted action approval, or
+    continuity across interface reruns. The engineering problem was to make
+    those state boundaries explicit enough that the UI, graph, retrieval layer,
+    and deployment workflow could stay understandable.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="system-architecture" title="System Architecture">
+  <CaseStudyCopy>
+    The implemented architecture separates runtime request flow from supporting
+    persistence, retrieval, observability, and deployment concerns. Streamlit
+    owns the user interface, while LangGraph owns the model/tool loop and
+    checkpointed execution state.
+  </CaseStudyCopy>
+
+  <AgentArchitecture />
+</CaseStudySection>
+
+<CaseStudySection id="langgraph-control-flow" title="LangGraph Control Flow">
+  <CaseStudyCopy>
+    The graph uses a single `ChatState` with accumulated messages. A `chat_node`
+    invokes the Groq model bound to tools, `tools_condition` decides whether to
+    return a direct answer or execute tools, and `ToolNode` executes selected
+    tools before returning control to the chat node.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  The graph is compiled with a SQLite checkpointer. This makes it a stateful
+  tool-using agent workflow, not a multi-agent architecture.
+</CaseStudyCopy>
+
+  <LangGraphFlow />
+</CaseStudySection>
+
+<CaseStudySection id="memory-and-threads" title="Memory and Threads">
+  <CaseStudyCopy>
+    The implementation uses three distinct state layers: LangGraph graph state,
+    persistent checkpoint state, and Streamlit session/UI state. Keeping those
+    layers separate is what allows conversation switching and approval recovery
+    to work without treating the UI as the source of truth.
+  </CaseStudyCopy>
+
+<MemoryThreadModel />
+
+  <CaseStudyCopy>
+    The audited deployment does not mount persistent storage. SQLite checkpoints
+    and FAISS indexes live in the container filesystem, so they may be lost when
+    the container is replaced. The accurate public claim is thread-scoped
+    checkpointing, not permanent cloud memory.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="rag-pipeline" title="RAG Pipeline">
+  <CaseStudyCopy>
+    Document retrieval is implemented as a tool. A PDF upload is converted into
+    local chunks, embedded with HuggingFace `all-MiniLM-L6-v2`, indexed with
+    FAISS, and retrieved with similarity search before the retrieved
+    source/page/content context is handed back to the model.
+  </CaseStudyCopy>
+
+<RagPipeline />
+
+  <CaseStudyCopy>
+    The implementation does not currently prove durable multi-user document
+    isolation. The FAISS index uses a fixed local path, can be replaced by a new
+    upload, and is loaded with dangerous deserialization enabled. Those are
+    important hardening points for any future production version.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="tool-system" title="Tool System">
+  <CaseStudyCopy>
+    Six tools are bound to the model. They are tools inside one graph workflow,
+    not autonomous agents. Tool selection is guided by the system prompt and the
+    model's tool-calling behavior.
+  </CaseStudyCopy>
+
+<ToolInventory />
+
+  <CaseStudyCopy>
+    The stock-purchase path is explicitly simulated. It demonstrates approval
+    gating and resumable execution, but it does not place real orders or connect
+    to a brokerage.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="human-in-the-loop" title="Human-in-the-Loop">
+  <CaseStudyCopy>
+    The strongest implementation pattern in the project is the interrupt/resume
+    flow around the simulated stock purchase. The tool pauses with
+    `interrupt()`, LangGraph checkpoints the pending execution, Streamlit
+    renders approval controls, and the graph resumes with `Command(resume=...)`
+    using the same thread ID.
+  </CaseStudyCopy>
+
+<HitlFlow />
+
+  <CaseStudyCopy>
+    HITL applies specifically to the simulated purchase tool. The same thread
+    ID matters because the pending execution is checkpointed under that thread;
+    resuming with a different thread would not target the interrupted graph
+    state.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="streaming-interface" title="Streaming Interface">
+  <CaseStudyCopy>
+    Streamlit provides the chat interface through `st.chat_input`, chat
+    messages, a conversation sidebar, and approval controls. The graph streams
+    with `stream_mode="messages"`, and the UI filters assistant messages from
+    tool messages so the final answer is readable while tool execution remains
+    visible.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Tool activity appears through Streamlit status containers, while assistant
+    text is rendered with `st.write_stream`. This is Streamlit-level streaming
+    over LangGraph message events; the repository does not implement custom
+    WebSocket infrastructure.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="observability" title="Observability">
+  <CaseStudyCopy>
+    Observability is configured through LangSmith environment variables and run
+    metadata rather than custom tracing infrastructure. Chat runs use a
+    `chat_trace` run name, HITL resume runs use `hitl_resume_trace`, and the
+    thread ID is attached as metadata.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    This supports visibility into graph/model/tool execution where the
+    LangChain and LangGraph runtime can emit traces. The repository does not
+    include evidence for custom dashboards, measured latency improvements, or
+    service-level objectives.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="docker-and-deployment" title="Docker and Deployment">
+  <CaseStudyCopy>
+    The deployment workflow builds a Docker image, publishes it to Docker Hub,
+    uses a self-hosted EC2 runner to pull the latest image, replaces the running
+    Streamlit container, and verifies both container state and the Streamlit
+    health endpoint.
+  </CaseStudyCopy>
+
+<DeploymentPipeline />
+
+  <CaseStudyCopy>
+    Safe wording is that GitHub Actions automates Docker image publishing, EC2
+    container replacement, and post-deployment health verification. The lint and
+    unit-test steps are placeholders, the deployment is not zero-downtime, and
+    the container does not mount durable SQLite or FAISS storage.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="engineering-challenges" title="Engineering Challenges">
+  <CaseStudyCopy>
+    The most meaningful engineering work was not only binding tools to a model.
+    It was coordinating checkpoints, UI state, streaming, approval recovery,
+    local retrieval, and deployment verification without hiding the system's
+    constraints.
+  </CaseStudyCopy>
+
+  <EngineeringChallengeRows />
+</CaseStudySection>
+
+<CaseStudySection id="reliability-review" title="Reliability Review">
+  <CaseStudyCopy>
+    This is a completed implementation, but not a fully production-hardened
+    platform. The review below separates implemented safeguards from current
+    limitations and hardening opportunities.
+  </CaseStudyCopy>
+
+  <ReliabilityReview />
+</CaseStudySection>
+
+<CaseStudySection id="what-i-would-improve" title="What I Would Improve">
+  <CaseStudyCopy>
+    If I were revisiting the project today, I would prioritize correctness,
+    state durability, isolation, test coverage, and safer delivery before making
+    broader product claims.
+  </CaseStudyCopy>
+
+  <ImprovementPriorities />
+</CaseStudySection>
+
+<CaseStudySection id="current-status" title="Current Status">
+  <CurrentStatusSummary />
+</CaseStudySection>
+
+<CaseStudySection id="lessons" title="Lessons">
+  <CaseStudyCopy>
+    Stateful AI applications require coordination between graph state, UI state,
+    and persistence. Human-in-the-Loop execution depends on resumable
+    checkpoints and stable thread identity. Streaming tool-using systems need a
+    clear separation between model output and operational status.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The project also shows that local persistence is convenient for prototypes
+    but creates deployment-durability constraints, and that deployment
+    automation is incomplete without genuine test gates and recovery strategy.
+    Observability configuration belongs next to agent orchestration, not as a
+    final afterthought.
+  </CaseStudyCopy>
+</CaseStudySection>

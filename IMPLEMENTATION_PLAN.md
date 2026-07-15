@@ -362,6 +362,18 @@ Acceptance criteria:
 - Homepage changes are limited to truthful metadata/link updates for this real case study.
 - No screenshots are added unless they are reviewed and redacted.
 
+Status:
+
+Completed as the second Work case study at `/work/stateful-agentic-ai-assistant`.
+
+Implementation notes:
+
+- Public wording uses HuggingFace `all-MiniLM-L6-v2` embeddings with FAISS, not Google Embeddings.
+- The project is presented as completed but not continuously hosted.
+- GitHub remains a secondary external action alongside the internal case-study route.
+- The page uses implemented-system flow components for LangGraph control flow, memory/threading, RAG, HITL, deployment, reliability review, and improvement priorities.
+- Deployment and CI wording remains qualified because lint and unit-test workflow steps are placeholders.
+
 ## Quality Gates
 
 Future implementation should not be considered complete unless:

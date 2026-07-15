@@ -1,10 +1,29 @@
 import Link from "next/link";
 
+import { ActionLink } from "@/components/ui/ActionLink";
 import type { WorkMeta } from "@/types/content";
 
 import { StatusBadge } from "./StatusBadge";
 
 export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
+  const isTraceForge = meta.slug === "traceforge";
+  const isAgenticAssistant = meta.slug === "stateful-agentic-ai-assistant";
+  const summary = isTraceForge
+    ? "TraceForge is an ongoing distributed tracing and telemetry-pipeline project focused on context propagation, OpenTelemetry ingestion, Kafka-backed event transport, scalable processing boundaries, infrastructure automation, and measurable operational visibility."
+    : meta.summary;
+  const projectPeriodLabel = isTraceForge
+    ? "Current milestone"
+    : "Project period";
+  const projectPeriodValue = isTraceForge ? meta.currentMilestone : meta.year;
+  const repositoryValue = meta.repositoryUrl
+    ? "Public GitHub repository"
+    : "Not published yet";
+  const demoValue = isAgenticAssistant
+    ? "Not continuously hosted"
+    : meta.demoUrl
+      ? "Available"
+      : "Not available";
+
   return (
     <header className="border-b border-border pb-10">
       <nav
@@ -35,10 +54,7 @@ export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
         {meta.title}
       </h1>
       <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
-        TraceForge is an ongoing distributed tracing and telemetry-pipeline
-        project focused on context propagation, OpenTelemetry ingestion,
-        Kafka-backed event transport, scalable processing boundaries,
-        infrastructure automation, and measurable operational visibility.
+        {summary}
       </p>
 
       <dl className="mt-8 grid gap-5 border-y border-border py-6 md:grid-cols-2 xl:grid-cols-4">
@@ -52,10 +68,10 @@ export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
         </div>
         <div>
           <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            Current milestone
+            {projectPeriodLabel}
           </dt>
           <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {meta.currentMilestone}
+            {projectPeriodValue}
           </dd>
         </div>
         <div>
@@ -63,18 +79,46 @@ export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
             Repository
           </dt>
           <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            Not published yet
+            {repositoryValue}
           </dd>
         </div>
         <div>
           <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            Demo
+            {isAgenticAssistant ? "Deployment" : "Demo"}
           </dt>
           <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            Not available
+            {isAgenticAssistant ? "On-demand AWS EC2" : demoValue}
           </dd>
         </div>
+        {isAgenticAssistant ? (
+          <div>
+            <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
+              Demo
+            </dt>
+            <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+              {demoValue}
+            </dd>
+          </div>
+        ) : null}
       </dl>
+
+      {meta.repositoryUrl ? (
+        <div className="mt-6 flex flex-wrap gap-3">
+          <ActionLink
+            href={meta.repositoryUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="secondary"
+          >
+            GitHub Repository
+          </ActionLink>
+          {isAgenticAssistant ? (
+            <span className="inline-flex min-h-11 items-center rounded-lg border border-border bg-transparent px-4 py-2 font-mono text-[length:var(--text-technical-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase">
+              Demo: Not continuously hosted
+            </span>
+          ) : null}
+        </div>
+      ) : null}
 
       <ul className="mt-6 flex flex-wrap gap-2">
         {meta.stack.map((item) => (

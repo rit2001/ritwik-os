@@ -45,10 +45,9 @@ function validateContent() {
 
 try {
   validateContent();
+  const entryCount = Number(workMetaEntries.length);
   console.log(
-    `Validated ${workMetaEntries.length} work entr${
-      workMetaEntries.length === 1 ? "y" : "ies"
-    }.`,
+    `Validated ${entryCount} work entr${entryCount === 1 ? "y" : "ies"}.`,
   );
 } catch (error) {
   console.error("Content validation failed.");

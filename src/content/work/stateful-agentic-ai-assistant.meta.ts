@@ -1,0 +1,47 @@
+import type { WorkMeta } from "../../types/content";
+
+export const statefulAgenticAiAssistantMeta = {
+  slug: "stateful-agentic-ai-assistant",
+  title: "Stateful Agentic AI Assistant",
+  shortTitle: "Agentic AI Assistant",
+  category: "AI Systems and Cloud Deployment",
+  summary:
+    "Built a LangGraph-based tool-using assistant with thread-scoped SQLite checkpointing, streamed responses, PDF retrieval, Human-in-the-Loop approval, LangSmith tracing, containerization, and automated AWS EC2 deployment.",
+  status: "completed",
+  statusLabel: "Completed",
+  year: "May-June 2026",
+  featured: true,
+  ongoing: false,
+  stack: [
+    "Python",
+    "Streamlit",
+    "LangGraph",
+    "Groq",
+    "SQLite",
+    "FAISS",
+    "HuggingFace Embeddings",
+    "Docker",
+    "GitHub Actions",
+    "AWS EC2",
+    "LangSmith",
+  ],
+  roles: [
+    "Agent orchestration",
+    "Stateful memory",
+    "Retrieval-augmented generation",
+    "Human-in-the-Loop workflows",
+    "Tool routing",
+    "Cloud deployment",
+    "Observability",
+  ],
+  repositoryUrl: "https://github.com/rit2001/Agentic-Chatbot-AWS",
+  caseStudyPath: "/work/stateful-agentic-ai-assistant",
+  seoTitle: "Stateful Agentic AI Assistant | Ritwik Biswas",
+  seoDescription:
+    "A completed engineering case study covering LangGraph orchestration, thread-scoped memory, PDF retrieval, tool routing, Human-in-the-Loop approval, streaming, observability, Docker, and AWS EC2 deployment.",
+  publishedDate: "2026-07-15",
+  updatedDate: "2026-07-15",
+  readingTime: "13 min read",
+  draft: false,
+  relatedProjectSlugs: ["traceforge"],
+} satisfies WorkMeta;

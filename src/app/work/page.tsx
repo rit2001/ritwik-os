@@ -73,8 +73,18 @@ export default function WorkPage() {
                 className="mt-6 inline-flex min-h-11 items-center rounded-lg border border-accent/70 bg-accent-muted/45 px-4 py-2 font-mono text-[length:var(--text-technical-size)] font-semibold tracking-[0.08em] text-foreground uppercase transition-colors duration-[var(--duration-base)] hover:border-accent hover:bg-accent hover:text-background"
                 href={meta.caseStudyPath}
               >
-                View Build Case Study
+                {meta.ongoing ? "View Build Case Study" : "View Case Study"}
               </Link>
+              {meta.repositoryUrl ? (
+                <a
+                  className="mt-6 ml-3 inline-flex min-h-11 items-center rounded-lg border border-border bg-transparent px-4 py-2 font-mono text-[length:var(--text-technical-size)] font-semibold tracking-[0.08em] text-foreground-secondary uppercase transition-colors duration-[var(--duration-base)] hover:border-accent hover:bg-accent-muted/25 hover:text-foreground"
+                  href={meta.repositoryUrl}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  GitHub
+                </a>
+              ) : null}
             </article>
           ))}
         </div>

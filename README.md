@@ -132,6 +132,8 @@ TraceForge is the current flagship build, but its repository is not published ye
 
 Project presentation is currently text-first. Screenshots are deferred until polished recaptures or case-study assets are available.
 
+The Stateful Agentic AI Assistant is registered as the second Work case study. Its public stack uses HuggingFace Embeddings and FAISS based on the audited repository. It has a real GitHub repository link and no continuously hosted demo.
+
 ## Content Pipeline
 
 Phase 5 uses the official Next.js App Router MDX integration.
@@ -182,6 +184,8 @@ To add a Work entry:
 Ongoing projects must use `status: "in-development"` and `ongoing: true`. Do not add repository URLs, demo URLs, metrics, benchmark figures, completion claims, or production claims unless they are real and project-specific.
 
 Ongoing-project copy should use one prominent scope/status note near the beginning, then speak clearly in public engineering language. Avoid repeated defensive disclaimers or internal prompt language.
+
+Completed project case studies should still qualify deployment, persistence, testing, and reliability claims when the repository evidence requires it. Placeholder CI steps must not be described as real tests.
 
 The homepage is frozen after Phase 4. Homepage updates during content phases should be limited to truthful links to real content, such as the TraceForge case-study link.
 
