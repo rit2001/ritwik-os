@@ -1,5 +1,13 @@
 import { ActionLink } from "@/components/ui/ActionLink";
 import { Container } from "@/components/ui/Container";
+import { AlgorithmProfileCard } from "@/components/motion/AlgorithmProfileCard";
+import { CapabilityMatrix } from "@/components/motion/CapabilityMatrix";
+import {
+  CurrentBuildItem,
+  CurrentBuildPanel,
+  CurrentBuildStatus,
+} from "@/components/motion/CurrentBuildPanel";
+import { EducationReveal } from "@/components/motion/EducationReveal";
 import { ExperienceTimeline } from "@/components/motion/ExperienceTimeline";
 import { HeroScroll } from "@/components/motion/HeroScroll";
 import { ProjectCard } from "@/components/motion/ProjectCard";
@@ -145,33 +153,34 @@ export default function Home() {
         </HeroScroll>
 
         <HeroScroll variant="panel">
-          <aside
-            className="rounded-md border border-border-strong bg-surface/70 p-5 shadow-elevation-1 sm:p-6"
-            aria-labelledby="current-build-title"
-          >
-            <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
-              Current Build
-            </p>
-            <h2
-              id="current-build-title"
-              className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground uppercase"
-            >
-              {profile.currentBuild.project}
-            </h2>
-            <p className="mt-3 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-              {profile.currentBuild.category}
-            </p>
+          <CurrentBuildPanel>
+            <CurrentBuildItem>
+              <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
+                Current Build
+              </p>
+            </CurrentBuildItem>
+            <CurrentBuildItem>
+              <h2
+                id="current-build-title"
+                className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground uppercase"
+              >
+                {profile.currentBuild.project}
+              </h2>
+              <p className="mt-3 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
+                {profile.currentBuild.category}
+              </p>
+            </CurrentBuildItem>
 
             <dl className="mt-7 space-y-5 border-t border-border pt-6">
-              <div>
+              <CurrentBuildItem>
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
                   Status
                 </dt>
-                <dd className="mt-2 inline-flex min-h-8 items-center border border-warning/60 bg-surface-muted px-3 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-warning uppercase">
+                <CurrentBuildStatus>
                   {profile.currentBuild.status}
-                </dd>
-              </div>
-              <div>
+                </CurrentBuildStatus>
+              </CurrentBuildItem>
+              <CurrentBuildItem>
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
                   Current Milestone
                 </dt>
@@ -181,33 +190,33 @@ export default function Home() {
                   </span>{" "}
                   {profile.currentBuild.milestoneExplanation}
                 </dd>
-              </div>
-              <div>
+              </CurrentBuildItem>
+              <CurrentBuildItem>
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
                   Next Step
                 </dt>
                 <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
                   {profile.currentBuild.nextStep}
                 </dd>
-              </div>
-              <div>
+              </CurrentBuildItem>
+              <CurrentBuildItem>
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
                   Stack Direction
                 </dt>
                 <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
                   {stackDirection}
                 </dd>
-              </div>
-              <div>
+              </CurrentBuildItem>
+              <CurrentBuildItem>
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
                   Repository
                 </dt>
                 <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
                   {profile.currentBuild.repository}
                 </dd>
-              </div>
+              </CurrentBuildItem>
             </dl>
-          </aside>
+          </CurrentBuildPanel>
         </HeroScroll>
       </Container>
 
@@ -226,55 +235,68 @@ export default function Home() {
           <StaggerGroup className="mt-10 grid gap-5 lg:grid-cols-2">
             {selectedProjects.map((project) => (
               <StaggerItem key={project.title}>
-                <ProjectCard interactive={Boolean(project.githubUrl)}>
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
-                      {project.category}
-                    </p>
-                    <span className="rounded-xs border border-border bg-background px-2.5 py-1 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-                      {project.status}
-                    </span>
-                  </div>
-                  <h3 className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground">
-                    {project.title}
-                  </h3>
-                  <p className="mt-4 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-                    {project.summary}
-                  </p>
-                  <div className="mt-6">
-                    <TagList items={project.stack} />
-                  </div>
-                  <div className="mt-6 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
-                      {project.use ? <p>{project.use}</p> : null}
-                      {project.deploymentNote ? (
-                        <p>{project.deploymentNote}</p>
-                      ) : null}
-                      {project.repositoryNote ? (
-                        <p>{project.repositoryNote}</p>
-                      ) : null}
-                      {!project.githubUrl ? (
-                        <p>Repository: Not published yet</p>
-                      ) : null}
-                    </div>
-                    {project.githubUrl ? (
-                      <a
-                        className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground hover:decoration-current focus-visible:text-foreground sm:self-auto"
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Open ${project.title} repository on GitHub`}
-                      >
-                        GitHub{" "}
-                        <span
-                          className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1 group-focus-within:translate-x-1"
-                          aria-hidden="true"
-                        >
-                          →
+                <ProjectCard
+                  ariaLabel={
+                    project.githubUrl
+                      ? `Open ${project.title} repository on GitHub`
+                      : undefined
+                  }
+                  href={project.githubUrl}
+                >
+                  <StaggerGroup>
+                    <StaggerItem y={12}>
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
+                          {project.category}
+                        </p>
+                        <span className="rounded-xs border border-border bg-background px-2.5 py-1 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase">
+                          {project.status}
                         </span>
-                      </a>
-                    ) : null}
-                  </div>
+                      </div>
+                    </StaggerItem>
+                    <StaggerItem y={12}>
+                      <h3 className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground">
+                        {project.title}
+                      </h3>
+                    </StaggerItem>
+                    <StaggerItem y={12}>
+                      <p className="mt-4 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
+                        {project.summary}
+                      </p>
+                    </StaggerItem>
+                    <StaggerItem y={12}>
+                      <div className="mt-6">
+                        <TagList items={project.stack} />
+                      </div>
+                    </StaggerItem>
+                    <StaggerItem y={12}>
+                      <div className="mt-6 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="space-y-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
+                          {project.use ? <p>{project.use}</p> : null}
+                          {project.deploymentNote ? (
+                            <p>{project.deploymentNote}</p>
+                          ) : null}
+                          {project.repositoryNote ? (
+                            <p>{project.repositoryNote}</p>
+                          ) : null}
+                          {!project.githubUrl ? (
+                            <p>Repository: Not published yet</p>
+                          ) : null}
+                        </div>
+                        {project.githubUrl ? (
+                          <span className="inline-flex min-h-11 items-center self-start rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] group-hover:text-foreground group-hover:decoration-current group-focus-visible:text-foreground sm:self-auto">
+                            GitHub{" "}
+                            <span
+                              className="ml-1 inline-block transition-transform duration-[var(--duration-base)] group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5"
+                              aria-hidden="true"
+                            >
+                              →
+                            </span>
+                          </span>
+                        ) : null}
+                      </div>
+                    </StaggerItem>
+                  </StaggerGroup>
                 </ProjectCard>
               </StaggerItem>
             ))}
@@ -307,25 +329,7 @@ export default function Home() {
             />
           </Reveal>
 
-          <StaggerGroup className="mt-10 grid gap-px overflow-hidden rounded-md border border-border bg-border md:grid-cols-2 xl:grid-cols-3">
-            {capabilityGroups.map((group) => (
-              <StaggerItem key={group.title}>
-                <article className="h-full bg-background p-5 sm:p-6">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <h3 className="text-[length:var(--text-body-large-size)] leading-tight font-semibold text-foreground">
-                      {group.title}
-                    </h3>
-                    <span className="rounded-xs border border-border bg-surface px-2.5 py-1 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-                      {group.status}
-                    </span>
-                  </div>
-                  <div className="mt-5">
-                    <TagList items={group.items} />
-                  </div>
-                </article>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+          <CapabilityMatrix groups={capabilityGroups} />
         </Container>
       </section>
 
@@ -342,42 +346,7 @@ export default function Home() {
             <div className="grid gap-5 md:grid-cols-2">
               {algorithmProfiles.map((platform) => (
                 <StaggerItem key={platform.platform}>
-                  <article className="h-full rounded-md border border-border bg-surface/55 p-5 sm:p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
-                          {platform.platform}
-                        </p>
-                        <h3 className="mt-3 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground">
-                          {platform.status}
-                        </h3>
-                      </div>
-                      <a
-                        className="inline-flex min-h-11 items-center rounded-sm font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-accent uppercase underline decoration-transparent underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground hover:decoration-current"
-                        href={platform.profileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Open Ritwik Biswas ${platform.platform} profile`}
-                      >
-                        Profile
-                      </a>
-                    </div>
-                    <dl className="mt-6 grid gap-4">
-                      {platform.stats.map((stat) => (
-                        <div
-                          className="border-t border-border pt-4"
-                          key={stat.label}
-                        >
-                          <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-                            {stat.label}
-                          </dt>
-                          <dd className="mt-1 text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] font-semibold text-foreground">
-                            {stat.value}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </article>
+                  <AlgorithmProfileCard profile={platform} />
                 </StaggerItem>
               ))}
             </div>
@@ -406,37 +375,109 @@ export default function Home() {
         </Container>
       </section>
 
+      <div
+        className="h-44 bg-[linear-gradient(180deg,var(--ritwik-color-canvas)_0%,#1f2123_38%,#9c9387_72%,#f4f0e8_100%)] sm:h-52 lg:h-60"
+        aria-hidden="true"
+      />
+
       <section
-        className="theme-recruiter border-y border-border py-20 scroll-mt-32"
+        className="theme-recruiter border-y border-border pt-14 pb-16 scroll-mt-32 sm:pt-16 sm:pb-20"
         aria-labelledby="recruiter-brief-title"
       >
         <Container width="wide">
-          <Reveal>
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem]">
+          <Reveal y={18}>
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
               <div>
-                <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
-                  Recruiter Brief
-                </p>
-                <h2
-                  id="recruiter-brief-title"
-                  className="mt-4 text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold text-balance text-foreground"
-                >
-                  {recruiterBrief.summary}
-                </h2>
-                <ul className="mt-8 grid gap-4 md:grid-cols-3">
-                  {recruiterBrief.evidence.map((item) => (
-                    <li
-                      className="border-t border-border pt-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
-                      key={item}
+                <StaggerGroup>
+                  <StaggerItem y={12}>
+                    <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
+                      Recruiter Brief
+                    </p>
+                  </StaggerItem>
+                  <StaggerItem y={12}>
+                    <h2
+                      id="recruiter-brief-title"
+                      className="mt-4 text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold text-balance text-foreground"
                     >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                      {recruiterBrief.summary}
+                    </h2>
+                  </StaggerItem>
+                  <StaggerItem y={12}>
+                    <ul className="mt-8 grid gap-3 md:grid-cols-3">
+                      {recruiterBrief.evidence.map((item) => (
+                        <li
+                          className="border-t border-border bg-surface/35 px-3 py-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary transition-colors duration-[var(--duration-base)] hover:border-border-strong hover:text-foreground"
+                          key={item}
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </StaggerItem>
+                  <StaggerItem y={12}>
+                    <div className="mt-8 flex flex-wrap gap-3">
+                      <ActionLink href={profile.resumePath} variant="primary">
+                        View Resume
+                      </ActionLink>
+                      {linkedIn ? (
+                        <ActionLink
+                          href={linkedIn.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Open Ritwik Biswas on LinkedIn"
+                        >
+                          LinkedIn
+                        </ActionLink>
+                      ) : null}
+                      <ActionLink
+                        href={`mailto:${profile.email}`}
+                        variant="text"
+                      >
+                        Email
+                      </ActionLink>
+                    </div>
+                  </StaggerItem>
+                </StaggerGroup>
+              </div>
+
+              <EducationReveal education={recruiterBrief.education} />
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      <section
+        className="theme-recruiter pt-12 pb-16 scroll-mt-32 sm:pt-14"
+        id="contact"
+      >
+        <Container width="content">
+          <Reveal y={18}>
+            <StaggerGroup className="max-w-4xl">
+              <StaggerItem y={12}>
+                <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
+                  Contact
+                </p>
+              </StaggerItem>
+              <StaggerItem y={12}>
+                <h2 className="mt-4 text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold text-balance text-foreground">
+                  LET’S BUILD SOMETHING THAT SHIPS.
+                </h2>
+              </StaggerItem>
+              <StaggerItem y={12}>
+                <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
+                  {profile.availability.summary}{" "}
+                  {profile.availability.immediate}
+                </p>
+              </StaggerItem>
+              <StaggerItem y={12}>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <ActionLink href={profile.resumePath} variant="primary">
-                    View Resume
+                  <ActionLink
+                    href={`mailto:${profile.email}`}
+                    variant="primary"
+                  >
+                    Email Ritwik
                   </ActionLink>
+                  <ActionLink href={profile.resumePath}>View Resume</ActionLink>
                   {linkedIn ? (
                     <ActionLink
                       href={linkedIn.href}
@@ -447,113 +488,46 @@ export default function Home() {
                       LinkedIn
                     </ActionLink>
                   ) : null}
-                  <ActionLink href={`mailto:${profile.email}`} variant="text">
-                    Email
-                  </ActionLink>
+                  {github ? (
+                    <ActionLink
+                      href={github.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open Ritwik Biswas on GitHub"
+                    >
+                      GitHub
+                    </ActionLink>
+                  ) : null}
                 </div>
-              </div>
-
-              <aside
-                className="rounded-md border border-border bg-surface/55 p-5 sm:p-6"
-                aria-label="Education"
-              >
-                <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
-                  Education
-                </p>
-                <h3 className="mt-4 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground">
-                  {recruiterBrief.education.institution}
-                </h3>
-                <p className="mt-4 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-                  {recruiterBrief.education.degree}
-                </p>
-                <dl className="mt-6 grid grid-cols-2 gap-4 border-t border-border pt-5">
-                  <div>
-                    <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-                      Years
-                    </dt>
-                    <dd className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                      {recruiterBrief.education.dates}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-                      CGPA
-                    </dt>
-                    <dd className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                      {recruiterBrief.education.cgpa}
-                    </dd>
-                  </div>
-                </dl>
-              </aside>
-            </div>
-          </Reveal>
-        </Container>
-      </section>
-
-      <section className="theme-recruiter py-20 scroll-mt-32" id="contact">
-        <Container width="content">
-          <Reveal>
-            <div className="max-w-4xl">
-              <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
-                Contact
-              </p>
-              <h2 className="mt-4 text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold text-balance text-foreground">
-                LET’S BUILD SOMETHING THAT SHIPS.
-              </h2>
-              <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
-                {profile.availability.summary} {profile.availability.immediate}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <ActionLink href={`mailto:${profile.email}`} variant="primary">
-                  Email Ritwik
-                </ActionLink>
-                <ActionLink href={profile.resumePath}>View Resume</ActionLink>
-                {linkedIn ? (
-                  <ActionLink
-                    href={linkedIn.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Open Ritwik Biswas on LinkedIn"
-                  >
-                    LinkedIn
-                  </ActionLink>
-                ) : null}
-                {github ? (
-                  <ActionLink
-                    href={github.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Open Ritwik Biswas on GitHub"
-                  >
-                    GitHub
-                  </ActionLink>
-                ) : null}
-              </div>
-              <p className="mt-6 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
-                Algorithm profiles:{" "}
-                {leetCode ? (
-                  <a
-                    className="text-foreground-secondary underline decoration-border underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground"
-                    href={leetCode.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    LeetCode
-                  </a>
-                ) : null}
-                {leetCode && codeforces ? " / " : null}
-                {codeforces ? (
-                  <a
-                    className="text-foreground-secondary underline decoration-border underline-offset-4 transition-colors duration-[var(--duration-base)] hover:text-foreground"
-                    href={codeforces.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Codeforces
-                  </a>
-                ) : null}
-              </p>
-            </div>
+              </StaggerItem>
+              <StaggerItem y={12}>
+                <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border pt-5">
+                  <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
+                    Algorithm profiles
+                  </p>
+                  {leetCode ? (
+                    <ActionLink
+                      href={leetCode.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open Ritwik Biswas on LeetCode"
+                    >
+                      LeetCode
+                    </ActionLink>
+                  ) : null}
+                  {codeforces ? (
+                    <ActionLink
+                      href={codeforces.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open Ritwik Biswas on Codeforces"
+                    >
+                      Codeforces
+                    </ActionLink>
+                  ) : null}
+                </div>
+              </StaggerItem>
+            </StaggerGroup>
           </Reveal>
         </Container>
       </section>

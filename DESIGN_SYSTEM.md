@@ -204,6 +204,17 @@ Phase 4.5 establishes the motion system:
 - The recruiter brief and contact sequence uses one warm off-white editorial transition; the page does not repeatedly alternate between dark and light themes.
 - Scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, sound, and animated backgrounds are not part of the RITWIK OS motion language.
 
+Phase 4.6 completes the homepage interaction polish:
+
+- Use shared motion values for easing, reveal duration, stagger, travel, and viewport timing.
+- Reveal motion must be visible but restrained, and must never make content availability depend on JavaScript, hydration, or IntersectionObserver.
+- Interactive surfaces are reserved for real actions. Linked cards may lift about 5px, brighten, and show accent borders; static panels may only receive restrained emphasis.
+- TraceForge may use finite status motion and one-time sequencing, but it must not look clickable or imply a repository/demo exists.
+- Capability groups live inside one capability matrix with internal separators, clear status labels, and no navigation-like lift.
+- Algorithm profiles use full-surface accessible anchors because each has one real external destination.
+- The recruiter and contact area is a coherent warm-light editorial zone reached by a static dark-to-light transition bridge.
+- Primary actions rest neutral or accent-muted; strong blue fill is reserved for hover and focus states.
+
 Specialized content components:
 
 - ArchitectureDiagram

@@ -10,6 +10,8 @@ import { useRef } from "react";
 
 import type { ExperienceRole } from "@/data/experience";
 
+import { motionEase, motionTiming, motionTravel } from "./motionTokens";
+
 function TimelineItem({
   role,
   index,
@@ -33,45 +35,102 @@ function TimelineItem({
   const markerScale = useTransform(
     progress,
     [Math.max(0, start - 0.08), start, end, Math.min(1, end + 0.08)],
-    [0.85, 1.12, 1.12, 0.85],
+    [0.9, 1.18, 1.18, 0.9],
   );
+  const textOpacity = useTransform(
+    progress,
+    [Math.max(0, start - 0.08), start, end, Math.min(1, end + 0.1)],
+    [0.82, 1, 1, 0.88],
+  );
+  const item = {
+    hidden: shouldReduceMotion
+      ? { opacity: 1 }
+      : { opacity: 0.78, y: motionTravel.compact },
+    show: { opacity: 1, y: 0 },
+  };
 
   return (
     <motion.article
       className="relative pb-10 pl-6 last:pb-0 sm:pl-8"
-      initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? false : "hidden"}
+      whileInView="show"
       viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
+      variants={{
+        hidden: {},
+        show: {
+          transition: {
+            staggerChildren: shouldReduceMotion ? 0 : motionTiming.stagger,
+          },
+        },
+      }}
     >
       <motion.span
-        className="absolute top-2 -left-[5px] h-2.5 w-2.5 rounded-xs bg-accent"
+        className="absolute top-2 -left-[6px] h-3 w-3 rounded-xs border border-accent bg-background"
         aria-hidden="true"
         style={{
           opacity: shouldReduceMotion ? 1 : markerOpacity,
           scale: shouldReduceMotion ? 1 : markerScale,
         }}
       />
-      <div className="grid gap-5 lg:grid-cols-[18rem_minmax(0,1fr)]">
+      <motion.div
+        className="grid gap-5 lg:grid-cols-[18rem_minmax(0,1fr)]"
+        style={{ opacity: shouldReduceMotion ? 1 : textOpacity }}
+      >
         <div>
-          <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
+          <motion.p
+            className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase"
+            transition={{
+              duration: shouldReduceMotion ? 0 : motionTiming.itemReveal,
+              ease: motionEase,
+            }}
+            variants={item}
+          >
             {role.company}
-          </p>
-          <h3 className="mt-3 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground">
+          </motion.p>
+          <motion.h3
+            className="mt-3 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground"
+            transition={{
+              duration: shouldReduceMotion ? 0 : motionTiming.itemReveal,
+              ease: motionEase,
+            }}
+            variants={item}
+          >
             {role.role}
-          </h3>
-          <p className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
-            {role.location}
-          </p>
-          <p className="mt-1 font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-            {role.dates}
-          </p>
+          </motion.h3>
+          <motion.div
+            transition={{
+              duration: shouldReduceMotion ? 0 : motionTiming.itemReveal,
+              ease: motionEase,
+            }}
+            variants={item}
+          >
+            <p className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
+              {role.location}
+            </p>
+            <p className="mt-1 font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
+              {role.dates}
+            </p>
+          </motion.div>
         </div>
         <div>
-          <p className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
+          <motion.p
+            className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary"
+            transition={{
+              duration: shouldReduceMotion ? 0 : motionTiming.itemReveal,
+              ease: motionEase,
+            }}
+            variants={item}
+          >
             {role.summary}
-          </p>
-          <ul className="mt-5 space-y-3">
+          </motion.p>
+          <motion.ul
+            className="mt-5 space-y-3"
+            transition={{
+              duration: shouldReduceMotion ? 0 : motionTiming.itemReveal,
+              ease: motionEase,
+            }}
+            variants={item}
+          >
             {role.evidence.map((item) => (
               <li
                 className="border-l border-border-strong pl-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
@@ -80,9 +139,9 @@ function TimelineItem({
                 {item}
               </li>
             ))}
-          </ul>
+          </motion.ul>
         </div>
-      </div>
+      </motion.div>
     </motion.article>
   );
 }
@@ -102,7 +161,7 @@ export function ExperienceTimeline({
   return (
     <div ref={timelineRef} className="relative mt-10">
       <div
-        className="absolute top-0 bottom-0 left-0 w-px bg-border"
+        className="absolute top-0 bottom-0 left-0 w-0.5 bg-border"
         aria-hidden="true"
       >
         <motion.div

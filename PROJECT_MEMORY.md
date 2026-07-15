@@ -255,6 +255,19 @@ Phase 4.5 motion, interaction, and scroll rhythm has been completed:
 - Reduced-motion mode removes movement, parallax, stagger delays, and the scroll progress indicator while keeping all content immediately visible.
 - Scroll hijacking, decorative ripple effects, magnetic buttons, custom cursors, continuous animation, and animated backgrounds remain rejected.
 
+Phase 4.6 final interaction, motion, and narrative polish has been completed:
+
+- Phase 4 homepage experience is now considered complete enough to proceed to the content pipeline and project case-study architecture.
+- Shared motion values are centralized for section reveal travel, internal stagger, duration, easing, and viewport behavior.
+- Motion is progressive enhancement: reveal states begin from visible content rather than fully hidden content, so content is not dependent on animation startup.
+- Interactive surfaces and static surfaces have different rules. Real links can lift, brighten, show accent borders, and use pressed states; static information surfaces cannot use pointer-like lift or fake actions.
+- TraceForge remains non-clickable. Its current-build panel uses one-time internal sequencing, accent-line reveal, and a finite status pulse without fake progress or repository links.
+- Selected project cards with real GitHub destinations are card-level accessible anchors; TraceForge remains a static project surface.
+- Capabilities are presented as one cohesive capability matrix with internal divisions instead of six independent floating cards.
+- LeetCode and Codeforces profile surfaces are single-destination interactive anchors with visible hover, focus, pressed, and sequential stat reveal behavior.
+- Recruiter Brief, education, Contact, and footer form one warm-light editorial zone reached through a gradual static dark-to-light bridge.
+- Primary actions now rest in neutral/accent-muted states and move to stronger accent treatment on hover or keyboard focus.
+
 ## Next Expected Phase
 
 The next implementation phase should be content-model preparation and static content pipeline work only when explicitly requested:

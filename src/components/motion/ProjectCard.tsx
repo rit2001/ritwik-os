@@ -3,40 +3,60 @@
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
+import { motionEase, motionTiming } from "./motionTokens";
+
 export function ProjectCard({
+  ariaLabel,
   children,
-  interactive,
+  href,
 }: Readonly<{
+  ariaLabel?: string;
   children: ReactNode;
-  interactive: boolean;
+  href?: string | null;
 }>) {
   const shouldReduceMotion = useReducedMotion();
   const reduce = shouldReduceMotion === true;
+  const interactive = Boolean(href);
+  const className = [
+    "group relative flex min-h-full flex-col overflow-hidden rounded-md border border-border bg-surface/55 p-5 transition-[background-color,border-color,transform] duration-[var(--duration-slow)] ease-[var(--ease-standard)] sm:p-6",
+    interactive
+      ? "focus-visible:border-accent focus-visible:bg-surface/85 hover:border-accent hover:bg-surface/85 active:translate-y-px"
+      : "bg-surface/45",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const hover =
+    interactive && !reduce
+      ? {
+          y: -5,
+          transition: { duration: motionTiming.quick, ease: motionEase },
+        }
+      : undefined;
+  const tap = interactive && !reduce ? { y: -1 } : undefined;
 
-  return (
-    <motion.article
-      className={[
-        "group relative flex min-h-full flex-col overflow-hidden rounded-md border border-border bg-surface/55 p-5 transition-colors duration-[var(--duration-base)] sm:p-6",
-        interactive
-          ? "focus-within:border-accent hover:border-border-strong active:translate-y-px"
-          : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      whileHover={
-        interactive && !reduce
-          ? { y: -4, transition: { duration: 0.18 } }
-          : undefined
-      }
-      whileTap={interactive && !reduce ? { y: -1 } : undefined}
-    >
-      {interactive ? (
-        <span
-          className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-[var(--duration-base)] group-focus-within:scale-x-100 group-hover:scale-x-100"
-          aria-hidden="true"
-        />
-      ) : null}
-      {children}
-    </motion.article>
-  );
+  const accentLine = interactive ? (
+    <span
+      className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-[var(--duration-slow)] group-focus-visible:scale-x-100 group-hover:scale-x-100"
+      aria-hidden="true"
+    />
+  ) : null;
+
+  if (href) {
+    return (
+      <motion.a
+        aria-label={ariaLabel}
+        className={className}
+        href={href}
+        rel="noopener noreferrer"
+        target="_blank"
+        whileHover={hover}
+        whileTap={tap}
+      >
+        {accentLine}
+        {children}
+      </motion.a>
+    );
+  }
+
+  return <motion.article className={className}>{children}</motion.article>;
 }

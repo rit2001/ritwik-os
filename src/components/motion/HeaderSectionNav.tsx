@@ -55,9 +55,9 @@ export function HeaderSectionNav({
             <li key={link.href}>
               <a
                 className={[
-                  "relative inline-flex min-h-11 items-center rounded-sm px-2.5 py-2 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] uppercase transition-colors duration-[var(--duration-base)] sm:px-3",
+                  "relative inline-flex min-h-11 items-center rounded-sm px-2.5 py-2 pl-5 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] uppercase transition-colors duration-[var(--duration-base)] sm:px-3 sm:pl-5",
                   isActive
-                    ? "text-foreground"
+                    ? "text-accent"
                     : "text-foreground-muted hover:text-foreground",
                 ].join(" ")}
                 href={link.href}
@@ -65,7 +65,14 @@ export function HeaderSectionNav({
               >
                 <span
                   className={[
-                    "absolute bottom-1 left-3 h-px w-4 origin-left bg-accent transition-transform duration-[var(--duration-base)]",
+                    "absolute left-2 h-1.5 w-1.5 rounded-xs bg-accent transition-opacity duration-[var(--duration-base)]",
+                    isActive ? "opacity-100" : "opacity-0",
+                  ].join(" ")}
+                  aria-hidden="true"
+                />
+                <span
+                  className={[
+                    "absolute bottom-1 left-5 h-0.5 w-6 origin-left bg-accent transition-transform duration-[var(--duration-base)] sm:left-5",
                     isActive ? "scale-x-100" : "scale-x-0",
                   ].join(" ")}
                   aria-hidden="true"

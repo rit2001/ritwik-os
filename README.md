@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, the Phase 4 full homepage control plane, and the Phase 4.5 motion system.
+This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, the Phase 4 full homepage control plane, and the final Phase 4 motion/interaction polish.
 
 ## What This Project Is
 
@@ -51,7 +51,7 @@ Current status:
 - Minimal layout primitives and the global application shell are implemented.
 - Typed canonical identity and external link data are implemented.
 - The app currently renders a complete single-page RITWIK OS homepage control plane.
-- A restrained Motion-powered interaction and scroll rhythm layer is implemented.
+- A restrained Motion-powered interaction, scroll rhythm, and final homepage polish layer is implemented.
 - The MDX pipeline, additional routes, screenshots, and project detail pages have not been implemented yet.
 
 ## Source Structure
@@ -132,7 +132,12 @@ Motion rules:
 - Scroll-linked motion is limited to the top progress line, restrained desktop hero response, and Experience timeline progress.
 - Reduced-motion users receive immediately visible content without vertical movement, parallax, or stagger delays.
 - The site does not use scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, animated backgrounds, or continuous animation.
-- The Recruiter Brief and Contact sequence uses a single warm light editorial transition near the bottom of the homepage.
+- Content remains visible before and without JavaScript; motion progressively enhances visible content.
+- Interactive surfaces are only used for real actions. Static surfaces such as TraceForge and education do not lift or pretend to be links.
+- Project and algorithm cards with real destinations use card-level accessible anchors.
+- Capabilities are presented as one unified matrix instead of separate floating cards.
+- The Recruiter Brief, Education, Contact, and Footer sequence uses a single warm light editorial zone reached through a static dark-to-light bridge.
+- Primary buttons rest in neutral/accent-muted states and transition into stronger accent treatment on hover or focus.
 
 ## Documentation Map
 
