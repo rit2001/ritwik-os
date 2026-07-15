@@ -64,6 +64,53 @@ Required case study sections:
 - Outcome
 - Lessons learned
 
+Implemented Phase 5 model:
+
+- Long-form body content lives in `src/content/work/*.mdx`.
+- Structured metadata lives beside the body in `src/content/work/*.meta.ts`.
+- Metadata is validated with Zod in `src/lib/content/schemas.ts`.
+- The metadata manifest in `src/lib/content/work-manifest.ts` identifies registered entries for validation.
+- The explicit app registry in `src/lib/content/work.ts` imports known metadata and MDX modules so static generation is bundler-visible.
+- `/work` lists only registered, non-draft Work entries.
+- `/work/[slug]` is generated from known slugs and unknown slugs must return not found.
+
+Current required Work metadata includes:
+
+- `slug`
+- `title`
+- `shortTitle` when useful
+- `category`
+- `summary`
+- `status`
+- `statusLabel`
+- `year`
+- `featured`
+- `ongoing`
+- `stack`
+- `roles`
+- optional `repositoryUrl`
+- optional `demoUrl`
+- `caseStudyPath`
+- `seoTitle`
+- `seoDescription`
+- optional `publishedDate`
+- optional `updatedDate`
+- optional truthful `readingTime`
+- `draft`
+- optional `relatedProjectSlugs`
+- optional `currentMilestone`
+
+Allowed Work status values are:
+
+- `in-development`
+- `completed`
+- `maintained`
+- `archived`
+
+Ongoing entries must use `in-development`. Repository and demo URLs must be omitted when no real project-specific destination exists.
+
+TraceForge is the first registered Work entry. It is an ongoing build case study, not a completed-project page. Its metadata must continue to omit repository and demo URLs until real destinations exist.
+
 ### Builds
 
 The `builds` collection contains ongoing engineering work, progress logs, experiments, and implementation notes.
@@ -209,6 +256,16 @@ Recommended validation:
 
 Invalid content should fail the build.
 
+Run content validation with:
+
+```bash
+npm run content:check
+```
+
+The validator must reject duplicate slugs, malformed internal case-study paths, invalid URLs, empty title/summary/category/stack values, missing MDX modules, and ongoing projects incorrectly marked completed.
+
+Do not downgrade validation failures to warnings.
+
 ## MDX Component Standards
 
 MDX content may use approved components for clarity.
@@ -258,6 +315,13 @@ Content should:
 - Describe tradeoffs
 - Avoid hype
 - Avoid generic marketing phrases
+
+Ongoing-project truthfulness rules:
+
+- Label proposed architecture as proposed.
+- Label roadmap items as future work, not completed work.
+- Do not invent benchmark numbers, performance claims, users, adoption, deployments, repositories, demos, or production readiness.
+- Replace assumptions with measured evidence only after implementation produces it.
 - Give enough technical detail for engineers
 - Give enough summary clarity for recruiters
 

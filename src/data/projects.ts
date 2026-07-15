@@ -10,6 +10,7 @@ export type Project = {
   stack: readonly string[];
   githubUrl: string | null;
   liveDemoUrl: null;
+  caseStudyPath?: string;
   use?: ProjectUse;
   deploymentNote?: string;
   repositoryNote?: string;
@@ -32,6 +33,7 @@ export const selectedProjects: readonly Project[] = [
     ],
     githubUrl: null,
     liveDemoUrl: null,
+    caseStudyPath: "/work/traceforge",
     use: "Current Build",
   },
   {

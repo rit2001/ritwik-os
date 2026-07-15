@@ -1,0 +1,151 @@
+import { ArchitectureFlow } from "@/components/work/ArchitectureFlow";
+
+## Executive Summary
+
+TraceForge is being designed as an engineering exercise in distributed telemetry ingestion, event transport, service boundaries, observability, deployment automation, load testing, and capacity planning.
+
+The project is currently in the architecture and repository-bootstrap phase. The complete pipeline is not implemented yet, and this case study records the intended direction, constraints, and open engineering questions before implementation claims are made.
+
+## Problem and Motivation
+
+Distributed systems generate traces across multiple services, and trace context has to be propagated consistently for those traces to remain useful. Telemetry ingestion should stay decoupled from downstream processing so ingestion failures, processing delays, and storage behavior can be reasoned about independently.
+
+The design needs deliberate handling for buffering, backpressure, consumer lag, ingestion throughput, and end-to-end trace latency. Infrastructure and deployment should also be reproducible so the system can be tested, operated, and changed without relying on manual setup.
+
+## Goals
+
+- Accept OpenTelemetry-compatible trace data.
+- Propagate and preserve trace context.
+- Decouple ingestion from processing through Kafka.
+- Define clear ingestion, processing, and storage boundaries.
+- Expose meaningful operational metrics.
+- Support containerized deployment.
+- Make infrastructure reproducible.
+- Create a foundation for load testing and capacity planning.
+
+## Non-Goals for the Current Milestone
+
+- No claim of production readiness.
+- No user-facing tracing dashboard yet.
+- No verified throughput target yet.
+- No public SaaS product.
+- No multi-tenant billing system.
+- No claim of production adoption.
+- No fake benchmark numbers.
+
+## Current Milestone
+
+### Architecture and repository bootstrap
+
+Defining service boundaries, OpenTelemetry ingestion flow, Kafka event contracts, storage interfaces, and the initial observability and load-testing strategy.
+
+## Proposed Architecture
+
+The architecture below is a proposed architecture, not implemented architecture.
+
+<ArchitectureFlow />
+
+## Planned Service Boundaries
+
+### Trace ingestion
+
+The trace-ingestion boundary is planned to receive telemetry payloads, validate required trace data, preserve context, and publish normalized events.
+
+### Kafka transport
+
+Kafka is planned as the asynchronous transport layer for decoupling, buffering, consumer-group processing, and observable lag.
+
+### Processing consumers
+
+Processing consumers are expected to handle validation, transformation, enrichment where justified, and storage preparation.
+
+### Storage and query boundary
+
+The storage/query boundary will define persistent trace representation, future retrieval, and diagnostics. The implementation is not yet finalized.
+
+## Key Engineering Decisions
+
+### OpenTelemetry
+
+Reason: standardized instrumentation and trace-context interoperability.
+
+### Go
+
+Reason: planned lightweight ingestion services, explicit concurrency, and suitable backend service tooling.
+
+### Kafka
+
+Reason: planned asynchronous event transport, buffering, replayability, and consumer separation.
+
+### Docker
+
+Reason: repeatable service environments.
+
+### Kubernetes
+
+Reason: future orchestration and operational experimentation.
+
+### Terraform
+
+Reason: future reproducible infrastructure.
+
+These choices have not yet produced measured results. They are the current implementation direction.
+
+## Trade-Offs and Open Questions
+
+- Storage backend selection.
+- Event schema evolution.
+- Partition-key strategy.
+- Retention policy.
+- Sampling strategy.
+- Backpressure behavior.
+- Retry and dead-letter handling.
+- Trace-query model.
+- Infrastructure cost.
+- Minimum meaningful benchmark.
+
+These remain unresolved engineering questions and will be updated as implementation work produces real constraints.
+
+## Observability Strategy
+
+Planned metrics include ingestion throughput, rejected spans, Kafka producer errors, Kafka consumer lag, processing latency, end-to-end trace latency, storage write failures, and service health.
+
+No numeric values are displayed because repeatable measurement has not been performed yet.
+
+## Load-Testing and Capacity Plan
+
+The planned approach is to define representative payloads, establish baseline ingestion behavior, increase concurrency gradually, and monitor latency, CPU, memory, errors, and lag.
+
+The goal is to identify bottlenecks, document capacity assumptions, and publish measured figures only after repeatable testing exists. No benchmarks are claimed at this stage.
+
+## Current Status
+
+- Architecture direction is documented.
+- Initial repository structure is the next implementation step.
+- No public TraceForge repository exists yet.
+- No public demo exists.
+- No production deployment exists.
+- No verified performance results exist.
+
+## Next Step
+
+Initialize the Go repository and implement the first trace-ingestion service with OpenTelemetry context propagation.
+
+## Roadmap
+
+1. Repository and Go service bootstrap
+2. OpenTelemetry ingestion endpoint
+3. Trace-context validation and propagation
+4. Kafka producer integration
+5. Consumer processing service
+6. Initial storage adapter
+7. Operational metrics
+8. Containerized local environment
+9. Load-testing harness
+10. Kubernetes and Terraform deployment experiment
+
+This is a roadmap, not a completed-work list.
+
+## Engineering Journal Note
+
+This case study will evolve as real implementation decisions, measurements, failures, and architecture changes occur. Future updates should replace assumptions with evidence rather than inventing outcomes ahead of the build.

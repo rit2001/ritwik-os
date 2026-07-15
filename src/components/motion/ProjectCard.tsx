@@ -17,6 +17,7 @@ export function ProjectCard({
   const shouldReduceMotion = useReducedMotion();
   const reduce = shouldReduceMotion === true;
   const interactive = Boolean(href);
+  const isExternal = Boolean(href && /^https?:\/\//.test(href));
   const className = [
     "group relative flex min-h-full flex-col overflow-hidden rounded-md border border-border bg-surface/55 p-5 transition-[background-color,border-color,transform] duration-[var(--duration-slow)] ease-[var(--ease-standard)] sm:p-6",
     interactive
@@ -47,8 +48,8 @@ export function ProjectCard({
         aria-label={ariaLabel}
         className={className}
         href={href}
-        rel="noopener noreferrer"
-        target="_blank"
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        target={isExternal ? "_blank" : undefined}
         whileHover={hover}
         whileTap={tap}
       >
