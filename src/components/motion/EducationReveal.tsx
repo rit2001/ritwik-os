@@ -4,7 +4,12 @@ import { motion, useReducedMotion } from "motion/react";
 
 import type { RecruiterBrief } from "@/data/recruiter-brief";
 
-import { motionTiming, motionTravel, motionViewport } from "./motionTokens";
+import {
+  motionEase,
+  motionTiming,
+  motionTravel,
+  motionViewport,
+} from "./motionTokens";
 
 export function EducationReveal({
   education,
@@ -17,11 +22,15 @@ export function EducationReveal({
       : { opacity: 0.78, y: motionTravel.compact },
     show: { opacity: 1, y: 0 },
   };
+  const transition = {
+    duration: reduce ? 0 : motionTiming.itemReveal,
+    ease: motionEase,
+  };
 
   return (
     <motion.aside
       aria-label="Education"
-      className="rounded-md border border-border-strong bg-surface/55 p-5 sm:p-6"
+      className="group/education rounded-md border border-border-strong bg-surface/55 p-5 transition-[background-color,border-color] duration-[var(--duration-slow)] [@media(hover:hover)_and_(pointer:fine)]:hover:border-accent/70 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-surface/70 sm:p-6"
       initial={reduce ? false : "hidden"}
       whileInView="show"
       viewport={motionViewport}
@@ -35,25 +44,29 @@ export function EducationReveal({
       }}
     >
       <motion.p
-        className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase"
+        className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase transition-colors duration-[var(--duration-base)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/education:text-foreground"
+        transition={transition}
         variants={item}
       >
         Education
       </motion.p>
       <motion.h3
-        className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground"
+        className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground transition-colors duration-[var(--duration-base)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/education:text-accent"
+        transition={transition}
         variants={item}
       >
         {education.institution}
       </motion.h3>
       <motion.p
-        className="mt-4 border-t border-border pt-5 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary"
+        className="mt-4 border-t border-border pt-5 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary transition-colors duration-[var(--duration-base)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/education:border-accent/55"
+        transition={transition}
         variants={item}
       >
         {education.degree}
       </motion.p>
       <motion.dl
-        className="mt-6 grid grid-cols-2 gap-4 border-t border-border pt-5"
+        className="mt-6 grid grid-cols-2 gap-4 border-t border-border pt-5 transition-colors duration-[var(--duration-base)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/education:border-accent/55"
+        transition={transition}
         variants={item}
       >
         <div>

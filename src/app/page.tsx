@@ -358,17 +358,27 @@ export default function Home() {
                 className="rounded-md border border-border-strong bg-surface/35 p-5 sm:p-6"
                 aria-label="Additional achievement signals"
               >
-                <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
-                  Additional Signals
-                </p>
-                <StaggerGroup className="mt-5 space-y-0 divide-y divide-border">
-                  {achievementSignals.map((signal) => (
-                    <StaggerItem key={signal} y={10}>
-                      <p className="py-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] font-medium text-foreground-secondary first:pt-0 last:pb-0">
-                        {signal}
-                      </p>
-                    </StaggerItem>
-                  ))}
+                <StaggerGroup>
+                  <StaggerItem y={10}>
+                    <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
+                      Additional Signals
+                    </p>
+                  </StaggerItem>
+                  <StaggerGroup className="mt-5 space-y-0 divide-y divide-border">
+                    {achievementSignals.map((signal) => (
+                      <StaggerItem key={signal} y={10}>
+                        <div className="group/signal py-4 transition-[background-color] duration-[var(--duration-base)] first:pt-0 last:pb-0 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-surface/45">
+                          <span
+                            aria-hidden="true"
+                            className="mb-3 block h-px w-8 bg-border-strong transition-[background-color,width] duration-[var(--duration-base)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/signal:w-12 [@media(hover:hover)_and_(pointer:fine)]:group-hover/signal:bg-accent"
+                          />
+                          <p className="text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] font-medium text-foreground-secondary transition-colors duration-[var(--duration-base)] [@media(hover:hover)_and_(pointer:fine)]:group-hover/signal:text-foreground">
+                            {signal}
+                          </p>
+                        </div>
+                      </StaggerItem>
+                    ))}
+                  </StaggerGroup>
                 </StaggerGroup>
               </aside>
             </StaggerItem>
@@ -480,7 +490,7 @@ export default function Home() {
       </section>
 
       <section className="pt-16 pb-20 scroll-mt-32" id="contact">
-        <Container width="content">
+        <Container width="wide">
           <Reveal y={18}>
             <StaggerGroup className="max-w-4xl">
               <StaggerItem y={12}>
