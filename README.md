@@ -136,8 +136,9 @@ Motion rules:
 - Interactive surfaces are only used for real actions. Static surfaces such as TraceForge and education do not lift or pretend to be links.
 - Project and algorithm cards with real destinations use card-level accessible anchors.
 - Capabilities are presented as one unified matrix instead of separate floating cards.
-- The Recruiter Brief, Education, Contact, and Footer sequence uses a single warm light editorial zone reached through a static dark-to-light bridge.
+- The Recruiter Brief, Education, Contact, and Footer sequence remains in the dark graphite RITWIK OS visual system; the previous warm-light transition bridge has been removed.
 - Primary buttons rest in neutral/accent-muted states and transition into stronger accent treatment on hover or focus.
+- Recruiter evidence uses structured proof blocks, Education uses a dark evidence block, and Phase 4 is visually complete before Phase 5.
 
 ## Documentation Map
 

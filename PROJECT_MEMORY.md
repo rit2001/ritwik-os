@@ -251,7 +251,7 @@ Phase 4.5 motion, interaction, and scroll rhythm has been completed:
 - A transform-based scroll progress line appears at the top edge when reduced motion is not requested.
 - The hero uses subtle desktop-only scroll response with no blur, scale, 3D transform, or scroll hijacking.
 - The Experience timeline has a scroll-linked progress line and active markers while preserving the exact role order and content.
-- The recruiter brief and contact sequence intentionally transitions once into a warm light editorial theme.
+- The homepage remains visually continuous in the dark RITWIK OS engineering identity through the footer.
 - Reduced-motion mode removes movement, parallax, stagger delays, and the scroll progress indicator while keeping all content immediately visible.
 - Scroll hijacking, decorative ripple effects, magnetic buttons, custom cursors, continuous animation, and animated backgrounds remain rejected.
 
@@ -265,8 +265,19 @@ Phase 4.6 final interaction, motion, and narrative polish has been completed:
 - Selected project cards with real GitHub destinations are card-level accessible anchors; TraceForge remains a static project surface.
 - Capabilities are presented as one cohesive capability matrix with internal divisions instead of six independent floating cards.
 - LeetCode and Codeforces profile surfaces are single-destination interactive anchors with visible hover, focus, pressed, and sequential stat reveal behavior.
-- Recruiter Brief, education, Contact, and footer form one warm-light editorial zone reached through a gradual static dark-to-light bridge.
+- Recruiter Brief, education, Contact, and footer now remain in the dark graphite visual system; the previous warm-light zone and large transition bridge were removed.
 - Primary actions now rest in neutral/accent-muted states and move to stronger accent treatment on hover or keyboard focus.
+
+Phase 4.7 final visual acceptance and homepage consistency has been completed:
+
+- Phase 4 is visually complete; no further homepage redesign is recommended before Phase 5.
+- The page remains dark from hero through footer using deep black, graphite surfaces, soft white text, controlled gray hierarchy, and restrained blue accents.
+- The large dark-to-light bridge, warm recruiter zone, and light footer treatment were removed.
+- Recruiter Brief uses dark editorial proof blocks for production delivery, systems breadth, and algorithmic depth instead of plain paragraphs.
+- Education is a dark evidence block with internal dividers and sequenced reveal.
+- Experience timeline markers are circular with muted inactive and accented active states.
+- Header active-section observation is tuned so Contact activates only when the Contact section is dominant.
+- Action links use one bounded dark action system across hero, recruiter brief, contact, and footer-adjacent surfaces.
 
 ## Next Expected Phase
 

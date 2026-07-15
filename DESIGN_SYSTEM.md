@@ -201,7 +201,7 @@ Phase 4.5 establishes the motion system:
 - Reduced-motion mode must remove vertical movement, parallax, and stagger delays while preserving content visibility and simple interaction feedback.
 - Project-card hover uses small upward movement, border brightening, accent-line reveal, and directional-link movement only for genuinely interactive cards.
 - Large surfaces use restrained radius tokens around 6px; buttons use around 8px; badges and tags remain 2-4px.
-- The recruiter brief and contact sequence uses one warm off-white editorial transition; the page does not repeatedly alternate between dark and light themes.
+- The homepage should remain visually continuous in the dark engineering identity through the footer.
 - Scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, sound, and animated backgrounds are not part of the RITWIK OS motion language.
 
 Phase 4.6 completes the homepage interaction polish:
@@ -212,8 +212,17 @@ Phase 4.6 completes the homepage interaction polish:
 - TraceForge may use finite status motion and one-time sequencing, but it must not look clickable or imply a repository/demo exists.
 - Capability groups live inside one capability matrix with internal separators, clear status labels, and no navigation-like lift.
 - Algorithm profiles use full-surface accessible anchors because each has one real external destination.
-- The recruiter and contact area is a coherent warm-light editorial zone reached by a static dark-to-light transition bridge.
+- Recruiter Brief, Education, Contact, and Footer remain in the dark graphite visual system; do not reintroduce a warm-light zone or large transition bridge.
 - Primary actions rest neutral or accent-muted; strong blue fill is reserved for hover and focus states.
+
+Phase 4.7 establishes final visual acceptance:
+
+- The dark RITWIK OS identity is permanent for the completed homepage.
+- Recruiter evidence is presented as structured dark proof blocks, not plain paragraphs or SaaS cards.
+- Education is a dark evidence block with internal dividers and no click-like behavior.
+- Experience markers are circular, with muted inactive and blue active states.
+- Action links must remain bounded and consistent wherever Email, Resume, LinkedIn, or GitHub appear together.
+- Header active navigation must not activate Contact while Recruiter Brief is dominant.
 
 Specialized content components:
 

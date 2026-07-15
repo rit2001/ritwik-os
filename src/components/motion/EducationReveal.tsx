@@ -21,7 +21,7 @@ export function EducationReveal({
   return (
     <motion.aside
       aria-label="Education"
-      className="border-l border-border-strong pl-5 lg:pl-7"
+      className="rounded-md border border-border-strong bg-surface/55 p-5 sm:p-6"
       initial={reduce ? false : "hidden"}
       whileInView="show"
       viewport={motionViewport}
@@ -41,13 +41,13 @@ export function EducationReveal({
         Education
       </motion.p>
       <motion.h3
-        className="mt-4 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground"
+        className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground"
         variants={item}
       >
         {education.institution}
       </motion.h3>
       <motion.p
-        className="mt-4 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary"
+        className="mt-4 border-t border-border pt-5 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary"
         variants={item}
       >
         {education.degree}

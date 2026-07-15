@@ -10,7 +10,9 @@ type HeaderSectionLink = {
 export function HeaderSectionNav({
   links,
 }: Readonly<{ links: readonly HeaderSectionLink[] }>) {
-  const [activeHref, setActiveHref] = useState(links[0]?.href ?? "");
+  const [activeHref, setActiveHref] = useState<string | null>(
+    links[0]?.href ?? null,
+  );
 
   useEffect(() => {
     const sections = links
@@ -25,15 +27,27 @@ export function HeaderSectionNav({
       (entries) => {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          .sort((a, b) => {
+            const aRect = a.boundingClientRect;
+            const bRect = b.boundingClientRect;
+            const viewportCenter = window.innerHeight / 2;
+            const aDistance = Math.abs(
+              aRect.top + aRect.height / 2 - viewportCenter,
+            );
+            const bDistance = Math.abs(
+              bRect.top + bRect.height / 2 - viewportCenter,
+            );
+
+            return aDistance - bDistance;
+          })[0];
 
         if (visible?.target.id) {
           setActiveHref(`#${visible.target.id}`);
         }
       },
       {
-        rootMargin: "-28% 0px -58% 0px",
-        threshold: [0.12, 0.28, 0.5],
+        rootMargin: "-38% 0px -42% 0px",
+        threshold: [0.08, 0.18, 0.32, 0.5],
       },
     );
 

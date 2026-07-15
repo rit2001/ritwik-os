@@ -37,6 +37,26 @@ function TimelineItem({
     [Math.max(0, start - 0.08), start, end, Math.min(1, end + 0.08)],
     [0.9, 1.18, 1.18, 0.9],
   );
+  const markerBackground = useTransform(
+    progress,
+    [Math.max(0, start - 0.08), start, end, Math.min(1, end + 0.08)],
+    [
+      "var(--ritwik-color-canvas)",
+      "var(--ritwik-color-accent)",
+      "var(--ritwik-color-accent)",
+      "var(--ritwik-color-canvas)",
+    ],
+  );
+  const markerBorder = useTransform(
+    progress,
+    [Math.max(0, start - 0.08), start, end, Math.min(1, end + 0.08)],
+    [
+      "var(--ritwik-color-border-strong)",
+      "var(--ritwik-color-accent)",
+      "var(--ritwik-color-accent)",
+      "var(--ritwik-color-border-strong)",
+    ],
+  );
   const textOpacity = useTransform(
     progress,
     [Math.max(0, start - 0.08), start, end, Math.min(1, end + 0.1)],
@@ -65,9 +85,15 @@ function TimelineItem({
       }}
     >
       <motion.span
-        className="absolute top-2 -left-[6px] h-3 w-3 rounded-xs border border-accent bg-background"
+        className="absolute top-2 -left-[7px] h-3.5 w-3.5 rounded-full border-2"
         aria-hidden="true"
         style={{
+          backgroundColor: shouldReduceMotion
+            ? "var(--ritwik-color-accent)"
+            : markerBackground,
+          borderColor: shouldReduceMotion
+            ? "var(--ritwik-color-accent)"
+            : markerBorder,
           opacity: shouldReduceMotion ? 1 : markerOpacity,
           scale: shouldReduceMotion ? 1 : markerScale,
         }}
@@ -88,7 +114,7 @@ function TimelineItem({
             {role.company}
           </motion.p>
           <motion.h3
-            className="mt-3 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground"
+            className="mt-3 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-accent"
             transition={{
               duration: shouldReduceMotion ? 0 : motionTiming.itemReveal,
               ease: motionEase,
@@ -114,7 +140,7 @@ function TimelineItem({
         </div>
         <div>
           <motion.p
-            className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary"
+            className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] font-medium text-foreground"
             transition={{
               duration: shouldReduceMotion ? 0 : motionTiming.itemReveal,
               ease: motionEase,
@@ -133,7 +159,7 @@ function TimelineItem({
           >
             {role.evidence.map((item) => (
               <li
-                className="border-l border-border-strong pl-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
+                className="border-l border-accent/45 pl-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
                 key={item}
               >
                 {item}

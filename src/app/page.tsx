@@ -166,6 +166,8 @@ export default function Home() {
               >
                 {profile.currentBuild.project}
               </h2>
+            </CurrentBuildItem>
+            <CurrentBuildItem>
               <p className="mt-3 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
                 {profile.currentBuild.category}
               </p>
@@ -353,40 +355,34 @@ export default function Home() {
 
             <StaggerItem>
               <aside
-                className="rounded-md border border-border-strong p-5 sm:p-6"
+                className="rounded-md border border-border-strong bg-surface/35 p-5 sm:p-6"
                 aria-label="Additional achievement signals"
               >
                 <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
                   Additional Signals
                 </p>
-                <ul className="mt-5 space-y-4">
+                <StaggerGroup className="mt-5 space-y-0 divide-y divide-border">
                   {achievementSignals.map((signal) => (
-                    <li
-                      className="border-l border-border-strong pl-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
-                      key={signal}
-                    >
-                      {signal}
-                    </li>
+                    <StaggerItem key={signal} y={10}>
+                      <p className="py-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] font-medium text-foreground-secondary first:pt-0 last:pb-0">
+                        {signal}
+                      </p>
+                    </StaggerItem>
                   ))}
-                </ul>
+                </StaggerGroup>
               </aside>
             </StaggerItem>
           </StaggerGroup>
         </Container>
       </section>
 
-      <div
-        className="h-44 bg-[linear-gradient(180deg,var(--ritwik-color-canvas)_0%,#1f2123_38%,#9c9387_72%,#f4f0e8_100%)] sm:h-52 lg:h-60"
-        aria-hidden="true"
-      />
-
       <section
-        className="theme-recruiter border-y border-border pt-14 pb-16 scroll-mt-32 sm:pt-16 sm:pb-20"
+        className="border-y border-border bg-background-elevated/35 py-20 scroll-mt-32"
         aria-labelledby="recruiter-brief-title"
       >
         <Container width="wide">
-          <Reveal y={18}>
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <Reveal>
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12">
               <div>
                 <StaggerGroup>
                   <StaggerItem y={12}>
@@ -397,22 +393,59 @@ export default function Home() {
                   <StaggerItem y={12}>
                     <h2
                       id="recruiter-brief-title"
-                      className="mt-4 text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold text-balance text-foreground"
+                      className="mt-4 max-w-4xl text-[clamp(1.65rem,3.2vw,3rem)] leading-[1.08] font-semibold text-balance text-foreground"
                     >
                       {recruiterBrief.summary}
                     </h2>
                   </StaggerItem>
                   <StaggerItem y={12}>
-                    <ul className="mt-8 grid gap-3 md:grid-cols-3">
-                      {recruiterBrief.evidence.map((item) => (
-                        <li
-                          className="border-t border-border bg-surface/35 px-3 py-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary transition-colors duration-[var(--duration-base)] hover:border-border-strong hover:text-foreground"
-                          key={item}
-                        >
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                    <StaggerGroup className="mt-9 grid overflow-hidden rounded-md border border-border bg-border md:grid-cols-3 md:gap-px">
+                      <StaggerItem y={10}>
+                        <article className="h-full bg-surface/65 p-5 transition-colors duration-[var(--duration-base)] hover:bg-surface">
+                          <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
+                            Proof 01 / Production Delivery
+                          </p>
+                          <h3 className="mt-4 text-[length:var(--text-body-large-size)] leading-tight font-semibold text-foreground uppercase">
+                            3 Software Engineering Internships
+                          </h3>
+                          <p className="mt-3 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+                            Delivered production-oriented engineering work
+                            across AI products, backend services, operational
+                            platforms, and cloud deployment workflows.
+                          </p>
+                        </article>
+                      </StaggerItem>
+                      <StaggerItem y={10}>
+                        <article className="h-full bg-surface/55 p-5 transition-colors duration-[var(--duration-base)] hover:bg-surface">
+                          <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
+                            Proof 02 / Systems Breadth
+                          </p>
+                          <h3 className="mt-4 text-[length:var(--text-body-large-size)] leading-tight font-semibold text-foreground uppercase">
+                            AI + Backend + Real-Time + Cloud
+                          </h3>
+                          <p className="mt-3 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+                            Built systems involving stateful AI agents, RAG,
+                            backend APIs, authentication, payments, real-time
+                            communication, Docker, AWS, and CI/CD.
+                          </p>
+                        </article>
+                      </StaggerItem>
+                      <StaggerItem y={10}>
+                        <article className="h-full bg-surface/65 p-5 transition-colors duration-[var(--duration-base)] hover:bg-surface">
+                          <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-accent uppercase">
+                            Proof 03 / Algorithmic Depth
+                          </p>
+                          <h3 className="mt-4 text-[length:var(--text-body-large-size)] leading-tight font-semibold text-foreground uppercase">
+                            LeetCode Knight · Codeforces Specialist
+                          </h3>
+                          <p className="mt-3 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+                            Combines applied engineering experience with 1,500+
+                            solved problems, a LeetCode peak rating of 1923, and
+                            a Codeforces peak rating of 1415.
+                          </p>
+                        </article>
+                      </StaggerItem>
+                    </StaggerGroup>
                   </StaggerItem>
                   <StaggerItem y={12}>
                     <div className="mt-8 flex flex-wrap gap-3">
@@ -446,10 +479,7 @@ export default function Home() {
         </Container>
       </section>
 
-      <section
-        className="theme-recruiter pt-12 pb-16 scroll-mt-32 sm:pt-14"
-        id="contact"
-      >
+      <section className="pt-16 pb-20 scroll-mt-32" id="contact">
         <Container width="content">
           <Reveal y={18}>
             <StaggerGroup className="max-w-4xl">

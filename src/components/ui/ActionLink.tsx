@@ -7,7 +7,7 @@ const variantClassName: Record<ActionLinkVariant, string> = {
     "border-accent/70 bg-accent-muted/45 text-foreground [@media(hover:hover)_and_(pointer:fine)]:hover:border-accent [@media(hover:hover)_and_(pointer:fine)]:hover:bg-accent [@media(hover:hover)_and_(pointer:fine)]:hover:text-background focus-visible:border-accent focus-visible:bg-accent focus-visible:text-background",
   secondary:
     "border-border-strong bg-surface/70 text-foreground [@media(hover:hover)_and_(pointer:fine)]:hover:border-accent [@media(hover:hover)_and_(pointer:fine)]:hover:bg-accent-muted/35 [@media(hover:hover)_and_(pointer:fine)]:hover:text-foreground focus-visible:border-accent focus-visible:bg-accent-muted/35",
-  text: "border-transparent bg-transparent text-foreground-secondary [@media(hover:hover)_and_(pointer:fine)]:hover:text-foreground focus-visible:text-foreground",
+  text: "border-border bg-transparent text-foreground-secondary [@media(hover:hover)_and_(pointer:fine)]:hover:border-accent [@media(hover:hover)_and_(pointer:fine)]:hover:bg-accent-muted/25 [@media(hover:hover)_and_(pointer:fine)]:hover:text-foreground focus-visible:border-accent focus-visible:bg-accent-muted/25 focus-visible:text-foreground",
 };
 
 export function ActionLink({
