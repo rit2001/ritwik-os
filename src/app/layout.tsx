@@ -2,13 +2,16 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
 import { SiteShell } from "@/components/layout/SiteShell";
+import { profile } from "@/data/profile";
 import { siteConfig } from "@/data/site";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.tagline,
+  title: `${profile.editorialName} — ${profile.compactTitle}`,
+  description: profile.seoDescription,
+  applicationName: siteConfig.name,
+  authors: [{ name: profile.editorialName }],
 };
 
 export const viewport: Viewport = {

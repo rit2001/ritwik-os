@@ -217,6 +217,20 @@ Phase 2 repository structure and design-system foundation has been completed:
 
 The home page remains a temporary foundation screen and is not the final homepage.
 
+Phase 3 real identity, brand shell, and first visual prototype has been completed:
+
+- Canonical identity data lives in `src/data/profile.ts`.
+- Canonical external link data lives in `src/data/social-links.ts`.
+- Site metadata and brand constants live in `src/data/site.ts`.
+- Display name is `RITWIK BISWAS`; editorial metadata name is `Ritwik Biswas`.
+- Public email is `biswas.ritwik2001@gmail.com`; no secondary email or phone number is displayed.
+- Primary professional positioning is Software Engineer work across AI systems, scalable backend platforms, and cloud-native infrastructure.
+- Header and footer expose only recruiter-readable actions: GitHub, LinkedIn, Resume, and Email where appropriate.
+- LeetCode, Codeforces, and X are stored in canonical data for later placement, but are not part of the first viewport or primary footer.
+- The resume PDF is served from `/resume/ritwik-biswas-resume.pdf`.
+- The first visual prototype is typography-led and does not use a profile photograph, generated imagery, fake terminal, fake OS chrome, invented metrics, or decorative dashboards.
+- TraceForge is represented truthfully as an in-development current build with no invented GitHub URL, demo URL, users, adoption, throughput, or production status.
+
 ## Next Expected Phase
 
 The next implementation phase should be content-model preparation and static content pipeline work only when explicitly requested:

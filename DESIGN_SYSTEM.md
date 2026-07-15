@@ -175,6 +175,15 @@ Phase 2 implements only foundation primitives:
 
 Larger UI components such as cards, buttons, badges, project cards, article cards, callouts, code blocks, tabs, and tables are deferred until real content and route needs exist.
 
+Phase 3 adds the first public-facing brand shell:
+
+- Header navigation uses understandable recruiter-facing labels: GitHub, LinkedIn, Resume.
+- Footer exposes GitHub, LinkedIn, Email, and Resume.
+- RITWIK OS terminology is used as visual and editorial flavor, not as a replacement for clear navigation.
+- The brand signature remains typography-led with a small CSS square mark next to the wordmark.
+- The first hero does not use a profile photo, raster imagery, fake terminal, typewriter effect, particles, bright gradients, excessive glow, or decorative dashboard metrics.
+- TraceForge appears as a compact current-build panel and is presented as an ongoing build, not a finished product.
+
 Specialized content components:
 
 - ArchitectureDiagram

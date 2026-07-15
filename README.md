@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the planning foundation, the Phase 1 Next.js project foundation, and the Phase 2 repository/design-system foundation.
+This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, and the Phase 3 identity/brand shell prototype.
 
 ## What This Project Is
 
@@ -49,7 +49,8 @@ Current status:
 - Tailwind CSS, ESLint, and Prettier are configured.
 - Semantic CSS design tokens and base global styles are implemented.
 - Minimal layout primitives and the global application shell are implemented.
-- The app currently renders a restrained temporary foundation screen.
+- Typed canonical identity and external link data are implemented.
+- The app currently renders the first real RITWIK OS brand shell prototype.
 - The final website, content system, navigation, MDX pipeline, motion system, and project pages have not been implemented yet.
 
 ## Source Structure
@@ -70,6 +71,26 @@ src/
 ```
 
 The `content/`, `lib/`, and `types/` directories are reserved boundaries from the initial structure and currently contain no implementation logic. Additional directories such as `docs/` and `tests/` should be added only when they contain real implementation files for an approved phase.
+
+## Canonical Identity Data
+
+Personal identity, availability, resume path, and current build metadata are centralized in `src/data/profile.ts`.
+
+External professional links are centralized in `src/data/social-links.ts`. GitHub and LinkedIn are primary public links; LeetCode, Codeforces, and X are stored for later sections but are not shown in the first viewport or primary footer yet.
+
+The current public email is `biswas.ritwik2001@gmail.com`. Do not display a phone number or secondary email unless the product direction changes.
+
+The resume PDF is expected at:
+
+```text
+public/resume/ritwik-biswas-resume.pdf
+```
+
+## Navigation Principle
+
+Keep navigation immediately understandable to recruiters. Use RITWIK OS terminology for identity and atmosphere, but do not replace clear labels with cryptic file extensions, fake commands, or operating-system jargon.
+
+The Phase 3 prototype intentionally does not use a profile photograph. The brand remains typography-led until a stronger visual asset strategy is approved.
 
 ## Documentation Map
 
