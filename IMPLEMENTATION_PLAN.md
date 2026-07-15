@@ -319,6 +319,49 @@ Acceptance criteria:
 - Site does not become cluttered.
 - Content schema continues to validate.
 
+## Phase 6.0: Agentic AI Evidence Audit
+
+Goal:
+
+Audit the public Stateful Agentic AI Assistant repository before creating a public case study.
+
+Deliverables:
+
+- `docs/research/agentic-ai-assistant-evidence.md`
+- Phase status update in `PROJECT_MEMORY.md`
+- Phase 6.0/6.1 sequencing in this implementation plan
+
+Acceptance criteria:
+
+- External repository commit is recorded.
+- Claims are classified as verified, inference, historical/conflicting, unverified, or planned improvement.
+- Architecture, memory, RAG, tools, HITL, streaming, observability, Docker, CI/CD, security, and limitations are documented from source evidence.
+- Known factual conflicts are documented before publication.
+- No public case-study route is created in this phase.
+
+## Phase 6.1: Agentic AI Case Study Implementation
+
+Goal:
+
+Create the public Stateful Agentic AI Assistant Work entry and case-study route using the Phase 6.0 evidence report.
+
+Tasks:
+
+- Correct current project metadata where the audit found conflicts.
+- Add typed Work metadata and MDX content for the case study.
+- Reuse or extend case-study components only where the evidence requires it.
+- Add repository link to the real public GitHub repository.
+- Qualify deployment, memory durability, CI/test coverage, and observability claims accurately.
+- Run content validation and the full quality gate.
+
+Acceptance criteria:
+
+- Public copy is evidence-backed.
+- Unsupported claims from the audit are avoided.
+- The page is statically generated through the existing Work registry.
+- Homepage changes are limited to truthful metadata/link updates for this real case study.
+- No screenshots are added unless they are reviewed and redacted.
+
 ## Quality Gates
 
 Future implementation should not be considered complete unless:

@@ -81,6 +81,14 @@ scripts/
 
 Additional directories such as `docs/` and `tests/` should be added only when they contain real implementation files for an approved phase.
 
+Research documents live under:
+
+```text
+docs/research/
+```
+
+Research files should capture source-backed evidence before a public case study is written. They may inspect external public repositories, but they must not copy external source into the app, expose secrets, or replace validated Work metadata and MDX content.
+
 ## Canonical Identity Data
 
 Personal identity, availability, resume path, and current build metadata are centralized in `src/data/profile.ts`.
