@@ -1,622 +1,533 @@
 import type { ReactNode } from "react";
 
-type Pair = {
-  status: "Decided" | "Provisional" | "Open";
-  title: string;
-  context: string;
-};
-
-type Decision = {
-  technology: string;
-  role: string;
-  rationale: string;
-  condition: string;
-};
-
-type Boundary = {
-  name: string;
-  responsibility: string;
-  concern: string;
-};
-
-type MetricSignal = {
-  signal: string;
-  diagnostic: string;
-};
-
-type RoadmapGroup = {
-  label: string;
-  items: readonly string[];
-};
+import {
+  EvidenceTable,
+  FailureModeMatrix,
+  InvariantCallout,
+  SystemFlow,
+  TradeoffDecision,
+} from "./EvidencePrimitives";
 
 export function CaseStudyCopy({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <div className="mt-5 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary first:mt-0 [&>p:first-child]:mt-0 [&>p]:mt-5 [&>ul]:mt-5 [&>ol]:mt-5">
+    <div className="mt-5 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary first:mt-0 [&>ol]:mt-5 [&>p:first-child]:mt-0 [&>p]:mt-5 [&>ul]:mt-5">
       {children}
     </div>
   );
 }
 
-const goals = [
-  "OpenTelemetry-compatible trace ingestion",
-  "Trace-context preservation across service boundaries",
-  "Kafka-backed separation of ingestion and processing",
-  "Clear ingestion, transport, processing, and storage boundaries",
-  "Operational metrics for throughput, lag, latency, and failures",
-  "Reproducible containerized deployment",
-  "Foundation for load testing and capacity planning",
+const replaySteps = [
+  {
+    label: "Capture",
+    name: "Sanitized execution",
+    description: "Invocation, observations, and recorded dependency outcomes.",
+  },
+  {
+    label: "Seal",
+    name: "Replay Capsule",
+    description:
+      "Versioned JSON with request fingerprints and content integrity.",
+  },
+  {
+    label: "Replay",
+    name: "Recorded boundaries",
+    description: "Sequential model/HTTP playback with no live fallback.",
+  },
+  {
+    label: "Compare",
+    name: "Normalized observation",
+    description:
+      "Structural equality after named diagnostic fields are removed.",
+  },
+  {
+    label: "Regress",
+    name: "Approved assertions",
+    description: "Separate specifications and optional offline pytest export.",
+  },
 ] as const;
 
-const scope = [
-  "Architecture and service-boundary definition",
-  "Repository bootstrap is the next implementation step",
-  "No production-readiness claim",
-  "No hosted dashboard or public demo",
-  "Performance figures published only after repeatable testing",
-  "Storage, retention, and sampling remain under evaluation",
+const deliverySteps = [
+  {
+    label: "Validate",
+    name: "Go gateway",
+    description: "Bounded HTTP and Capture Event 0.2.0 checks.",
+  },
+  {
+    label: "Accept",
+    name: "Bounded queue",
+    description: "A 202 confirms local enqueue, not broker delivery.",
+  },
+  {
+    label: "Deliver",
+    name: "Kafka",
+    description: "At-least-once transport keyed by capture ID.",
+  },
+  {
+    label: "Assemble",
+    name: "Python + SQLite",
+    description: "Ordered processing and durable event-ID deduplication.",
+  },
+  {
+    label: "Evidence",
+    name: "Sealed capsule",
+    description: "Completed streams enter the replay core as immutable JSON.",
+  },
 ] as const;
 
-const boundaries = [
-  {
-    name: "Trace Ingestion",
-    responsibility:
-      "Receive telemetry payloads, validate required trace data, preserve context, and publish normalized events.",
-    concern:
-      "Input validation, context propagation, payload shape, and rejected-span handling.",
-  },
-  {
-    name: "Kafka Transport",
-    responsibility:
-      "Provide asynchronous decoupling, buffering, consumer-group processing, and observable lag.",
-    concern:
-      "Partition-key strategy, event schema evolution, retries, and dead-letter handling.",
-  },
-  {
-    name: "Processing Consumers",
-    responsibility:
-      "Validate, transform, enrich where justified, and prepare trace data for persistence.",
-    concern:
-      "Consumer lag, idempotency, processing latency, and storage write behavior.",
-  },
-  {
-    name: "Storage and Query",
-    responsibility:
-      "Define the persistent trace representation and future retrieval model for diagnostics.",
-    concern:
-      "Backend selection, retention policy, query shape, and storage cost are still open.",
-  },
-  {
-    name: "Operational Diagnostics",
-    responsibility:
-      "Expose service health, ingestion behavior, Kafka errors, lag, latency, and write failures.",
-    concern:
-      "Minimum useful signal set and benchmark methodology need implementation evidence.",
-  },
-] as const satisfies readonly Boundary[];
-
-const decisions = [
-  {
-    technology: "OpenTelemetry",
-    role: "Instrumentation and trace-context interoperability.",
-    rationale:
-      "A standard trace model keeps ingestion compatible with common exporters and collectors.",
-    condition:
-      "The collector/exporter boundary must stay clear enough to avoid custom instrumentation lock-in.",
-  },
-  {
-    technology: "Go",
-    role: "Trace-ingestion and processing services.",
-    rationale:
-      "A lightweight service runtime with explicit concurrency and strong backend tooling.",
-    condition:
-      "The choice will be validated through implementation complexity and repeatable benchmark results.",
-  },
-  {
-    technology: "Kafka",
-    role: "Asynchronous event transport between ingestion and processing.",
-    rationale:
-      "Kafka provides buffering, replayability, consumer separation, and lag visibility.",
-    condition:
-      "Partitioning, retention, and backpressure behavior need careful design before performance claims.",
-  },
-  {
-    technology: "Docker",
-    role: "Repeatable local service environments.",
-    rationale:
-      "Containerized services make the ingestion, transport, and processing stack easier to run consistently.",
-    condition:
-      "Images and compose setup should stay small enough for practical local development.",
-  },
-  {
-    technology: "Kubernetes",
-    role: "Future orchestration and operational experimentation.",
-    rationale:
-      "Kubernetes can expose deployment, scaling, service health, and rollout concerns for the system.",
-    condition:
-      "It remains a deployment experiment until the local services and metrics are implemented.",
-  },
-  {
-    technology: "Terraform",
-    role: "Future reproducible infrastructure.",
-    rationale:
-      "Infrastructure definitions make environment changes explicit and reviewable.",
-    condition:
-      "Cloud resources should be introduced only when the implementation can justify their cost.",
-  },
-] as const satisfies readonly Decision[];
-
-const openQuestions = [
-  {
-    status: "Open",
-    title: "Storage backend selection",
-    context:
-      "The persistence model still needs query, retention, and cost evidence.",
-  },
-  {
-    status: "Provisional",
-    title: "Event-schema evolution strategy",
-    context: "Contracts should support change without breaking consumers.",
-  },
-  {
-    status: "Open",
-    title: "Kafka partition-key strategy",
-    context:
-      "Ordering, hot partitions, and trace locality still need validation.",
-  },
-  {
-    status: "Open",
-    title: "Retention policy",
-    context:
-      "Trace value, storage cost, and operational needs need a clear boundary.",
-  },
-  {
-    status: "Open",
-    title: "Sampling strategy",
-    context: "The system needs a truthful way to balance fidelity and volume.",
-  },
-  {
-    status: "Open",
-    title: "Backpressure behavior",
-    context:
-      "Failure modes should be explicit when ingestion outpaces processing.",
-  },
-  {
-    status: "Open",
-    title: "Retries and dead-letter handling",
-    context:
-      "Error handling needs policies that are observable and recoverable.",
-  },
-  {
-    status: "Open",
-    title: "Trace-query model",
-    context:
-      "Diagnostics requirements should drive what the storage layer exposes.",
-  },
-  {
-    status: "Open",
-    title: "Infrastructure cost envelope",
-    context: "Deployment experiments should stay bounded and reproducible.",
-  },
-  {
-    status: "Provisional",
-    title: "Minimum meaningful benchmark definition",
-    context:
-      "Measurements should be published only after repeatable test conditions exist.",
-  },
-] as const satisfies readonly Pair[];
-
-const metrics = [
-  {
-    signal: "Ingestion throughput",
-    diagnostic: "How many trace payloads the ingestion boundary can accept.",
-  },
-  {
-    signal: "Rejected spans",
-    diagnostic:
-      "Whether validation rules or malformed payloads are causing loss.",
-  },
-  {
-    signal: "Kafka producer errors",
-    diagnostic: "Whether ingestion is failing to publish normalized events.",
-  },
-  {
-    signal: "Kafka consumer lag",
-    diagnostic: "Whether downstream processing is falling behind ingestion.",
-  },
-  {
-    signal: "Processing latency",
-    diagnostic:
-      "How long consumers spend validating and preparing trace events.",
-  },
-  {
-    signal: "End-to-end trace latency",
-    diagnostic:
-      "How long a trace takes to move from ingestion to queryable storage.",
-  },
-  {
-    signal: "Storage write failures",
-    diagnostic:
-      "Whether persistence is losing or rejecting prepared trace records.",
-  },
-  {
-    signal: "Service health",
-    diagnostic:
-      "Whether ingestion, transport, consumers, and storage are operational.",
-  },
-] as const satisfies readonly MetricSignal[];
-
-const loadTestStages = [
-  "Define representative payloads",
-  "Establish baseline behavior",
-  "Increase concurrency",
-  "Measure latency, CPU, memory, errors, and lag",
-  "Identify bottlenecks",
-  "Record capacity assumptions",
-  "Publish only repeatable measurements",
-] as const;
-
-const roadmap = [
-  {
-    label: "Current",
-    items: ["Repository and Go service bootstrap"],
-  },
-  {
-    label: "Next",
-    items: [
-      "OpenTelemetry ingestion endpoint",
-      "Trace-context validation and propagation",
-      "Kafka producer integration",
-    ],
-  },
-  {
-    label: "Planned",
-    items: [
-      "Consumer processing service",
-      "Initial storage adapter",
-      "Operational metrics",
-      "Containerized local environment",
-      "Load-testing harness",
-      "Kubernetes and Terraform deployment experiment",
-    ],
-  },
-] as const satisfies readonly RoadmapGroup[];
-
-export function StatusScopeNote() {
+export function TraceForgeReplayFlow() {
   return (
-    <aside className="rounded-md border border-border-strong bg-surface/60 p-5">
-      <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
-        Current Scope
-      </p>
-      <p className="mt-3 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-        This case study documents the current architecture direction and planned
-        implementation. Performance results and production claims will be added
-        only after repeatable implementation and testing.
-      </p>
-    </aside>
+    <SystemFlow
+      label="Implemented replay-first flow"
+      note="Kafka is optional transport around this core. Exact replay depends on the sealed capsule, not a running broker or telemetry service."
+      steps={replaySteps}
+    />
   );
 }
 
-export function GoalScopeMatrix() {
+export function TraceForgeDeliveryFlow() {
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-surface/45 md:grid md:grid-cols-2">
-      <div className="p-5 md:border-r md:border-border">
-        <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-accent uppercase">
-          Goals
-        </p>
-        <ul className="mt-5 space-y-3">
-          {goals.map((goal) => (
-            <li
-              className="border-l border-accent/55 pl-3 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
-              key={goal}
-            >
-              {goal}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="border-t border-border p-5 md:border-t-0">
-        <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-warning uppercase">
-          Current Scope
-        </p>
-        <ul className="mt-5 space-y-3">
-          {scope.map((item) => (
-            <li
-              className="border-l border-border-strong pl-3 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
-              key={item}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <SystemFlow
+      label="Optional distributed capture flow"
+      note="Mutable capture events are transport data. They become evidence only after ordered assembly, validation, sanitization checks, and sealing."
+      steps={deliverySteps}
+    />
   );
 }
 
-export function MilestoneCallout() {
+export function CaptureContractEvidence() {
   return (
-    <aside className="overflow-hidden rounded-md border border-border-strong bg-surface/65">
-      <div className="h-0.5 bg-accent" aria-hidden="true" />
-      <div className="p-5 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
-            Current Milestone
-          </p>
-          <span className="rounded-xs border border-warning/60 bg-surface-muted px-2.5 py-1 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-warning uppercase">
-            In Development
-          </span>
-        </div>
-        <h3 className="mt-5 max-w-2xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] font-semibold text-foreground sm:text-[length:var(--text-heading-3-size)] sm:leading-[var(--text-heading-3-line-height)]">
-          Architecture &amp; repository bootstrap
-        </h3>
-        <dl className="mt-6 grid gap-5 border-t border-border pt-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div>
-            <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-              Current work
-            </dt>
-            <dd className="mt-2 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-              Defining service boundaries, OpenTelemetry ingestion flow, Kafka
-              event contracts, storage interfaces, and the initial observability
-              and load-testing strategy.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-              Next step
-            </dt>
-            <dd className="mt-2 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-              Initialize the Go repository and implement the first
-              trace-ingestion service with OpenTelemetry context propagation.
-            </dd>
-          </div>
-        </dl>
-      </div>
-    </aside>
+    <EvidenceTable
+      caption="Versioned evidence boundaries"
+      rows={[
+        {
+          label: "Capture Event 0.2.0",
+          value:
+            "Strict event envelope with event/capture IDs, positive sequence, five event types, timestamp, producer, and JSON payload.",
+        },
+        {
+          label: "Replay Capsule 0.1.0",
+          value:
+            "Invocation, subject provenance, ordered model/HTTP dependencies, original observation, redaction record, and integrity metadata.",
+        },
+        {
+          label: "Request identity",
+          value:
+            "SHA-256 over RFC 8785 canonical JSON for each sanitized dependency request.",
+        },
+        {
+          label: "Evidence integrity",
+          value:
+            "SHA-256 over the canonical capsule with only integrity.digest omitted.",
+        },
+        {
+          label: "Compatibility behavior",
+          value:
+            "Exact schema versions are required; unsupported versions and unknown owned fields fail instead of being reinterpreted.",
+        },
+      ]}
+    />
   );
 }
 
-export function ServiceBoundaryMatrix() {
+export function GatewayAcceptanceDecision() {
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-surface/45">
-      {boundaries.map((boundary, index) => (
-        <article
-          className="grid gap-4 border-t border-border p-5 first:border-t-0 md:grid-cols-[13rem_minmax(0,1fr)]"
-          key={boundary.name}
-        >
-          <div>
-            <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-accent uppercase">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <h3 className="mt-2 text-[length:var(--text-body-large-size)] leading-tight font-semibold text-foreground">
-              {boundary.name}
-            </h3>
-          </div>
-          <dl className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-                Planned responsibility
-              </dt>
-              <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                {boundary.responsibility}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-                Key concern
-              </dt>
-              <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                {boundary.concern}
-              </dd>
-            </div>
-          </dl>
-        </article>
-      ))}
-    </div>
+    <TradeoffDecision
+      constraint="Clients must treat 202 as local queue acceptance and use downstream evidence/metrics to establish delivery or sealing."
+      decision="Acknowledge after strict request validation and bounded in-memory enqueue, before Kafka delivery completes."
+      downside="The request still waits for validation and a broker readiness ping; an asynchronous delivery failure can occur after 202."
+      why="This moves broker publication off the HTTP response path while retaining bounded backpressure and explicit 429/503 outcomes."
+    />
   );
 }
 
-export function DecisionGrid() {
+export function DeliverySemanticsEvidence() {
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      {decisions.map((decision) => (
-        <article
-          className="rounded-md border border-border bg-surface/45 p-5"
-          key={decision.technology}
-        >
-          <h3 className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
-            {decision.technology}
-          </h3>
-          <dl className="mt-5 space-y-4">
-            <div>
-              <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-                Intended role
-              </dt>
-              <dd className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                {decision.role}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-                Rationale
-              </dt>
-              <dd className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                {decision.rationale}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-                Condition
-              </dt>
-              <dd className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                {decision.condition}
-              </dd>
-            </div>
-          </dl>
-        </article>
-      ))}
-    </div>
+    <EvidenceTable
+      caption="Delivery and idempotency contract"
+      rows={[
+        {
+          label: "Partition key",
+          value:
+            "capture_id scopes Kafka partition ordering for one capture stream.",
+        },
+        {
+          label: "Consumer commits",
+          value:
+            "Auto commit is disabled; a synchronous commit follows durable processing or confirmed DLQ publication.",
+        },
+        {
+          label: "Duplicate handling",
+          value:
+            "SQLite event_id primary keys accept equivalent redelivery and reject conflicting content.",
+        },
+        {
+          label: "Sequence handling",
+          value:
+            "A unique capture_id/sequence pair must remain contiguous; gaps and completed-stream reopening fail.",
+        },
+        {
+          label: "Guarantee",
+          value:
+            "At-least-once delivery with durable single-writer application idempotency—not exactly-once Kafka processing.",
+        },
+      ]}
+    />
   );
 }
 
-export function OpenQuestionGrid() {
-  const groups = ["Decided", "Provisional", "Open"] as const;
-
+export function ReplayInvariant() {
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-surface/45">
-      {groups.map((group) => {
-        const items = openQuestions.filter(
-          (question) => question.status === group,
-        );
-
-        if (items.length === 0) {
-          return null;
-        }
-
-        return (
-          <section
-            className="grid gap-4 border-t border-border p-5 first:border-t-0 md:grid-cols-[9rem_minmax(0,1fr)]"
-            key={group}
-            aria-labelledby={`open-question-${group.toLowerCase()}`}
-          >
-            <h3
-              className={[
-                "font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] uppercase",
-                group === "Open" ? "text-warning" : "text-accent",
-              ].join(" ")}
-              id={`open-question-${group.toLowerCase()}`}
-            >
-              {group}
-            </h3>
-            <div className="grid gap-4">
-              {items.map((question) => (
-                <article
-                  className="border-t border-border pt-4 first:border-t-0 first:pt-0"
-                  key={question.title}
-                >
-                  <h4 className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] font-semibold text-foreground">
-                    {question.title}
-                  </h4>
-                  <p className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                    {question.context}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </section>
-        );
-      })}
-    </div>
+    <InvariantCallout title="No live fallback">
+      Every recorded dependency must be consumed once, in order, with the same
+      kind, operation, and sanitized-request fingerprint. Missing, unexpected,
+      reordered, mismatched, or unused fixtures terminate exact replay.
+    </InvariantCallout>
   );
 }
 
-export function MetricsMatrix() {
+export function ReplayScopeEvidence() {
   return (
-    <div className="rounded-md border border-border bg-surface/45 p-5">
-      <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
-        Planned Signals
-      </p>
-      <dl className="mt-5 grid gap-x-8 md:grid-cols-2">
-        {metrics.map((metric) => (
-          <div
-            className="border-t border-border py-4 first:pt-0 md:[&:nth-child(2)]:pt-0"
-            key={metric.signal}
-          >
-            <dt className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] font-semibold text-foreground">
-              {metric.signal}
-            </dt>
-            <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-              {metric.diagnostic}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </div>
+    <EvidenceTable
+      caption="Exact replay: guarantee and boundary"
+      rows={[
+        {
+          label: "Validated before execution",
+          value:
+            "Capsule structure, semantics, request fingerprints, and whole-document integrity.",
+        },
+        {
+          label: "Frozen today",
+          value:
+            "Recorded model outcomes and recorded HTTP outcomes, including returned and errored cases.",
+        },
+        {
+          label: "Network boundary",
+          value:
+            "Common Python socket connect and DNS entry points are blocked process-wide during replay.",
+        },
+        {
+          label: "Trusted execution",
+          value:
+            "A local MODULE:FUNCTION runner executes with the current process's authority; it is not sandboxed.",
+        },
+        {
+          label: "Not guaranteed",
+          value:
+            "Capture completeness, arbitrary framework support, native-code isolation, time/random/environment freezing, or fresh-model determinism.",
+        },
+      ]}
+    />
   );
 }
 
-export function LoadTestPlan() {
+export function FrozenBoundaryEvidence() {
   return (
-    <ol className="rounded-md border border-border bg-surface/45 p-5">
-      {loadTestStages.map((stage, index) => (
-        <li
-          className="relative grid gap-3 border-l border-border-strong pb-5 pl-6 last:pb-0"
-          key={stage}
-        >
-          <span
-            className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full border border-accent/55 bg-background font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-accent"
-            aria-hidden="true"
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span className="text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {stage}
-          </span>
-        </li>
-      ))}
-    </ol>
+    <EvidenceTable
+      caption="Recorded nondeterministic boundaries"
+      rows={[
+        {
+          label: "Model",
+          value:
+            "Model name and sanitized request payload are fingerprinted; the recorded response or error is returned sequentially.",
+        },
+        {
+          label: "HTTP / tool-like call",
+          value:
+            "Method, URL, content-type, body, and recorded response/error are matched; changed consequential arguments fail closed.",
+        },
+        {
+          label: "Internal observation",
+          value:
+            "Ordered application events and terminal output/error are evidence for comparison, not dependency fixtures.",
+        },
+        {
+          label: "Generic tools",
+          value:
+            "No generic tool dependency contract or side-effect policy exists yet; HTTP is the implemented external-call boundary.",
+        },
+      ]}
+    />
   );
 }
 
-export function RoadmapTimeline() {
+export function FixtureAndLangGraphEvidence() {
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-surface/45">
-      {roadmap.map((group) => (
-        <section
-          className="grid gap-4 border-t border-border p-5 first:border-t-0 md:grid-cols-[8rem_minmax(0,1fr)]"
-          key={group.label}
-          aria-labelledby={`roadmap-${group.label.toLowerCase()}`}
-        >
-          <h3
-            className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase"
-            id={`roadmap-${group.label.toLowerCase()}`}
-          >
-            {group.label}
-          </h3>
-          <ol className="grid gap-3">
-            {group.items.map((item) => (
-              <li
-                className="border-l border-border-strong pl-4 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary"
-                key={item}
-              >
-                {item}
-              </li>
-            ))}
-          </ol>
-        </section>
-      ))}
-    </div>
+    <EvidenceTable
+      caption="Fixture and framework scope"
+      rows={[
+        {
+          label: "Explicit capture",
+          value:
+            "CaptureSession records controlled invocation, model/HTTP outcomes, events, output, errors, and redaction actions before sealing.",
+        },
+        {
+          label: "Distributed assembly",
+          value:
+            "A completed ordered Capture Event stream can be assembled into the same capsule contract.",
+        },
+        {
+          label: "Controlled fixtures",
+          value:
+            "Reviewed weather, RAG citation, and tool-argument-safety capsules ship with separate regression specifications.",
+        },
+        {
+          label: "LangGraph",
+          value:
+            "One controlled single-node weather adapter is implemented; generic callbacks, graph-state capture, and framework-wide support are not.",
+        },
+      ]}
+    />
   );
 }
 
-export function StatusSummary() {
+export function ComparisonEvidence() {
   return (
-    <aside className="rounded-md border border-border-strong bg-surface/55 p-5">
-      <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
-        Build Status
-      </p>
-      <dl className="mt-5 divide-y divide-border">
-        {[
-          [
-            "Current scope",
-            "Telemetry capture and deterministic replay foundations",
-          ],
-          ["Repository", "No public project repository linked"],
-          ["Public demo", "Not available"],
-          ["Performance results", "Not measured yet"],
-        ].map(([label, value]) => (
-          <div
-            className="grid gap-2 py-3 first:pt-0 sm:grid-cols-[12rem_minmax(0,1fr)]"
-            key={label}
-          >
-            <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-              {label}
-            </dt>
-            <dd className="text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-              {value}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </aside>
+    <EvidenceTable
+      caption="Comparison and regression semantics"
+      rows={[
+        {
+          label: "Replay comparison",
+          value:
+            "Deep structural equality after recursively removing duration_ms, recorded_at, timestamp, started_at, and finished_at.",
+        },
+        {
+          label: "Result surface",
+          value:
+            "Returns both observations, a deterministic_match boolean, and the exact ignored-field list.",
+        },
+        {
+          label: "Regression evaluator",
+          value:
+            "Synchronous developer-authored equals/contains assertions over dotted observation paths.",
+        },
+        {
+          label: "Test export",
+          value:
+            "Generates an executable offline pytest from a reviewed capsule, trusted runner, and separate regression specification.",
+        },
+        {
+          label: "Not implemented",
+          value:
+            "Semantic scoring, asynchronous evaluators, automatic assertion approval, and rich graph/message/tool diffs.",
+        },
+      ]}
+    />
+  );
+}
+
+export function StorageObservabilityEvidence() {
+  return (
+    <EvidenceTable
+      caption="Operational state and diagnostics"
+      rows={[
+        {
+          label: "Assembly state",
+          value:
+            "SQLite events and captures tables retain ordering, completion, capsule paths, and optional trace correlation.",
+        },
+        {
+          label: "Evidence store",
+          value:
+            "Sealed UTF-8 JSON capsules; exact replay does not load traces or spans from PostgreSQL.",
+        },
+        {
+          label: "Tracing",
+          value:
+            "Optional native OpenTelemetry spans propagate W3C context across HTTP/Kafka/Python; replay starts a linked separate trace.",
+        },
+        {
+          label: "Metrics",
+          value:
+            "Bounded gateway, worker, sealing, and replay counters/histograms with no payload identifiers in labels.",
+        },
+        {
+          label: "Absent",
+          value:
+            "Consumer lag, measured throughput/end-to-end latency, trace search, dashboards, alerts, and SLOs.",
+        },
+      ]}
+    />
+  );
+}
+
+export function TraceForgeFailureEvidence() {
+  return (
+    <FailureModeMatrix
+      caption="Verified failure-path behavior"
+      rows={[
+        {
+          trigger: "Malformed or unsafe capture",
+          expected:
+            "Reject before queue acceptance without logging payload secrets.",
+          evidence:
+            "Go schema, media/body, secret, and payload-free logging tests.",
+        },
+        {
+          trigger: "Queue full / broker unready",
+          expected:
+            "Return 429 or 503; never reinterpret the event as accepted.",
+          evidence: "Gateway HTTP tests and publisher outage/recovery tests.",
+        },
+        {
+          trigger: "Duplicate or conflicting event",
+          expected:
+            "Equivalent event IDs are no-ops; changed content or sequence gaps fail.",
+          evidence:
+            "SQLite reopen, duplicate, conflict, gap, and completion tests.",
+        },
+        {
+          trigger: "Poison Kafka record",
+          expected:
+            "Commit only after confirmed DLQ publication; otherwise leave offset uncommitted.",
+          evidence: "Worker confirmed-DLQ and failed-DLQ unit tests.",
+        },
+        {
+          trigger: "Replay fixture mismatch",
+          expected: "Fail before live fallback or false deterministic success.",
+          evidence: "Missing, extra, reordered, fingerprint, and tamper tests.",
+        },
+        {
+          trigger: "Runner attempts network",
+          expected:
+            "Block common socket connection/DNS entry points during exact replay.",
+          evidence: "Offline replay network-guard test.",
+        },
+      ]}
+    />
+  );
+}
+
+export function LocalInfrastructureEvidence() {
+  return (
+    <EvidenceTable
+      caption="Locally verified infrastructure boundaries"
+      rows={[
+        {
+          label: "Docker / Compose",
+          value:
+            "Non-root Python and Go images; one local Kafka broker, worker, API, gateway, and optional Collector on loopback ports.",
+        },
+        {
+          label: "Kubernetes",
+          value:
+            "Native Kustomize deployment of five workloads to one ARM64 kind cluster with probes, resource bounds, security contexts, and one RWO PVC.",
+        },
+        {
+          label: "Terraform",
+          value:
+            "Pinned Kubernetes provider manages only the local namespace, quota, limit range, five token-less ServiceAccounts, labels, and outputs.",
+        },
+        {
+          label: "Executed gate",
+          value:
+            "One local capture/replay smoke, duplicate handling, malformed input, pod replacement, PVC capsule persistence, drift reconciliation, and controlled cleanup.",
+        },
+        {
+          label: "Claim boundary",
+          value:
+            "No cloud, multi-node, high-availability, durable Kafka, remote Terraform state, load, scale, or production evidence.",
+        },
+      ]}
+    />
+  );
+}
+
+export function SecurityEvidence() {
+  return (
+    <EvidenceTable
+      caption="Security controls and trust boundaries"
+      rows={[
+        {
+          label: "Implemented controls",
+          value:
+            "Best-effort redaction, known-secret rejection, safe HTTP-header allowlisting, payload-free telemetry, loopback access, non-root containers, and disabled service-account tokens.",
+        },
+        {
+          label: "Sensitive evidence",
+          value:
+            "Prompts, model responses, tool arguments/results, errors, and user text can enter a capsule and require human review before sharing.",
+        },
+        {
+          label: "Trusted code",
+          value:
+            "Local replay runners execute with process authority; dynamic runner registration is startup-only and not sandboxing.",
+        },
+        {
+          label: "No isolation claim",
+          value:
+            "No authentication, API-key store, authorization, tenant/project scope, TLS, network policy, or production threat model.",
+        },
+      ]}
+    />
+  );
+}
+
+export function TraceForgeLimitations() {
+  return (
+    <EvidenceTable
+      caption="Current limitations"
+      rows={[
+        {
+          label: "Capture breadth",
+          value:
+            "Controlled Python capture and one bounded LangGraph adapter; no generic real-agent or arbitrary-framework capture.",
+        },
+        {
+          label: "Replay fidelity",
+          value:
+            "Only recorded model and HTTP boundaries are frozen; environment, time, randomness, native code, and arbitrary side effects are outside the guarantee.",
+        },
+        {
+          label: "Pipeline recovery",
+          value:
+            "No sustained outage, rebalance, multi-partition, concurrent duplicate, shutdown-drain, or DLQ-redrive evidence.",
+        },
+        {
+          label: "State and security",
+          value:
+            "Single-writer local SQLite, best-effort redaction, unauthenticated dashboard/OTLP, and no tenant boundary.",
+        },
+        {
+          label: "Measurement",
+          value:
+            "No repeatable throughput, latency, capacity, soak, or reliability benchmark exists.",
+        },
+        {
+          label: "Deployment",
+          value:
+            "Compose, kind, and Terraform evidence is local development only; no hosted or production deployment is claimed.",
+        },
+      ]}
+    />
+  );
+}
+
+export function CurrentStatusEvidence() {
+  return (
+    <EvidenceTable
+      caption="Experimental Beta v0.4.1 status"
+      rows={[
+        {
+          label: "Implemented now",
+          value:
+            "Capsule capture/sealing/validation, exact offline replay, structural comparison, regression evaluation/export, CLI, and local workbench.",
+        },
+        {
+          label: "Tested optional path",
+          value:
+            "Go gateway, Kafka transport, Python/SQLite assembly, DLQ safety, OpenTelemetry/Prometheus, Docker, local kind, and narrow local Terraform foundation.",
+        },
+        {
+          label: "Expanding next",
+          value:
+            "One real sanitized LangGraph application, a generic dependency boundary, and a richer reviewable execution diff.",
+        },
+        {
+          label: "Planned later",
+          value:
+            "Fork replay, fresh-model experiments, pipeline recovery operations, consumer lag, and repeatable performance measurement.",
+        },
+      ]}
+    />
   );
 }

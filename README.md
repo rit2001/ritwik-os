@@ -53,11 +53,11 @@ Current status:
 - The app renders the V2 static-first homepage hierarchy with editorial flagship systems, evidence placement, professional topology, concise experience, capability mapping, Foundations, and contact.
 - A restrained Motion-powered interaction, scroll rhythm, and final homepage polish layer is implemented.
 - The official Next.js MDX pipeline is implemented for local Work content.
-- `/work` and `/work/traceforge` are implemented as static-first App Router routes.
-- TraceForge is the first validated Work case study and remains documented as an in-development build with no public repository or demo.
+- `/work` plus the ThesisLens, TraceForge, and Stateful Agentic AI Assistant case studies are implemented as static-first App Router routes.
+- TraceForge is evidence-audited at public Experimental Beta `v0.4.1`; its case study centers exact offline replay and qualifies its optional local Go/Kafka/kind/Terraform path.
 - Stateful Agentic AI Assistant is the second validated Work case study and remains documented as a completed implementation with qualified deployment status.
 - Production-hardening foundations are implemented: centralized launch metadata, generated Open Graph image, JSON-LD, robots, sitemap, custom 404, route integrity checks, and launch checklist.
-- Screenshots, Writing, Builds, Architecture, and additional case studies have not been implemented yet.
+- Screenshots, Writing, Builds, Architecture, and the Converge case study have not been implemented yet.
 
 ## Source Structure
 
@@ -139,7 +139,7 @@ The Phase 4 homepage uses recruiter-friendly internal anchor navigation:
 - `algorithms`
 - `contact`
 
-TraceForge is the current flagship build, but its repository is not published yet. Do not add a TraceForge GitHub or demo link until a real project-specific destination exists.
+TraceForge has a verified public repository at `https://github.com/rit2001/traceforge`. Its public claims must follow `docs/research/traceforge-evidence.md`; no hosted demo or production deployment is claimed.
 
 Project presentation is currently text-first. Screenshots are deferred until polished recaptures or case-study assets are available.
 
@@ -200,7 +200,7 @@ Ongoing-project copy should use one prominent scope/status note near the beginni
 
 Completed project case studies should still qualify deployment, persistence, testing, and reliability claims when the repository evidence requires it. Placeholder CI steps must not be described as real tests.
 
-The homepage is frozen after Phase 4. Homepage updates during content phases should be limited to truthful links to real content, such as the TraceForge case-study link.
+The V2 homepage hierarchy is stable. Content phases may reconcile canonical evidence and automatically derived presentation, but must not redesign that hierarchy.
 
 ## Motion System
 

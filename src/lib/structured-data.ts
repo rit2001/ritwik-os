@@ -76,21 +76,12 @@ export function getWorkStructuredData(meta: WorkMeta) {
     },
     keywords: meta.stack,
     ...(workUrl ? { url: workUrl } : {}),
-  };
-
-  if (meta.slug === "traceforge") {
-    return {
-      ...base,
-      about:
-        "Ongoing engineering case study for a distributed tracing and telemetry pipeline.",
-      creativeWorkStatus: "InDevelopment",
-    };
-  }
-
-  return {
-    ...base,
     ...(meta.repositoryUrl ? { codeRepository: meta.repositoryUrl } : {}),
-    about:
-      "Completed engineering case study for a stateful LangGraph assistant implementation.",
+    about: meta.summary,
+    ...(meta.status === "in-development"
+      ? { creativeWorkStatus: "InDevelopment" }
+      : {}),
   };
+
+  return base;
 }

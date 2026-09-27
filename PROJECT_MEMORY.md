@@ -392,4 +392,16 @@ Phase 8.6 ThesisLens evidence audit and case study are complete on `feat/ritwik-
 
 ## Next Expected Phase
 
-Phase 8.7 should audit the authoritative TraceForge repository at source level and rewrite only `/work/traceforge` so implemented capture/replay evidence is clearly separated from persistence, evaluation, Kubernetes, and Terraform direction. Preserve the canonical project hierarchy, published-only navigation, ThesisLens case study, package files, resume, and static homepage architecture. Do not begin Converge, resume/SEO, deployment, or Phase 8.10 interaction work.
+Phase 8.7 TraceForge evidence audit and case-study rewrite are complete on `feat/ritwik-os-v2`:
+
+- The authoritative public source is `https://github.com/rit2001/traceforge`, audited at `660506fe07f0fb99d8829340121b9c537ec5616d`; evidence and safe wording are recorded in `docs/research/traceforge-evidence.md`.
+- `/work/traceforge` now centers immutable Replay Capsules, exact offline recorded model/HTTP playback, normalized structural comparison, developer-authored regression specifications, and pytest export.
+- The optional Go/Kafka path is described as bounded queue acceptance plus at-least-once delivery and single-writer SQLite event-ID idempotency. A gateway `202` is not broker acknowledgement or sealed evidence.
+- PostgreSQL, API-key/tenant isolation, asynchronous evaluators, consumer lag, throughput/latency metrics, and production-scale implications were removed. Generic tools, real-agent capture, fork replay, richer diffs, recovery operations, and benchmarks remain planned.
+- Native OpenTelemetry/Prometheus instrumentation, non-root Docker images, one verified local kind deployment, and a narrow locally verified Terraform foundation remain bounded development evidence—not cloud or production claims.
+- The verified public repository action now derives from canonical project metadata. Published-only navigation remains ThesisLens, TraceForge, and Stateful Agentic AI Assistant; Converge still has no route.
+- No dependencies, resume assets, global SEO, deployment, or interactive-topology work changed.
+
+## Next Expected Phase
+
+Phase 8.8 should locate and audit the authoritative Converge repository, reconcile every ordering, offline-sync, multi-replica, testing, and failure-recovery claim against source and executed evidence, then author the real `/work/converge` case study and register it in published-only navigation. Preserve ThesisLens and TraceForge narratives, the V2 hierarchy, package files, resume, and static homepage architecture. Do not begin resume/SEO reconciliation, deployment, or Phase 8.10 interaction work.

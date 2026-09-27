@@ -96,46 +96,48 @@ export const projects: readonly Project[] = [
     tier: "flagship",
     displayOrder: 2,
     summary:
-      "AI infrastructure for resilient telemetry capture and deterministic AI-agent replay, with implemented ingestion and replay foundations and an expanding platform direction.",
+      "Local-first replay and regression infrastructure that seals sanitized agent execution into immutable capsules and replays recorded model and HTTP dependencies offline.",
     stack: [
+      "Python",
       "Go",
       "Kafka",
-      "OpenTelemetry",
-      "Python",
+      "SQLite",
       "LangGraph",
-      "PostgreSQL",
+      "OpenTelemetry",
+      "Prometheus",
+      "FastAPI",
       "Docker",
       "Kubernetes",
       "Terraform",
-      "Distributed Systems",
     ],
     evidence: [
       {
         kind: "proof",
-        label: "Capture foundation",
+        label: "Exact replay contract",
         detail:
-          "Non-blocking telemetry ingestion, versioned capture contracts, schema validation, idempotent processing, Kafka-backed asynchronous delivery, and execution-context capture.",
+          "Versioned sealed capsules bind sanitized requests with RFC 8785 and SHA-256; exact replay consumes recorded model and HTTP outcomes in order and fails closed on mismatch.",
       },
       {
         kind: "proof",
-        label: "Replay foundation",
+        label: "Optional distributed capture",
         detail:
-          "Nondeterministic LLM and tool boundaries are frozen into replay fixtures with original-versus-replay diffing and regression testing.",
+          "A Go gateway accepts validated events into a bounded queue, Kafka delivers at least once, and a Python worker uses SQLite event-ID deduplication before sealing evidence.",
       },
       {
         kind: "proof",
-        label: "Reliability evidence",
+        label: "Regression evidence",
         detail:
-          "Failure-path testing, API-key isolation, and consumer lag, throughput, and latency observability shape the current reliability work.",
+          "Normalized structural comparison, developer-authored regression specifications, and pytest export turn reviewed capsules into offline failure-path tests.",
       },
       {
         kind: "proof",
-        label: "Expanding direction",
+        label: "Bounded local infrastructure",
         detail:
-          "PostgreSQL trace/span persistence, asynchronous evaluation, containerized workers, Kubernetes deployment, Terraform-managed infrastructure, and operational observability are being expanded.",
+          "Native OpenTelemetry and Prometheus instrumentation, non-root containers, one locally verified kind deployment, and a narrow Terraform-managed kind foundation remain development-only evidence.",
       },
     ],
     caseStudyPath: "/work/traceforge",
+    repositoryUrl: "https://github.com/rit2001/traceforge",
   },
   {
     id: "converge",

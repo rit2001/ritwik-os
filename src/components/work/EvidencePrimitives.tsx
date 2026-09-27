@@ -171,6 +171,64 @@ export function TradeoffDecision({
   );
 }
 
+export function FailureModeMatrix({
+  caption,
+  rows,
+}: Readonly<{
+  caption: string;
+  rows: readonly {
+    trigger: string;
+    expected: string;
+    evidence: string;
+  }[];
+}>) {
+  return (
+    <div className="overflow-x-auto border-y border-border">
+      <table className="w-full min-w-[42rem] border-collapse text-left">
+        <caption className="border-b border-border px-0 py-3 text-left font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-accent uppercase">
+          {caption}
+        </caption>
+        <thead>
+          <tr className="border-b border-border">
+            {["Trigger", "Expected behavior", "Verified evidence"].map(
+              (heading) => (
+                <th
+                  className="px-0 py-3 pr-5 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-foreground-muted uppercase last:pr-0"
+                  key={heading}
+                  scope="col"
+                >
+                  {heading}
+                </th>
+              ),
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr
+              className="border-b border-border last:border-b-0"
+              key={row.trigger}
+            >
+              <th
+                className="w-[24%] px-0 py-3 pr-5 align-top text-[length:var(--text-body-small-size)] font-medium text-foreground"
+                scope="row"
+              >
+                {row.trigger}
+              </th>
+              <td className="w-[38%] py-3 pr-5 align-top text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+                {row.expected}
+              </td>
+              <td className="w-[38%] py-3 align-top text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
+                {row.evidence}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function CaseStudyFactList({
   facts,
 }: Readonly<{ facts: readonly CaseStudyHeaderFact[] }>) {

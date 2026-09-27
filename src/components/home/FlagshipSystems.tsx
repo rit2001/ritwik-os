@@ -15,6 +15,9 @@ type FlagshipPresentation = {
 const thesisLens = getProject("thesislens");
 const traceForge = getProject("traceforge");
 const converge = getProject("converge");
+const traceForgeEvidence = traceForge.evidence.flatMap((item) =>
+  item.kind === "proof" ? [item.detail] : [],
+);
 
 const flagships: readonly FlagshipPresentation[] = [
   {
@@ -54,36 +57,24 @@ const flagships: readonly FlagshipPresentation[] = [
     project: traceForge,
     sequence: "02",
     thesis:
-      "Capture nondeterministic AI-agent execution so workflows can be inspected, replayed, evaluated, and regression-tested.",
+      "Seal controlled agent execution into immutable evidence, replay recorded external boundaries offline, and turn reviewed failures into regression tests.",
     proof: {
-      label: "Implemented foundation",
-      value: "Capture → Replay",
+      label: "Exact replay contract",
+      value: "Seal → Replay",
       context:
-        "Versioned capture contracts and frozen LLM/tool boundaries establish deterministic replay fixtures.",
+        "Recorded model and HTTP requests are matched by sequence and fingerprint with no live fallback.",
     },
-    evidence: [
-      "Schema validation and idempotent event processing",
-      "Kafka-backed asynchronous delivery with non-blocking telemetry ingestion",
-      "Original-versus-replay diffing and regression testing",
-      "Failure-path testing with API-key isolation and operational telemetry",
-    ],
+    evidence: traceForgeEvidence,
     flow: [
-      "AI agent",
-      "Capture / gateway",
-      "Kafka",
-      "Trace processing",
-      "Replay / evaluation",
+      "Controlled agent run",
+      "Seal capsule",
+      "Exact replay",
+      "Compare",
+      "Regress",
     ],
-    stack: [
-      "Go",
-      "Kafka",
-      "OpenTelemetry",
-      "Python",
-      "LangGraph",
-      "PostgreSQL",
-    ],
+    stack: traceForge.stack.slice(0, 6),
     scopeNote:
-      "Expanding: PostgreSQL trace/span persistence, asynchronous evaluation, containerized workers, Kubernetes, and Terraform direction.",
+      "Bounded today: controlled Python/LangGraph capture and optional local Go/Kafka delivery. Generic tools, fork replay, richer diffs, and benchmarks remain planned.",
   },
   {
     project: converge,

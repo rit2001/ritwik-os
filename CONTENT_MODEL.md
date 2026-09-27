@@ -127,7 +127,14 @@ Evidence highlights are `delta`, `count`, or `proof`. Delta evidence must includ
 
 `src/data/capabilities.ts` expresses techniques/tools plus demonstrated project or experience references; it does not use proficiency labels.
 
-TraceForge is the first registered Work entry. It is an ongoing build case study, not a completed-project page. Its metadata must continue to omit repository and demo URLs until real destinations exist.
+TraceForge is an ongoing case study backed by the verified public repository
+`https://github.com/rit2001/traceforge`. Its public claims are constrained by
+`docs/research/traceforge-evidence.md`: exact replay is fixture-scoped to recorded
+model and HTTP outcomes; comparison is structural; Kafka is at least once;
+SQLite supplies single-writer event idempotency; and Docker, kind/Kustomize, and
+Terraform evidence is local development only. PostgreSQL, API-key isolation,
+asynchronous evaluators, consumer lag, performance, hosted operation, cloud, and
+production claims are not supported.
 
 Stateful Agentic AI Assistant is the second registered Work entry. It is a completed implemented-system case study with a real public GitHub repository and no continuously hosted demo. Its public metadata must use `HuggingFace Embeddings`, not `Google Embeddings`, unless future historical evidence supports both.
 

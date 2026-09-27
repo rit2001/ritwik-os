@@ -1,145 +1,419 @@
-import { ArchitectureFlow } from "@/components/work/ArchitectureFlow";
 import { CaseStudySection } from "@/components/work/CaseStudySection";
 import {
+  CaptureContractEvidence,
   CaseStudyCopy,
-  DecisionGrid,
-  GoalScopeMatrix,
-  LoadTestPlan,
-  MetricsMatrix,
-  MilestoneCallout,
-  OpenQuestionGrid,
-  RoadmapTimeline,
-  ServiceBoundaryMatrix,
-  StatusScopeNote,
-  StatusSummary,
+  ComparisonEvidence,
+  CurrentStatusEvidence,
+  DeliverySemanticsEvidence,
+  FixtureAndLangGraphEvidence,
+  FrozenBoundaryEvidence,
+  GatewayAcceptanceDecision,
+  LocalInfrastructureEvidence,
+  ReplayInvariant,
+  ReplayScopeEvidence,
+  SecurityEvidence,
+  StorageObservabilityEvidence,
+  TraceForgeDeliveryFlow,
+  TraceForgeFailureEvidence,
+  TraceForgeLimitations,
+  TraceForgeReplayFlow,
 } from "@/components/work/TraceForgeBlocks";
 
 <CaseStudySection id="overview" title="Overview">
   <CaseStudyCopy>
-    TraceForge is an ongoing distributed tracing and telemetry-pipeline build
-    focused on trace-context propagation, OpenTelemetry ingestion, Kafka-backed
-    event transport, service boundaries, operational visibility, and
-    reproducible deployment.
+    TraceForge is an experimental local-first replay and regression system for
+    controlled Python AI-agent runs. It captures sanitized execution evidence,
+    seals that evidence into an immutable Replay Capsule, replays recorded model
+    and HTTP dependencies offline, compares the resulting observation, and can
+    export developer-approved expectations as pytest regressions.
   </CaseStudyCopy>
 
 <CaseStudyCopy>
-  The current scope includes non-blocking telemetry ingestion, versioned capture
-  contracts, schema validation, idempotent event processing, Kafka-backed
-  delivery, and deterministic replay fixtures. Persistence and evaluation
-  capabilities are expanding from this foundation.
+  That replay loop—not distributed tracing—is the product center. A Go gateway,
+  Kafka, a Python assembly worker, OpenTelemetry, Kubernetes, and Terraform
+  exist as an optional local development path around capture-event delivery.
+  They do not change capsule integrity or exact-replay semantics, and they are
+  not evidence of hosted or production operation.
 </CaseStudyCopy>
 
-  <StatusScopeNote />
-</CaseStudySection>
-
-<CaseStudySection id="problem" title="Problem">
   <CaseStudyCopy>
-    Distributed systems generate trace data across multiple services. The trace
-    context has to survive hops between services, ingestion boundaries, event
-    transport, processing consumers, and storage so diagnostics remain useful.
+    The current public release is Experimental Beta `v0.4.1`. Its strongest
+    claims are implemented contracts, deterministic failure behavior for tested
+    fixtures, and bounded local infrastructure verification—not adoption,
+    scale, model-quality improvement, or arbitrary-agent support.
   </CaseStudyCopy>
-
-  <CaseStudyCopy>
-    The system design needs to keep ingestion decoupled from downstream
-    processing, make buffering and backpressure visible, and expose enough
-    operational signal to reason about consumer lag, ingestion behavior,
-    processing latency, and end-to-end trace latency.
-  </CaseStudyCopy>
-</CaseStudySection>
-
-<CaseStudySection id="goals-and-scope" title="Goals and Scope">
-  <GoalScopeMatrix />
-</CaseStudySection>
-
-<CaseStudySection id="current-milestone" title="Current Milestone">
-  <MilestoneCallout />
-</CaseStudySection>
-
-<CaseStudySection id="proposed-architecture" title="Proposed Architecture">
-  <CaseStudyCopy>
-    The proposed flow separates instrumentation, ingestion, transport,
-    processing, storage, and diagnostics so each boundary can be evaluated and
-    tested independently as implementation proceeds.
-  </CaseStudyCopy>
-
-  <ArchitectureFlow />
-</CaseStudySection>
-
-<CaseStudySection id="service-boundaries" title="Service Boundaries">
-  <CaseStudyCopy>
-    The boundaries below describe design direction and planned responsibility.
-    They are not presented as completed production services.
-  </CaseStudyCopy>
-
-  <ServiceBoundaryMatrix />
-</CaseStudySection>
-
-<CaseStudySection id="engineering-decisions" title="Engineering Decisions">
-  <CaseStudyCopy>
-    The technology choices are provisional where implementation evidence is
-    still pending. Each decision needs to survive real service implementation,
-    local operation, and repeatable measurement.
-  </CaseStudyCopy>
-
-  <DecisionGrid />
 </CaseStudySection>
 
 <CaseStudySection
-  id="open-questions"
-  title="Trade-offs and Open Questions"
+  id="problem-and-reliability-model"
+  title="Problem and Reliability Model"
 >
   <CaseStudyCopy>
-    The most important engineering risk is not choosing tools; it is validating
-    the boundaries and operational behavior under realistic load. These
-    questions stay visible until implementation turns them into decisions.
+    An agent failure can depend on a prompt, a model response, external HTTP
+    data, tool arguments, graph logic, and developer expectations. Re-running
+    the agent against live dependencies changes several variables at once, so a
+    disappeared failure does not prove a fix.
   </CaseStudyCopy>
-
-  <OpenQuestionGrid />
-</CaseStudySection>
-
-<CaseStudySection id="observability" title="Observability">
-  <CaseStudyCopy>
-    TraceForge should make pipeline health visible at every boundary. These
-    planned signals define what the system should eventually report, without
-    displaying values before measurement exists.
-  </CaseStudyCopy>
-
-  <MetricsMatrix />
-</CaseStudySection>
-
-<CaseStudySection id="load-testing" title="Load Testing">
-  <CaseStudyCopy>
-    The load-testing plan is intentionally staged. It starts with representative
-    payloads and baseline behavior, then increases pressure only after the
-    ingestion and transport boundaries are implemented.
-  </CaseStudyCopy>
-
-  <LoadTestPlan />
-</CaseStudySection>
-
-<CaseStudySection id="current-status" title="Current Status">
-  <StatusSummary />
 
 <CaseStudyCopy>
-  The current implementation foundation focuses on capture contracts, resilient
-  ingestion, and replay fidelity while persistence and evaluation capabilities
-  continue to expand.
+  TraceForge separates three concerns. The capsule preserves what happened.
+  Exact replay checks whether the captured execution can run again against
+  frozen dependency outcomes. A separate regression specification states what
+  the developer now expects. Technical replay completion and behavioral
+  correctness therefore remain different results.
 </CaseStudyCopy>
 
   <CaseStudyCopy>
-    Near-term focus: extend trace/span persistence, asynchronous evaluation, and
-    operational observability without overstating production scale.
+    The reliability model is fail-closed. Evidence is never silently repaired,
+    a mismatched request never receives a nearby fixture, and an absent fixture
+    never triggers a live fallback. That gives “deterministic” an operational
+    scope: the tested local runner receives the same ordered recorded outcomes
+    for the same sanitized requests.
   </CaseStudyCopy>
 </CaseStudySection>
 
-<CaseStudySection id="roadmap" title="Roadmap">
-  <RoadmapTimeline />
+<CaseStudySection id="system-architecture" title="System Architecture">
+  <CaseStudyCopy>
+    The replay core can operate from a local JSON capsule without Kafka,
+    OpenTelemetry, Kubernetes, or Terraform. Capture and transport adapters may
+    surround the core, but they cannot mutate sealed evidence or weaken replay
+    matching.
+  </CaseStudyCopy>
+
+<TraceForgeReplayFlow />
+
+<CaseStudyCopy>
+  The optional distributed path transports mutable Capture Events. The Go
+  service owns bounded HTTP admission and queueing. Kafka owns retryable
+  delivery. Python owns event semantics, assembly, sealing, replay, and
+  regression. SQLite stores local operational state; the sealed capsule is the
+  evidence boundary.
+</CaseStudyCopy>
+
+  <TraceForgeDeliveryFlow />
 </CaseStudySection>
 
-<CaseStudySection id="journal-note" title="Engineering Journal Note">
+<CaseStudySection id="capture-contracts" title="Capture Contracts">
   <CaseStudyCopy>
-    This case study will evolve as real implementation decisions, measurements,
-    failures, and architecture changes occur. Future updates should replace
-    assumptions with evidence from the build.
+    TraceForge maintains two independent versions. Capture Event `0.2.0` is a
+    transport envelope for mutable, retryable events. Replay Capsule `0.1.0` is
+    the portable evidence document consumed by validation and replay. A software
+    release number does not silently change either contract.
+  </CaseStudyCopy>
+
+<CaptureContractEvidence />
+
+<CaseStudyCopy>
+  Capture Events name five lifecycle types and require stable event and capture
+  identifiers, contiguous positive sequencing, an occurrence time, producer
+  identity, and JSON payload. The Go and Python validators share checked-in
+  fixtures for the same schema.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    A capsule distinguishes external dependencies from internal observations.
+    Only model and HTTP interactions are replay fixtures in v0. Internal node or
+    application events explain the original path but are not injected merely
+    because they mention a model or tool. Unknown owned fields and unsupported
+    versions fail validation rather than being accepted optimistically.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="ingestion-gateway" title="Ingestion Gateway">
+  <CaseStudyCopy>
+    The Go gateway exposes `POST /v1/capture-events`, `/healthz`, `/readyz`, and
+    `/metrics`. The request path rejects prohibited authorization/cookie/query
+    material, non-JSON content, bodies above one megabyte, malformed documents,
+    schema violations, and known secret-bearing payload strings.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  “Asynchronous ingestion” needs qualification. Validation and a Kafka readiness
+  ping—bounded to 500 milliseconds—remain synchronous. After those checks,
+  `Enqueue` performs a non-blocking send to a bounded Go channel. Kafka
+  production and its callback occur later. A successful HTTP response therefore
+  means local queue acceptance, not broker acknowledgement or capsule
+  completion.
+</CaseStudyCopy>
+
+<GatewayAcceptanceDecision />
+
+  <CaseStudyCopy>
+    Backpressure is visible at admission: a full channel returns `429`, while an
+    unavailable broker returns `503`. A later Kafka delivery failure increments
+    a metric but cannot revoke an earlier `202`. This is an intentional boundary
+    and a reason clients cannot treat HTTP acceptance as durable evidence.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="delivery-and-idempotency"
+  title="Kafka Delivery and Idempotency"
+>
+  <CaseStudyCopy>
+    The Go publisher uses `franz-go`, writes to `traceforge.capture.v1`, and keys
+    records by `capture_id`. The Python consumer disables auto commit and
+    performs a synchronous offset commit only after durable assembly succeeds or
+    a poison record has been confirmed on `traceforge.capture.dlq.v1`.
+  </CaseStudyCopy>
+
+<DeliverySemanticsEvidence />
+
+<CaseStudyCopy>
+  SQLite, not Kafka, supplies the domain idempotency boundary. The `events`
+  table uses `event_id` as its primary key and makes `(capture_id, sequence)`
+  unique. Equivalent redelivery returns an explicit duplicate result;
+  conflicting reuse of an event ID, a sequence gap, or an attempt to reopen a
+  completed capture fails.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    This behavior survives reopening the SQLite state in the tested path, but it
+    does not establish exactly-once delivery, concurrent-writer safety, or a
+    distributed persistence model. The worker remains one local writer, and
+    Kafka transport remains at least once.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="exact-replay" title="Exact Replay">
+  <CaseStudyCopy>
+    Exact replay validates the capsule before invoking subject code. It then
+    supplies a recorded dependency adapter to a trusted local runner. For each
+    call, the adapter checks sequence, dependency kind, operation, and the
+    SHA-256 fingerprint of the sanitized request before returning a deep copy of
+    the recorded response or error.
+  </CaseStudyCopy>
+
+<ReplayInvariant />
+
+<ReplayScopeEvidence />
+
+  <CaseStudyCopy>
+    A process-wide guard temporarily replaces common Python socket connection
+    and DNS entry points. It is protection against accidental live calls, not an
+    operating-system sandbox. The runner still executes trusted Python with the
+    process's authority, so file access, native code, subprocesses, time,
+    randomness, and other side effects are not universally frozen.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="frozen-boundaries" title="Frozen External Boundaries">
+  <CaseStudyCopy>
+    Model fixtures preserve the configured model name, sanitized request
+    payload, and either a returned response or captured error. HTTP fixtures
+    preserve method, URL, a deliberately narrow safe-header shape, body, and
+    returned response or error. Both remain ordered and fingerprint-bound.
+  </CaseStudyCopy>
+
+<FrozenBoundaryEvidence />
+
+  <CaseStudyCopy>
+    The controlled tool-argument-safety example treats a consequential external
+    action as an HTTP dependency: changing an argument changes the request
+    fingerprint and replay fails before returning the recorded result. This is
+    useful evidence for that adapter, but it is not a generic tool-calling
+    interception layer or proof that arbitrary side effects are safe.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="langgraph-and-fixtures" title="LangGraph and Replay Fixtures">
+  <CaseStudyCopy>
+    The repository contains one real but deliberately bounded LangGraph adapter.
+    It builds a single-node weather graph, captures controlled model and HTTP
+    dependencies, and replays through the same dependency adapter. Core imports
+    remain independent of LangGraph unless that optional integration is used.
+  </CaseStudyCopy>
+
+<FixtureAndLangGraphEvidence />
+
+  <CaseStudyCopy>
+    The three checked-in cases cover incorrect weather grounding, RAG citation
+    grounding, and changed consequential tool arguments. They use synthetic,
+    reviewed data. They demonstrate mechanics and failure behavior, not broad
+    model quality, real production provenance, or arbitrary LangGraph support.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="comparison-and-regression"
+  title="Comparison and Regression"
+>
+  <CaseStudyCopy>
+    Original-versus-replay comparison is intentionally literal. The
+    implementation recursively removes five diagnostic timestamp/duration keys
+    and compares the remaining observation structures for equality. It returns
+    both observations and one `deterministic_match` boolean.
+  </CaseStudyCopy>
+
+<ComparisonEvidence />
+
+  <CaseStudyCopy>
+    Behavioral expectations remain outside immutable evidence. A developer can
+    author `equals` or `contains` assertions against supported observation paths,
+    review the result, and export the capsule, runner, and specification as an
+    offline pytest. TraceForge does not infer and silently approve a test from a
+    model-generated judgment.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="storage-and-observability"
+  title="Storage and Observability"
+>
+  <CaseStudyCopy>
+    The distributed worker stores event bodies, per-capture sequence state,
+    completion, capsule paths, and optional trace correlation in SQLite. Sealed
+    evidence is written as JSON. The local FastAPI workbench has a separate
+    SQLite replay-history store. There is no PostgreSQL trace/span persistence
+    or hosted trace-query service.
+  </CaseStudyCopy>
+
+<StorageObservabilityEvidence />
+
+<CaseStudyCopy>
+  OpenTelemetry instrumentation is native but optional. W3C trace context
+  crosses the Go receive/validate/publish spans and Kafka headers into Python
+  consume/assemble/seal spans. A later `replay.execute` starts a separate trace
+  with an optional Span Link to the capture correlation retained in SQLite;
+  trace identifiers never enter capsule integrity.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The metrics surface reports bounded local request, queue, delivery-failure,
+    processing, duplicate, DLQ, sealing, and replay outcomes. It does not expose
+    Kafka consumer lag or establish throughput and latency values. Instrumented
+    code and measured performance are separate claims.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="failure-path-evidence" title="Failure-Path Evidence">
+  <CaseStudyCopy>
+    Failure behavior is tested at contract, transport, assembly, and replay
+    boundaries. These tests matter more than a generic “resilient” label because
+    they identify what is rejected, what can be retried, and when an offset or
+    artifact becomes durable.
+  </CaseStudyCopy>
+
+<TraceForgeFailureEvidence />
+
+  <CaseStudyCopy>
+    The final `v0.4.1` verification ledger records 103 passing Python tests plus
+    Go tests, vet, and race checks. During this evidence audit, `go test ./...`
+    again passed across the tested gateway packages. The Python suite was not
+    rerun because the Desktop-local virtual environment stalled while importing
+    pytest; the published claim therefore remains tied to the release ledger.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="local-infrastructure" title="Local Infrastructure">
+  <CaseStudyCopy>
+    Container and infrastructure work is implemented, but deliberately bounded.
+    Multi-stage Dockerfiles package a non-root Python API/worker and Go gateway.
+    Compose connects those services to one local Kafka broker and an optional
+    local OpenTelemetry Collector on loopback ports.
+  </CaseStudyCopy>
+
+<LocalInfrastructureEvidence />
+
+<CaseStudyCopy>
+  Kubernetes manifests use native Kustomize rather than a second service
+  implementation. The verified topology is one dedicated local kind cluster, one
+  worker replica, single-node ephemeral Kafka, and one `ReadWriteOnce` PVC. Pod
+  replacement and byte-identical capsule persistence across worker replacement
+  were observed in that bounded environment; neither is high availability or
+  disaster recovery.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Terraform owns only eight local foundation resources: a namespace, quota,
+    limit range, and five ServiceAccounts. Kustomize owns workloads, Services,
+    ConfigMaps, PVC data, and pod configuration. Local plan/apply/state, a
+    controlled namespace-label drift and reconciliation, and ordered destroy
+    were verified. Terraform does not create the cluster or any cloud resource.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="security-and-trust" title="Security and Trust Boundaries">
+  <CaseStudyCopy>
+    Replay evidence can contain prompts, responses, tool arguments, tool output,
+    errors, and user text. TraceForge applies versioned best-effort redaction,
+    removes unsafe headers, rejects known secret-shaped material at the gateway,
+    and avoids payload data in metrics and spans. A passed scan is evidence that
+    the configured process ran—not proof that no sensitive value remains.
+  </CaseStudyCopy>
+
+<SecurityEvidence />
+
+  <CaseStudyCopy>
+    The local dashboard and Collector endpoint are unauthenticated. There is no
+    API-key database, tenant scoping, authorization middleware, TLS boundary, or
+    production threat model. “API-key isolation” was removed from the public
+    project metadata because secret rejection is not identity isolation.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="limitations" title="Limitations">
+  <CaseStudyCopy>
+    The implementation is strongest where its contracts are narrow. Capsule
+    integrity, request matching, recorded outcome playback, and the tested local
+    delivery path have explicit behavior. General capture, arbitrary tools,
+    distributed operation, and security remain intentionally outside that
+    guarantee.
+  </CaseStudyCopy>
+
+<TraceForgeLimitations />
+
+  <CaseStudyCopy>
+    In particular, no repeatable benchmark establishes ingestion throughput,
+    publish latency, end-to-end latency, replay latency, capacity, reliability,
+    or scale. The roadmap schedules measurement only after pipeline recovery
+    semantics become explicit enough to test.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="current-status-and-roadmap"
+  title="Current Status and Roadmap"
+>
+  <CaseStudyCopy>
+    TraceForge remains in development as Experimental Beta `v0.4.1`. Exact
+    offline replay and developer-reviewed regression export are usable today for
+    the tested controlled paths. The optional distributed path and local
+    infrastructure have bounded verification but remain development tools.
+  </CaseStudyCopy>
+
+<CurrentStatusEvidence />
+
+  <CaseStudyCopy>
+    The next evidence gate is one real sanitized LangGraph application and a
+    generic dependency boundary. Fork replay comes later and will need to make
+    fresh-model probability explicit. Pipeline reliability work—consumer lag,
+    rebalance, outage recovery, shutdown draining, and DLQ redrive—precedes any
+    capacity claim.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="lessons" title="Lessons">
+  <CaseStudyCopy>
+    Determinism is a boundary, not a slogan. TraceForge can guarantee strict
+    playback only for dependency requests and outcomes that were captured,
+    validated, and consumed by tested adapters. Naming what remains unfrozen is
+    part of the replay contract.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  Delivery semantics also need separate language. Queue acceptance, broker
+  delivery, offset commit, application idempotency, capsule sealing, and
+  exactly-once processing are different events. Treating them as one
+  “non-blocking reliable pipeline” claim would hide the failure modes that the
+  system is designed to expose.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Finally, infrastructure evidence should stay proportional. A locally
+    verified kind deployment and Terraform lifecycle demonstrate disciplined
+    packaging and ownership. They do not turn a single-writer experimental beta
+    into a production distributed platform—and the case study is stronger for
+    saying so.
   </CaseStudyCopy>
 </CaseStudySection>
