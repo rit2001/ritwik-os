@@ -114,9 +114,9 @@ The V2 portfolio hierarchy is ThesisLens, TraceForge, and Converge (flagship); S
 
 The Work index presents those tiers from the canonical project registry. Published
 case-study metadata owns each page's header facts and table of contents; previous
-and next links operate only across the two registered MDX case studies. ThesisLens,
-Converge, and AI Mock Interview Platform remain portfolio entries without
-placeholder routes.
+and next links operate only across the three registered MDX case studies:
+ThesisLens, TraceForge, and Stateful Agentic AI Assistant. Converge and AI Mock
+Interview Platform remain portfolio entries without placeholder routes.
 
 The resume PDF is expected at:
 
@@ -153,6 +153,8 @@ Work entries use separated metadata and body content:
 
 ```text
 src/content/work/
+  thesislens.meta.ts
+  thesislens.mdx
   traceforge.meta.ts
   traceforge.mdx
 

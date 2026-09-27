@@ -39,7 +39,7 @@ export const projects: readonly Project[] = [
     tier: "flagship",
     displayOrder: 1,
     summary:
-      "An evidence-grounded financial research platform combining semantic document ingestion, validated KPI extraction, deterministic SQL/RAG routing, and claim-level citation validation.",
+      "An evidence-grounded financial research platform combining semantic document ingestion, evidence-guarded KPI extraction, deterministic SQL/RAG routing, and current-request citation validation.",
     stack: [
       "Python",
       "FastAPI",
@@ -58,29 +58,34 @@ export const projects: readonly Project[] = [
         kind: "count",
         label: "Retrieval benchmark",
         value: "44 queries / 1,012 judged query-document pairs",
-        context: "Evaluation corpus",
+        context:
+          "Exhaustive Apple and Tesla FY2024 content-adjudicated evaluation corpus",
       },
       {
         kind: "delta",
         label: "Holdout nDCG@5",
         before: "0.704",
         after: "0.811",
-        context: "Local MiniLM cross-encoder fine-tuning",
+        context:
+          "Eight-query frozen holdout: local BM25 versus the fine-tuned MiniLM reranker",
       },
       {
         kind: "delta",
         label: "Holdout Recall@3",
         before: "0.448",
         after: "0.604",
-        context: "Local MiniLM cross-encoder fine-tuning",
+        context:
+          "Eight-query frozen holdout: local BM25 versus the fine-tuned MiniLM reranker",
       },
       {
         kind: "proof",
         label: "Retrieval tradeoff",
         detail:
-          "The reranker added about 3.19s/query of CPU latency and reduced top-rank MRR, so lexical retrieval remains in the system.",
+          "Mean reranking-only latency was about 3.19s/query on local CPU and MRR declined from 1.000 to 0.938, so the reranker remains offline and lexical remains the serving default.",
       },
     ],
+    caseStudyPath: "/work/thesislens",
+    repositoryUrl: "https://github.com/rit2001/thesislens",
   },
   {
     id: "traceforge",

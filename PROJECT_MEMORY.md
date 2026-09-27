@@ -380,4 +380,16 @@ Phase 8.5 Work index and evidence primitives are complete on `feat/ritwik-os-v2`
 
 ## Next Expected Phase
 
-Phase 8.6 should add the ThesisLens case study only: reconcile its approved evidence into a registered metadata entry and authored MDX route, add only real case-study actions, and extend focused content/route validation. Do not begin TraceForge narrative rewriting, Converge case-study work, resume replacement, SEO reconciliation, or topology interaction work in Phase 8.6.
+Phase 8.6 ThesisLens evidence audit and case study are complete on `feat/ritwik-os-v2`:
+
+- The authoritative public source is `https://github.com/rit2001/thesislens`, audited at commit `a1a394c13977fc83d8cf2b80bbeec2efc7c5d902` with its 221-test zero-cloud suite passing.
+- Evidence and safe wording are recorded in `docs/research/thesislens-evidence.md`.
+- `/work/thesislens` is a real registered MDX case study. Published-only navigation now orders ThesisLens, TraceForge, and Stateful Agentic AI Assistant.
+- The 44-query, 1,012-pair dataset is content-adjudicated across Apple and Tesla FY2024. The reported nDCG@5, Recall@3, MRR, and latency comparison uses the eight-query frozen final holdout.
+- The fine-tuned MiniLM reranker remains offline and experimental after a mixed result; lexical retrieval remains the serving default.
+- Citation controls validate current-request evidence IDs and report scope. They are not described as independent semantic-entailment verification.
+- Converge and AI Mock Interview Platform still have no case-study routes. No dependencies, resume assets, global SEO, or interactive-topology work changed.
+
+## Next Expected Phase
+
+Phase 8.7 should audit the authoritative TraceForge repository at source level and rewrite only `/work/traceforge` so implemented capture/replay evidence is clearly separated from persistence, evaluation, Kubernetes, and Terraform direction. Preserve the canonical project hierarchy, published-only navigation, ThesisLens case study, package files, resume, and static homepage architecture. Do not begin Converge, resume/SEO, deployment, or Phase 8.10 interaction work.

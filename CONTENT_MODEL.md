@@ -131,6 +131,15 @@ TraceForge is the first registered Work entry. It is an ongoing build case study
 
 Stateful Agentic AI Assistant is the second registered Work entry. It is a completed implemented-system case study with a real public GitHub repository and no continuously hosted demo. Its public metadata must use `HuggingFace Embeddings`, not `Google Embeddings`, unless future historical evidence supports both.
 
+ThesisLens is the first V2 flagship case study and the third registered MDX Work
+entry. Its public claims are constrained by
+`docs/research/thesislens-evidence.md`: the 44-query dataset and 1,012 judgments
+describe the full two-company benchmark, while the published nDCG@5, Recall@3,
+MRR, and latency comparison describes only the eight-query frozen holdout. The
+MiniLM reranker is offline/experimental; lexical retrieval remains the serving
+default. Citation wording must describe current-request ID/provenance validation,
+not independent semantic entailment.
+
 ### Builds
 
 The `builds` collection contains ongoing engineering work, progress logs, experiments, and implementation notes.
