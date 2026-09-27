@@ -148,9 +148,10 @@ export const projects: readonly Project[] = [
     tier: "flagship",
     displayOrder: 3,
     summary:
-      "A server-authoritative collaboration system with deterministic state, durable offline synchronization, multi-replica fan-out, and collaborative editing controls.",
+      "A PostgreSQL-authoritative collaboration system with board-local ordering, persist-before-optimism, verified snapshot-and-tail recovery, and at-least-once multi-replica delivery.",
     stack: [
       "TypeScript",
+      "Next.js",
       "React",
       "Konva",
       "Fastify",
@@ -158,7 +159,8 @@ export const projects: readonly Project[] = [
       "PostgreSQL",
       "Redis",
       "IndexedDB",
-      "Docker",
+      "Clerk",
+      "Docker Compose",
       "Playwright",
       "k6",
     ],
@@ -166,30 +168,34 @@ export const projects: readonly Project[] = [
       {
         kind: "count",
         label: "PostgreSQL integration tests",
-        value: "190+",
+        value: "245 across 29 files",
         context:
-          "Integration coverage for ordering, recovery, and collaborative state behavior",
+          "Recorded v1 release gate against real PostgreSQL for ordering, recovery, authorization, and collaborative state",
       },
       {
         kind: "proof",
-        label: "Consistency model",
+        label: "Board-local authority",
         detail:
-          "PostgreSQL advisory-lock sequencing, deterministic reducers, versioned protocols, idempotent commands, and transactional operation/projection/outbox/receipt commits.",
+          "A transaction-scoped PostgreSQL advisory lock establishes per-board order; operation, projection, receipt, heads, undo evidence, and outbox commit or roll back together.",
       },
       {
         kind: "proof",
-        label: "Resilience",
+        label: "Offline and recovery boundary",
         detail:
-          "IndexedDB persistence-before-optimism, durable command queues, generation-fenced reconnects, fixed-watermark catch-up, snapshot plus operation-tail replay, canonical hashing, and compaction.",
+          "IndexedDB persists stable command identities before optimism; generation fences, a fixed catch-up watermark, verified snapshots, and contiguous operation tails bound reconnection and recovery.",
       },
       {
         kind: "count",
-        label: "System-design components",
-        value: "25+",
+        label: "Failure-injection scenarios",
+        value: "59",
         context:
-          "With Playwright, k6, and multi-replica failure-injection and recovery suites",
+          "Recorded release evidence for two-API delivery, interruption, recovery, revocation, compaction, and presence behavior",
       },
     ],
+    caseStudyPath: "/work/converge",
+    repositoryUrl: "https://github.com/rit2001/converge",
+    deploymentNote:
+      "The audited release records one deployed API and worker; multi-replica behavior is locally failure-tested, not a production horizontal-scale claim.",
   },
   {
     id: "stateful-agentic-ai-assistant",

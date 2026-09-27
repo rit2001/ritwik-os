@@ -402,6 +402,39 @@ Phase 8.7 TraceForge evidence audit and case-study rewrite are complete on `feat
 - The verified public repository action now derives from canonical project metadata. Published-only navigation remains ThesisLens, TraceForge, and Stateful Agentic AI Assistant; Converge still has no route.
 - No dependencies, resume assets, global SEO, deployment, or interactive-topology work changed.
 
-## Next Expected Phase
+## Phase 8.8 — Converge Evidence Audit and Case Study
 
-Phase 8.8 should locate and audit the authoritative Converge repository, reconcile every ordering, offline-sync, multi-replica, testing, and failure-recovery claim against source and executed evidence, then author the real `/work/converge` case study and register it in published-only navigation. Preserve ThesisLens and TraceForge narratives, the V2 hierarchy, package files, resume, and static homepage architecture. Do not begin resume/SEO reconciliation, deployment, or Phase 8.10 interaction work.
+Phase 8.8 is complete on `feat/ritwik-os-v2`:
+
+- The authoritative public source is `https://github.com/rit2001/converge`,
+  audited at `966525daa9f9bea479c7f9d28d2cf3dcd9f735f2`; evidence and safe
+  wording are recorded in `docs/research/converge-evidence.md`.
+- `/work/converge` is a real registered MDX case study. Published-only
+  navigation now orders ThesisLens, TraceForge, Converge, and Stateful Agentic
+  AI Assistant.
+- PostgreSQL establishes a strict monotonic total order per board. Operation,
+  projection, receipt, board heads, undo evidence, and outbox commit or roll
+  back together; stable operation receipts provide application idempotency, not
+  exactly-once delivery.
+- Redis Stream delivery is at least once and non-authoritative. IndexedDB
+  retains pending command identity before optimism, while generation fencing,
+  fixed-watermark catch-up, and verified snapshot/tail recovery bound reconnect
+  and reconstruction.
+- Recorded release evidence includes 245 PostgreSQL integration tests across 29
+  files, 59 failure-injection scenarios, 93 production-build Chromium
+  scenarios, and one explicitly bounded 10-editor local k6 baseline.
+- The component-library figure is corrected to 39 architecture presets built
+  from 12 primitives. Docker is limited to local Docker Compose dependencies,
+  GitHub automation is described as CI, and complete version-history restore is
+  not claimed.
+- The recorded deployment uses one API and one worker. Production horizontal
+  scale, exactly-once delivery, active compaction, tested backup restore,
+  adoption, HA, and multi-region operation remain excluded.
+- No dependencies, resume assets, global SEO, deployment, or interactive
+  topology work changed.
+
+## Mandatory Human Review Gate
+
+Before any further V2 phase, review the homepage, `/work`, ThesisLens,
+TraceForge, and Converge together for public claim accuracy, editorial balance,
+responsive behavior, and recruiter readability.

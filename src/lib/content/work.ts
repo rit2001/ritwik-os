@@ -1,3 +1,4 @@
+import ConvergeContent from "../../content/work/converge.mdx";
 import StatefulAgenticAiAssistantContent from "../../content/work/stateful-agentic-ai-assistant.mdx";
 import ThesisLensContent from "../../content/work/thesislens.mdx";
 import TraceForgeContent from "../../content/work/traceforge.mdx";
@@ -18,6 +19,10 @@ const workModules = [
   },
   {
     meta: workMetaEntries[2].meta,
+    Content: ConvergeContent,
+  },
+  {
+    meta: workMetaEntries[3].meta,
     Content: StatefulAgenticAiAssistantContent,
   },
 ] satisfies readonly WorkEntry[];

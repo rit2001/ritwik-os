@@ -1,3 +1,4 @@
+import { convergeMeta } from "../../content/work/converge.meta";
 import { statefulAgenticAiAssistantMeta } from "../../content/work/stateful-agentic-ai-assistant.meta";
 import { thesisLensMeta } from "../../content/work/thesislens.meta";
 import { traceforgeMeta } from "../../content/work/traceforge.meta";
@@ -10,6 +11,10 @@ export const workMetaEntries = [
   {
     meta: traceforgeMeta,
     mdxPath: "src/content/work/traceforge.mdx",
+  },
+  {
+    meta: convergeMeta,
+    mdxPath: "src/content/work/converge.mdx",
   },
   {
     meta: statefulAgenticAiAssistantMeta,

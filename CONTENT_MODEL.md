@@ -147,6 +147,17 @@ MiniLM reranker is offline/experimental; lexical retrieval remains the serving
 default. Citation wording must describe current-request ID/provenance validation,
 not independent semantic entailment.
 
+Converge is the third flagship case study and the fourth registered MDX Work
+entry. Its public claims are constrained by
+`docs/research/converge-evidence.md`: PostgreSQL establishes a strict monotonic
+order per board and commits operation, projection, receipt, heads, undo evidence,
+and outbox atomically; Redis Stream delivery is at least once; IndexedDB retains
+pending intent before optimism; and snapshot/tail recovery verifies canonical
+state before rebasing. Multi-replica evidence is locally failure-tested, while
+the recorded deployment uses one API and one worker. Do not claim global order,
+exactly-once delivery, production horizontal scale, complete version history,
+active production compaction, or tested disaster recovery.
+
 ### Builds
 
 The `builds` collection contains ongoing engineering work, progress logs, experiments, and implementation notes.

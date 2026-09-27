@@ -83,22 +83,22 @@ const flagships: readonly FlagshipPresentation[] = [
       "A server-authoritative, offline-capable collaboration system designed around ordering, recovery, deterministic state, and multi-replica behavior.",
     proof: {
       label: "PostgreSQL integration tests",
-      value: "190+",
+      value: "245",
       context:
-        "Integration coverage for ordering, recovery, and collaborative state behavior.",
+        "Recorded v1 release gate across 29 files against real PostgreSQL.",
     },
     evidence: [
-      "Advisory-lock sequencing, deterministic reducers, and idempotent commands",
-      "Transactional operation, projection, outbox, and receipt semantics",
-      "Persistence-before-optimism with fixed-watermark catch-up and snapshot replay",
-      "Redis fan-out, canonical state hashing, Playwright, k6, and failure-injection suites",
+      "Board-local advisory-lock sequencing and retry-safe operation receipts",
+      "Atomic operation, projection, heads, undo evidence, outbox, and receipt commits",
+      "Persistence-before-optimism with generation fencing and fixed-watermark catch-up",
+      "At-least-once Redis Stream delivery with PostgreSQL-backed gap recovery",
     ],
     flow: [
-      "Clients",
-      "WebSocket gateway",
-      "Authoritative sequencing",
-      "Redis fan-out",
-      "PostgreSQL / recovery",
+      "Client / IndexedDB",
+      "API / board lock",
+      "PostgreSQL commit",
+      "Worker / Redis Stream",
+      "Replicas / catch-up",
     ],
     stack: [
       "TypeScript",
@@ -108,6 +108,8 @@ const flagships: readonly FlagshipPresentation[] = [
       "Redis",
       "IndexedDB",
     ],
+    scopeNote:
+      "Production records one API and one worker. Two-replica behavior is locally failure-tested; no horizontal production-scale or exactly-once claim is made.",
   },
 ];
 

@@ -53,11 +53,12 @@ Current status:
 - The app renders the V2 static-first homepage hierarchy with editorial flagship systems, evidence placement, professional topology, concise experience, capability mapping, Foundations, and contact.
 - A restrained Motion-powered interaction, scroll rhythm, and final homepage polish layer is implemented.
 - The official Next.js MDX pipeline is implemented for local Work content.
-- `/work` plus the ThesisLens, TraceForge, and Stateful Agentic AI Assistant case studies are implemented as static-first App Router routes.
+- `/work` plus the ThesisLens, TraceForge, Converge, and Stateful Agentic AI Assistant case studies are implemented as static-first App Router routes.
 - TraceForge is evidence-audited at public Experimental Beta `v0.4.1`; its case study centers exact offline replay and qualifies its optional local Go/Kafka/kind/Terraform path.
-- Stateful Agentic AI Assistant is the second validated Work case study and remains documented as a completed implementation with qualified deployment status.
+- Converge is evidence-audited at source commit `966525d`; its case study centers board-local PostgreSQL ordering, atomic authority, durable pending intent, at-least-once Redis delivery, and verified recovery.
+- Stateful Agentic AI Assistant remains documented as a completed implementation with qualified deployment status.
 - Production-hardening foundations are implemented: centralized launch metadata, generated Open Graph image, JSON-LD, robots, sitemap, custom 404, route integrity checks, and launch checklist.
-- Screenshots, Writing, Builds, Architecture, and the Converge case study have not been implemented yet.
+- Screenshots, Writing, Builds, and Architecture have not been implemented yet.
 
 ## Source Structure
 
@@ -114,9 +115,9 @@ The V2 portfolio hierarchy is ThesisLens, TraceForge, and Converge (flagship); S
 
 The Work index presents those tiers from the canonical project registry. Published
 case-study metadata owns each page's header facts and table of contents; previous
-and next links operate only across the three registered MDX case studies:
-ThesisLens, TraceForge, and Stateful Agentic AI Assistant. Converge and AI Mock
-Interview Platform remain portfolio entries without placeholder routes.
+and next links operate only across the four registered MDX case studies:
+ThesisLens, TraceForge, Converge, and Stateful Agentic AI Assistant. AI Mock
+Interview Platform remains a portfolio entry without a placeholder route.
 
 The resume PDF is expected at:
 
