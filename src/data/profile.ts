@@ -1,20 +1,9 @@
-type CurrentBuild = {
-  project: string;
-  category: string;
-  description: string;
-  status: "In Development";
-  currentMilestone: string;
-  milestoneExplanation: string;
-  nextStep: string;
-  stackDirection: readonly string[];
-  repository: "Not published yet";
-};
-
-export type Profile = {
+export type PublicProfile = {
   displayName: string;
   editorialName: string;
   headline: string;
-  compactTitle: string;
+  professionalTitle: string;
+  shortRoleLine: string;
   seoDescription: string;
   tagline: string;
   location: string;
@@ -24,51 +13,37 @@ export type Profile = {
     summary: string;
     immediate: string;
   };
-  rolePositioning: readonly string[];
-  currentBuild: CurrentBuild;
+  education: {
+    institution: string;
+    degree: string;
+    dates: string;
+    cgpa: string;
+  };
 };
 
+/** The authoritative public identity record for RITWIK OS. */
 export const profile = {
   displayName: "RITWIK BISWAS",
   editorialName: "Ritwik Biswas",
+  professionalTitle: "Software Engineer | Backend, Distributed Systems & AI",
+  shortRoleLine: "Software Engineer\nBackend · Distributed Systems · AI",
   headline:
-    "Software Engineer building AI systems, scalable backend platforms, and cloud-native infrastructure.",
-  compactTitle: "Software Engineer | AI Systems, Backend & Cloud",
+    "Software Engineer focused on backend systems, distributed systems, and applied AI.",
   seoDescription:
-    "Software Engineer building AI systems, scalable backend platforms, cloud-native infrastructure, and production-focused engineering projects.",
+    "Software Engineer portfolio for Ritwik Biswas, covering backend systems, distributed systems, applied AI, and evidence-backed engineering case studies.",
   tagline: "Engineering Intelligence into Production.",
-  location: "Bengaluru, India",
-  email: "biswas.ritwik2001@gmail.com",
+  location: "Kolkata, India",
+  email: "thisisritwikbiswas@gmail.com",
   resumePath: "/resume/ritwik-biswas-resume.pdf",
   availability: {
     summary:
-      "Open to full-time Software Engineering, Backend Engineering, AI Engineering, and Full-Stack opportunities.",
-    immediate: "Available to join immediately.",
+      "Open to relevant full-time Software Engineering, Backend Engineering, Distributed Systems and AI Engineering roles.",
+    immediate: "Immediate joiner.",
   },
-  rolePositioning: [
-    "Software Engineer — AI / LLM Systems",
-    "Backend Software Engineer",
-    "Full-Stack Product Engineer",
-    "Platform / Cloud / DevOps Engineer",
-  ],
-  currentBuild: {
-    project: "TraceForge",
-    category: "Distributed Tracing and Event Pipeline",
-    description: "Distributed Tracing and Event Pipeline",
-    status: "In Development",
-    currentMilestone: "Architecture and repository bootstrap",
-    milestoneExplanation:
-      "Defining service boundaries, OpenTelemetry ingestion flow, Kafka event contracts, storage interfaces, and the initial observability and load-testing strategy.",
-    nextStep:
-      "Initialize the Go repository and implement the first trace-ingestion service with OpenTelemetry context propagation.",
-    stackDirection: [
-      "Go",
-      "Kafka",
-      "OpenTelemetry",
-      "Docker",
-      "Kubernetes",
-      "Terraform",
-    ],
-    repository: "Not published yet",
+  education: {
+    institution: "Indian Institute of Technology Kharagpur",
+    degree: "Dual Degree (B.Tech + M.Tech) in Mechanical Engineering",
+    dates: "2021–2026",
+    cgpa: "7.84/10",
   },
-} satisfies Profile;
+} as const satisfies PublicProfile;

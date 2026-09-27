@@ -16,8 +16,8 @@ export const algorithmProfiles = [
     stats: [
       { label: "Peak rating", value: "1923" },
       { label: "Percentile", value: "Top 5.6%" },
-      { label: "Problems solved", value: "1,500+" },
-      { label: "Problem-of-the-Day streak", value: "550+ days" },
+      { label: "Problems solved", value: "1,550+" },
+      { label: "Problem-of-the-Day streak", value: "600+ days" },
     ],
   },
   {
@@ -35,7 +35,8 @@ export const algorithmProfiles = [
 ] as const satisfies readonly AlgorithmProfile[];
 
 export const achievementSignals = [
-  "Selected for Amazon Machine Learning Summer School 2024",
+  "Amazon ML Summer School 2024",
   "Top 3 in GCOS 2024 at IIT Kharagpur",
   "Top 5 in Overnite at Kshitij, IIT Kharagpur",
+  "Shyamal Ghosh & Sunanda Ghosh Endowment Honour",
 ] as const;

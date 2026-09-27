@@ -109,6 +109,16 @@ Allowed Work status values are:
 
 Ongoing entries must use `in-development`. Repository and demo URLs must be omitted when no real project-specific destination exists.
 
+#### V2 Portfolio Registry
+
+`src/data/projects.ts` is the canonical portfolio registry. Every project has a stable `id`, a `tier` (`flagship`, `selected`, or `archive`), `displayOrder`, evidence highlights, and optional real case-study or repository destinations. A missing `caseStudyPath` means no route is published yet; it is not a placeholder.
+
+Evidence highlights are `delta`, `count`, or `proof`. Delta evidence must include before, after, and context. The flagship order is ThesisLens, TraceForge, Converge. Archive entries may reference their successor through `supersededBy` without being described as failed or obsolete.
+
+`src/data/professional-signals.ts` stores approved public geography signals separately from identity. Public signals are limited to approved relationship labels and must not imply residence or relocation for remote work. Withheld signals must not render.
+
+`src/data/capabilities.ts` expresses techniques/tools plus demonstrated project or experience references; it does not use proficiency labels.
+
 TraceForge is the first registered Work entry. It is an ongoing build case study, not a completed-project page. Its metadata must continue to omit repository and demo URLs until real destinations exist.
 
 Stateful Agentic AI Assistant is the second registered Work entry. It is a completed implemented-system case study with a real public GitHub repository and no continuously hosted demo. Its public metadata must use `HuggingFace Embeddings`, not `Google Embeddings`, unless future historical evidence supports both.

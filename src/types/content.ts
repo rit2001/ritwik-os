@@ -4,6 +4,7 @@ export type WorkStatus =
   "in-development" | "completed" | "maintained" | "archived";
 
 export type WorkMeta = {
+  projectId: string;
   slug: string;
   title: string;
   shortTitle?: string;

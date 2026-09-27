@@ -1,12 +1,9 @@
+import { profile } from "./profile";
+
 export type RecruiterBrief = {
   summary: string;
   evidence: readonly string[];
-  education: {
-    institution: string;
-    degree: string;
-    dates: string;
-    cgpa: string;
-  };
+  education: typeof profile.education;
 };
 
 export const recruiterBrief = {
@@ -17,10 +14,5 @@ export const recruiterBrief = {
     "Built systems involving stateful AI agents, RAG, backend APIs, authentication, payments, real-time communication, Docker, AWS, and CI/CD.",
     "Combines applied engineering experience with strong algorithmic fundamentals.",
   ],
-  education: {
-    institution: "Indian Institute of Technology Kharagpur",
-    degree: "Dual Degree (B.Tech + M.Tech) in Mechanical Engineering",
-    dates: "2021 – 2026",
-    cgpa: "7.84/10",
-  },
+  education: profile.education,
 } as const satisfies RecruiterBrief;

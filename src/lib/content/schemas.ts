@@ -11,6 +11,7 @@ const optionalUrl = z.string().url().optional();
 
 export const workMetaSchema = z
   .object({
+    projectId: z.string().trim().min(1),
     slug: z
       .string()
       .trim()

@@ -596,8 +596,11 @@ export function StatusSummary() {
       </p>
       <dl className="mt-5 divide-y divide-border">
         {[
-          ["Current phase", "Architecture and repository bootstrap"],
-          ["Repository", "Not published yet"],
+          [
+            "Current scope",
+            "Telemetry capture and deterministic replay foundations",
+          ],
+          ["Repository", "No public project repository linked"],
           ["Public demo", "Not available"],
           ["Performance results", "Not measured yet"],
         ].map(([label, value]) => (

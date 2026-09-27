@@ -1,18 +1,21 @@
 import type { WorkMeta } from "../../types/content";
+import { getProject } from "../../data/projects";
+
+const project = getProject("traceforge");
 
 export const traceforgeMeta = {
+  projectId: project.id,
   slug: "traceforge",
-  title: "TraceForge",
+  title: project.title,
   shortTitle: "TraceForge",
-  category: "Distributed Tracing and Event Pipeline",
-  summary:
-    "Building a distributed tracing pipeline focused on OpenTelemetry ingestion, Kafka-backed event processing, containerized services, infrastructure automation, and operational visibility.",
+  category: project.category,
+  summary: project.summary,
   status: "in-development",
   statusLabel: "In Development",
-  year: "2026",
+  year: project.period,
   featured: true,
   ongoing: true,
-  stack: ["Go", "Kafka", "OpenTelemetry", "Docker", "Kubernetes", "Terraform"],
+  stack: project.stack,
   roles: [
     "Distributed tracing architecture",
     "Telemetry ingestion",
@@ -28,5 +31,6 @@ export const traceforgeMeta = {
   readingTime: "9 min read",
   draft: false,
   relatedProjectSlugs: [],
-  currentMilestone: "Architecture and repository bootstrap",
+  currentMilestone:
+    "Telemetry capture and deterministic replay foundations, with platform persistence and evaluation capabilities expanding.",
 } satisfies WorkMeta;

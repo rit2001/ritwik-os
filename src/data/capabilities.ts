@@ -1,91 +1,88 @@
-export type CapabilityStatus =
-  "Production Experience" | "Working Knowledge" | "Currently Building";
-
 export type CapabilityGroup = {
   title: string;
-  status: CapabilityStatus;
   items: readonly string[];
+  demonstratedIn: readonly string[];
 };
 
 export const capabilityGroups = [
   {
-    title: "AI Systems",
-    status: "Production Experience",
+    title: "Backend & Distributed Systems",
+    items: [
+      "Go",
+      "FastAPI",
+      "Kafka",
+      "OpenTelemetry",
+      "versioned protocols",
+      "idempotent commands",
+      "deterministic reducers",
+    ],
+    demonstratedIn: ["TraceForge", "Converge"],
+  },
+  {
+    title: "AI & Retrieval Systems",
     items: [
       "LangGraph",
-      "Stateful agent workflows",
-      "Retrieval-Augmented Generation",
-      "FAISS",
-      "Embeddings",
-      "Human-in-the-Loop execution",
-      "LangSmith observability",
-      "LLM API integration",
+      "RAG",
+      "hybrid retrieval",
+      "cross-encoder reranking",
+      "embeddings",
+      "Human-in-the-Loop",
+    ],
+    demonstratedIn: [
+      "ThesisLens",
+      "Stateful Agentic AI Assistant",
+      "TraceForge",
     ],
   },
   {
-    title: "Backend Systems",
-    status: "Production Experience",
-    items: [
-      "FastAPI",
-      "Node.js",
-      "Express.js",
-      "REST APIs",
-      "WebSockets",
-      "Socket.IO",
-      "Authentication and authorization",
-      "API design",
-    ],
-  },
-  {
-    title: "Data and Infrastructure",
-    status: "Working Knowledge",
+    title: "Data & State",
     items: [
       "PostgreSQL",
-      "MongoDB",
       "Redis",
-      "MySQL",
+      "IndexedDB",
       "SQLite",
-      "Docker",
-      "AWS",
-      "GitHub Actions",
-      "Nginx",
+      "transactional outbox",
+      "stateful sessions",
     ],
+    demonstratedIn: ["Converge", "ThesisLens", "Stateful Agentic AI Assistant"],
   },
   {
-    title: "Frontend Product Engineering",
-    status: "Production Experience",
+    title: "Cloud & Platform",
     items: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "JavaScript",
-      "Tailwind CSS",
-      "Firebase",
-      "responsive product interfaces",
+      "Docker",
+      "GitHub Actions",
+      "Kubernetes",
+      "Terraform",
+      "AWS EC2",
+      "containerized workers",
+    ],
+    demonstratedIn: [
+      "TraceForge",
+      "Stateful Agentic AI Assistant",
+      "ThesisLens",
     ],
   },
   {
-    title: "Algorithms and Foundations",
-    status: "Working Knowledge",
+    title: "Product Engineering",
+    items: [
+      "TypeScript",
+      "React",
+      "Konva",
+      "Socket.IO",
+      "Playwright",
+      "responsive interfaces",
+    ],
+    demonstratedIn: ["Converge", "AI Mock Interview Platform"],
+  },
+  {
+    title: "Algorithmic Foundations",
     items: [
       "C++",
       "Python",
-      "Data Structures and Algorithms",
-      "System Design",
-      "Competitive Programming",
+      "data structures and algorithms",
+      "system design",
+      "competitive programming",
     ],
-  },
-  {
-    title: "Observability and Platform",
-    status: "Currently Building",
-    items: [
-      "Go",
-      "Kafka",
-      "OpenTelemetry",
-      "Kubernetes",
-      "Terraform",
-      "distributed tracing",
-      "telemetry pipelines",
-    ],
+    demonstratedIn: ["LeetCode", "Codeforces"],
   },
 ] as const satisfies readonly CapabilityGroup[];

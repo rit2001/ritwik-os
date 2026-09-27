@@ -1,30 +1,21 @@
 import type { WorkMeta } from "../../types/content";
+import { getProject } from "../../data/projects";
+
+const project = getProject("stateful-agentic-ai-assistant");
 
 export const statefulAgenticAiAssistantMeta = {
+  projectId: project.id,
   slug: "stateful-agentic-ai-assistant",
-  title: "Stateful Agentic AI Assistant",
+  title: project.title,
   shortTitle: "Agentic AI Assistant",
-  category: "AI Systems and Cloud Deployment",
-  summary:
-    "Built a LangGraph-based tool-using assistant with thread-scoped SQLite checkpointing, streamed responses, PDF retrieval, Human-in-the-Loop approval, LangSmith tracing, containerization, and automated AWS EC2 deployment.",
+  category: project.category,
+  summary: project.summary,
   status: "completed",
   statusLabel: "Completed",
-  year: "May-June 2026",
+  year: project.period,
   featured: true,
   ongoing: false,
-  stack: [
-    "Python",
-    "Streamlit",
-    "LangGraph",
-    "Groq",
-    "SQLite",
-    "FAISS",
-    "HuggingFace Embeddings",
-    "Docker",
-    "GitHub Actions",
-    "AWS EC2",
-    "LangSmith",
-  ],
+  stack: project.stack,
   roles: [
     "Agent orchestration",
     "Stateful memory",
@@ -34,7 +25,7 @@ export const statefulAgenticAiAssistantMeta = {
     "Cloud deployment",
     "Observability",
   ],
-  repositoryUrl: "https://github.com/rit2001/Agentic-Chatbot-AWS",
+  repositoryUrl: project.repositoryUrl,
   caseStudyPath: "/work/stateful-agentic-ai-assistant",
   seoTitle: "Stateful Agentic AI Assistant | Ritwik Biswas",
   seoDescription:

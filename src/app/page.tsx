@@ -21,7 +21,7 @@ import {
 } from "@/data/competitive-programming";
 import { experience } from "@/data/experience";
 import { profile } from "@/data/profile";
-import { selectedProjects } from "@/data/projects";
+import { getProject, legacyHomepageProjects } from "@/data/projects";
 import { recruiterBrief } from "@/data/recruiter-brief";
 import { getSocialLink } from "@/data/social-links";
 import { getHomeStructuredData } from "@/lib/structured-data";
@@ -77,7 +77,18 @@ export default function Home() {
   const linkedIn = getSocialLink("linkedin");
   const leetCode = getSocialLink("leetcode");
   const codeforces = getSocialLink("codeforces");
-  const stackDirection = profile.currentBuild.stackDirection.join(" / ");
+  const traceForge = getProject("traceforge");
+  const stackDirection = traceForge.stack.join(" / ");
+  const traceForgeProofs = traceForge.evidence.filter(
+    (evidence): evidence is Extract<typeof evidence, { kind: "proof" }> =>
+      evidence.kind === "proof",
+  );
+  const currentScope = traceForgeProofs[0] ?? {
+    kind: "proof" as const,
+    label: "Current foundation",
+    detail: traceForge.summary,
+  };
+  const expandingDirection = traceForgeProofs[1] ?? currentScope;
 
   return (
     <>
@@ -173,12 +184,12 @@ export default function Home() {
                 id="current-build-title"
                 className="mt-5 text-[length:var(--text-heading-3-size)] leading-[var(--text-heading-3-line-height)] font-semibold text-foreground uppercase"
               >
-                {profile.currentBuild.project}
+                {traceForge.title}
               </h2>
             </CurrentBuildItem>
             <CurrentBuildItem>
               <p className="mt-3 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-                {profile.currentBuild.category}
+                {traceForge.category}
               </p>
             </CurrentBuildItem>
 
@@ -187,27 +198,25 @@ export default function Home() {
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
                   Status
                 </dt>
-                <CurrentBuildStatus>
-                  {profile.currentBuild.status}
-                </CurrentBuildStatus>
+                <CurrentBuildStatus>{traceForge.status}</CurrentBuildStatus>
               </CurrentBuildItem>
               <CurrentBuildItem>
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-                  Current Milestone
+                  Current Scope
                 </dt>
                 <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
                   <span className="font-semibold text-foreground">
-                    {profile.currentBuild.currentMilestone}.
+                    {currentScope.label}.
                   </span>{" "}
-                  {profile.currentBuild.milestoneExplanation}
+                  {currentScope.detail}
                 </dd>
               </CurrentBuildItem>
               <CurrentBuildItem>
                 <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-                  Next Step
+                  Expanding Direction
                 </dt>
                 <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                  {profile.currentBuild.nextStep}
+                  {expandingDirection.detail}
                 </dd>
               </CurrentBuildItem>
               <CurrentBuildItem>
@@ -216,14 +225,6 @@ export default function Home() {
                 </dt>
                 <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
                   {stackDirection}
-                </dd>
-              </CurrentBuildItem>
-              <CurrentBuildItem>
-                <dt className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-                  Repository
-                </dt>
-                <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-                  {profile.currentBuild.repository}
                 </dd>
               </CurrentBuildItem>
             </dl>
@@ -250,25 +251,25 @@ export default function Home() {
           </Reveal>
 
           <StaggerGroup className="mt-10 grid gap-5 lg:grid-cols-2">
-            {selectedProjects.map((project) => (
+            {legacyHomepageProjects.map((project) => (
               <StaggerItem key={project.title}>
                 <ProjectCard
                   ariaLabel={
-                    project.caseStudyPath && !project.githubUrl
+                    project.caseStudyPath && !project.repositoryUrl
                       ? `Open ${project.title} build case study`
-                      : project.githubUrl && !project.caseStudyPath
+                      : project.repositoryUrl && !project.caseStudyPath
                         ? `Open ${project.title} repository on GitHub`
                         : undefined
                   }
                   href={
-                    project.caseStudyPath && !project.githubUrl
+                    project.caseStudyPath && !project.repositoryUrl
                       ? project.caseStudyPath
-                      : project.githubUrl && !project.caseStudyPath
-                        ? project.githubUrl
+                      : project.repositoryUrl && !project.caseStudyPath
+                        ? project.repositoryUrl
                         : null
                   }
                   interactive={Boolean(
-                    project.caseStudyPath || project.githubUrl,
+                    project.caseStudyPath || project.repositoryUrl,
                   )}
                 >
                   <StaggerGroup>
@@ -300,18 +301,11 @@ export default function Home() {
                     <StaggerItem y={12}>
                       <div className="mt-6 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
                         <div className="space-y-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-muted">
-                          {project.use ? <p>{project.use}</p> : null}
                           {project.deploymentNote ? (
                             <p>{project.deploymentNote}</p>
                           ) : null}
-                          {project.repositoryNote ? (
-                            <p>{project.repositoryNote}</p>
-                          ) : null}
-                          {!project.githubUrl ? (
-                            <p>Repository: Not published yet</p>
-                          ) : null}
                         </div>
-                        {project.caseStudyPath && project.githubUrl ? (
+                        {project.caseStudyPath && project.repositoryUrl ? (
                           <div className="flex shrink-0 flex-wrap gap-3">
                             <a
                               className={projectInternalActionClassName}
@@ -327,7 +321,7 @@ export default function Home() {
                             </a>
                             <a
                               className={projectExternalActionClassName}
-                              href={project.githubUrl}
+                              href={project.repositoryUrl}
                               rel="noopener noreferrer"
                               target="_blank"
                             >
@@ -350,7 +344,7 @@ export default function Home() {
                               →
                             </span>
                           </span>
-                        ) : project.githubUrl ? (
+                        ) : project.repositoryUrl ? (
                           <span className={projectExternalActionClassName}>
                             GitHub{" "}
                             <span

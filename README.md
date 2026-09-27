@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, the Phase 4 full homepage control plane, the final Phase 4 motion/interaction polish, and the Phase 5 static content pipeline with the first TraceForge case study.
+This repository contains the V1 completed baseline and the V2 content-model foundation on `feat/ritwik-os-v2`.
 
 ## What This Project Is
 
@@ -93,7 +93,7 @@ Research files should capture source-backed evidence before a public case study 
 
 ## Canonical Identity Data
 
-Personal identity, availability, resume path, and current build metadata are centralized in `src/data/profile.ts`.
+Personal identity, availability, education, and resume path are centralized in `src/data/profile.ts`. This is the authoritative public identity record; launch metadata derives from it.
 
 External professional links are centralized in `src/data/social-links.ts`. GitHub and LinkedIn are primary public links. LeetCode and Codeforces appear as algorithm evidence; X remains stored for later placement and is not shown in the homepage header, hero, or primary footer.
 
@@ -107,7 +107,9 @@ src/data/competitive-programming.ts
 src/data/recruiter-brief.ts
 ```
 
-The current public email is `biswas.ritwik2001@gmail.com`. Do not display a phone number or secondary email unless the product direction changes.
+The current public email is `thisisritwikbiswas@gmail.com`; the current base is Kolkata, India. Do not display a phone number, secondary email, private job-search process, or unapproved geography signals.
+
+The V2 portfolio hierarchy is ThesisLens, TraceForge, and Converge (flagship); Stateful Agentic AI Assistant and AI Mock Interview Platform (selected); and Real-Time Collaborative Whiteboard (archive, superseded by Converge). Only real registered MDX entries receive Work routes.
 
 The resume PDF is expected at:
 

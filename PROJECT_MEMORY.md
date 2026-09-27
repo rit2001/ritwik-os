@@ -348,9 +348,20 @@ Production hardening and launch-readiness has been completed:
 - Browser console launch QA should use a clean profile or disabled DOM-modifying extensions such as Dark Reader, because extension-injected attributes can create false hydration warnings.
 - Manual launch tracking lives in `docs/LAUNCH_CHECKLIST.md`.
 
+## V2 Content Model — Phase 8.3
+
+Phase 8.3 is complete on branch `feat/ritwik-os-v2` in the canonical workspace
+`/Users/ritwikbiswas/Developer/ritwik-os`.
+
+- `src/data/profile.ts` is the authoritative public identity record: Ritwik Biswas, Kolkata, India, `thisisritwikbiswas@gmail.com`, approved availability, and education.
+- Portfolio hierarchy is canonical: ThesisLens, TraceForge, and Converge are flagship; Stateful Agentic AI Assistant and AI Mock Interview Platform are selected; Real-Time Collaborative Whiteboard is archive and superseded by Converge.
+- Public professional signals are evidence-oriented. They must not imply relocation or physical residence for remote work; no United States signal is public.
+- Work case-study routes remain limited to real registered MDX entries: TraceForge and Stateful Agentic AI Assistant. ThesisLens and Converge have no placeholder route.
+- The baseline resume PDF remains intentionally untouched until the later resume/SEO phase.
+
 ## Next Expected Phase
 
-The next implementation phase should review the production preview for launch acceptance:
+The next implementation phase is Phase 8.4: redesign the homepage around the V2 flagship hierarchy and professional-signal presentation without adding unpublished case-study routes or changing the resume PDF.
 
 1. Configure a real preview URL through `NEXT_PUBLIC_SITE_URL`.
 2. Run `npm run verify`.
