@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { traceforgeTocItems, type CaseStudyTocItem } from "./caseStudyTocItems";
+import type { CaseStudyTocItem } from "@/types/content";
 
 export function CaseStudyToc({
-  items = traceforgeTocItems,
-}: Readonly<{ items?: readonly CaseStudyTocItem[] }>) {
+  items,
+}: Readonly<{ items: readonly CaseStudyTocItem[] }>) {
   const sectionIds = useMemo(
     () => items.map((item) => item.href.replace(/^#/, "")),
     [items],

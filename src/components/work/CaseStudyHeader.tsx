@@ -3,26 +3,17 @@ import Link from "next/link";
 import { ActionLink } from "@/components/ui/ActionLink";
 import type { WorkMeta } from "@/types/content";
 
-import { StatusBadge } from "./StatusBadge";
+import { CaseStudyFactList } from "./EvidencePrimitives";
 
 export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
-  const isTraceForge = meta.slug === "traceforge";
-  const isAgenticAssistant = meta.slug === "stateful-agentic-ai-assistant";
-  const summary = isTraceForge
-    ? "TraceForge is an ongoing distributed tracing and telemetry-pipeline project focused on context propagation, OpenTelemetry ingestion, Kafka-backed event transport, scalable processing boundaries, infrastructure automation, and measurable operational visibility."
-    : meta.summary;
-  const projectPeriodLabel = isTraceForge
-    ? "Current milestone"
-    : "Project period";
-  const projectPeriodValue = isTraceForge ? meta.currentMilestone : meta.year;
-  const repositoryValue = meta.repositoryUrl
-    ? "Public GitHub repository"
-    : "Not published yet";
-  const demoValue = isAgenticAssistant
-    ? "Not continuously hosted"
-    : meta.demoUrl
-      ? "Available"
-      : "Not available";
+  const facts = [
+    { label: "Status", value: meta.statusLabel },
+    { label: "Project period", value: meta.year },
+    ...(meta.repositoryUrl
+      ? [{ label: "Repository", value: "Public GitHub repository" }]
+      : []),
+    ...(meta.headerFacts ?? []),
+  ];
 
   return (
     <header className="border-b border-border pb-10">
@@ -54,82 +45,39 @@ export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
         {meta.title}
       </h1>
       <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
-        {summary}
+        {meta.summary}
       </p>
 
-      <dl className="mt-8 grid gap-5 border-y border-border py-6 md:grid-cols-2 xl:grid-cols-4">
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            Status
-          </dt>
-          <dd className="mt-2">
-            <StatusBadge>{meta.statusLabel}</StatusBadge>
-          </dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            {projectPeriodLabel}
-          </dt>
-          <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {projectPeriodValue}
-          </dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            Repository
-          </dt>
-          <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {repositoryValue}
-          </dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            {isAgenticAssistant ? "Deployment" : "Demo"}
-          </dt>
-          <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {isAgenticAssistant ? "On-demand AWS EC2" : demoValue}
-          </dd>
-        </div>
-        {isAgenticAssistant ? (
-          <div>
-            <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-              Demo
-            </dt>
-            <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-              {demoValue}
-            </dd>
-          </div>
-        ) : null}
-      </dl>
+      <CaseStudyFactList facts={facts} />
 
-      {meta.repositoryUrl ? (
+      {meta.repositoryUrl || meta.demoUrl ? (
         <div className="mt-6 flex flex-wrap gap-3">
-          <ActionLink
-            href={meta.repositoryUrl}
-            rel="noopener noreferrer"
-            target="_blank"
-            variant="secondary"
-          >
-            GitHub Repository
-          </ActionLink>
-          {isAgenticAssistant ? (
-            <span className="inline-flex min-h-11 items-center rounded-lg border border-border bg-transparent px-4 py-2 font-mono text-[length:var(--text-technical-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-              Demo: Not continuously hosted
-            </span>
+          {meta.repositoryUrl ? (
+            <ActionLink
+              href={meta.repositoryUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+              variant="secondary"
+            >
+              GitHub Repository ↗
+            </ActionLink>
+          ) : null}
+          {meta.demoUrl ? (
+            <ActionLink
+              href={meta.demoUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+              variant="secondary"
+            >
+              Live Demo ↗
+            </ActionLink>
           ) : null}
         </div>
       ) : null}
 
-      <ul className="mt-6 flex flex-wrap gap-2">
-        {meta.stack.map((item) => (
-          <li
-            className="rounded-xs border border-border bg-surface-muted px-2.5 py-1 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.04em] text-foreground-secondary"
-            key={item}
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
+      <p className="mt-6 font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] text-foreground-muted">
+        {meta.stack.join(" · ")}
+      </p>
     </header>
   );
 }

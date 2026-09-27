@@ -99,6 +99,8 @@ Current required Work metadata includes:
 - `draft`
 - optional `relatedProjectSlugs`
 - optional `currentMilestone`
+- `toc` entries whose anchors must match rendered case-study section IDs
+- optional `headerFacts` for evidence-oriented case-study facts
 
 Allowed Work status values are:
 
@@ -108,6 +110,12 @@ Allowed Work status values are:
 - `archived`
 
 Ongoing entries must use `in-development`. Repository and demo URLs must be omitted when no real project-specific destination exists.
+
+Portfolio projects and published case studies are separate registries. A project
+may appear in the V2 Work index without a case-study route; only entries in
+`src/lib/content/work-manifest.ts` with real MDX bodies are published. Published
+case studies use their metadata-defined TOC and participate in previous/next
+navigation. Unpublished portfolio projects must never receive placeholder links.
 
 #### V2 Portfolio Registry
 

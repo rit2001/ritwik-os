@@ -112,6 +112,12 @@ The current public email is `thisisritwikbiswas@gmail.com`; the current base is 
 
 The V2 portfolio hierarchy is ThesisLens, TraceForge, and Converge (flagship); Stateful Agentic AI Assistant and AI Mock Interview Platform (selected); and Real-Time Collaborative Whiteboard (archive, superseded by Converge). Only real registered MDX entries receive Work routes.
 
+The Work index presents those tiers from the canonical project registry. Published
+case-study metadata owns each page's header facts and table of contents; previous
+and next links operate only across the two registered MDX case studies. ThesisLens,
+Converge, and AI Mock Interview Platform remain portfolio entries without
+placeholder routes.
+
 The resume PDF is expected at:
 
 ```text

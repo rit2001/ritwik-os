@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { ZodError } from "zod";
 
 import { workMetaSchema } from "../src/lib/content/schemas";
@@ -12,6 +12,10 @@ function formatZodError(slug: string, error: ZodError) {
 
     return `[${slug}] ${field}: ${issue.message}`;
   });
+}
+
+function hasSectionId(source: string, sectionId: string) {
+  return new RegExp(`\\bid\\s*=\\s*["']${sectionId}["']`).test(source);
 }
 
 function validateContent() {
@@ -37,6 +41,18 @@ function validateContent() {
       errors.push(
         `[${parsed.data.slug}] mdx: missing MDX module at ${entry.mdxPath}`,
       );
+    }
+
+    if (existsSync(entry.mdxPath)) {
+      const source = readFileSync(entry.mdxPath, "utf8");
+      for (const tocItem of parsed.data.toc) {
+        const sectionId = tocItem.href.slice(1);
+        if (!hasSectionId(source, sectionId)) {
+          errors.push(
+            `[${parsed.data.slug}] TOC href ${tocItem.href} does not match an MDX section id`,
+          );
+        }
+      }
     }
 
     const project = projects.find((item) => item.id === parsed.data.projectId);

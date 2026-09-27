@@ -370,8 +370,14 @@ Phase 8.4 static homepage hierarchy is complete on `feat/ritwik-os-v2`:
 - ThesisLens and Converge do not expose placeholder actions or routes. TraceForge retains its real case-study action.
 - Existing client boundaries are limited to the established navigation, scroll progress, provider, and restrained section reveal primitives; homepage content remains present without motion.
 
-The recommended Phase 8.5 scope is the V2 Work index hierarchy: present flagship, selected, and archive tiers from the canonical project registry while continuing to route only registered MDX case studies.
+Phase 8.5 Work index and evidence primitives are complete on `feat/ritwik-os-v2`:
 
-Do not add case-study MDX, placeholder routes, resume changes, SEO reconciliation, or animated topology work to Phase 8.5 unless separately approved.
+- `/work` is organized from the canonical registry into Flagship Systems, Selected Earlier Work, and Archive / Superseded sections.
+- Portfolio projects can remain visible without routes; only the registered TraceForge and Stateful Agentic AI Assistant MDX entries resolve as case studies.
+- Case-study headers, facts, TOCs, and previous/next navigation are metadata-driven. TOC anchors are validated against the authored MDX section IDs.
+- Shared evidence primitives provide metric deltas, semantic evidence tables, responsive system flows, invariant callouts, trade-off records, and case-study fact lists without introducing dependencies.
+- ThesisLens and Converge have no placeholder case-study route or action. The resume PDF remains unchanged.
 
-Do not start implementation until the user explicitly asks for it.
+## Next Expected Phase
+
+Phase 8.6 should add the ThesisLens case study only: reconcile its approved evidence into a registered metadata entry and authored MDX route, add only real case-study actions, and extend focused content/route validation. Do not begin TraceForge narrative rewriting, Converge case-study work, resume replacement, SEO reconciliation, or topology interaction work in Phase 8.6.
