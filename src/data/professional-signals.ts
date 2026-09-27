@@ -1,5 +1,5 @@
 export type ProfessionalSignalRelationship =
-  "current-base" | "engineering-experience";
+  "current-base" | "engineering-experience" | "country-marker";
 
 export type ProfessionalSignal = {
   id: string;
@@ -40,12 +40,21 @@ export const professionalSignals = [
     visibility: "public",
   },
   {
-    id: "canada",
-    label: "Canada",
+    id: "toronto",
+    label: "Toronto",
     relationship: "engineering-experience",
-    detail: "Taskly Technologies",
-    latitude: 56.1304,
-    longitude: -106.3468,
+    detail: "Taskly Technologies · Remote engineering experience",
+    latitude: 43.6532,
+    longitude: -79.3832,
+    visibility: "public",
+  },
+  {
+    id: "usa",
+    label: "USA",
+    relationship: "country-marker",
+    detail: "United States",
+    latitude: 39.8283,
+    longitude: -98.5795,
     visibility: "public",
   },
 ] as const satisfies readonly ProfessionalSignal[];

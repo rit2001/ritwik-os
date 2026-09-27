@@ -18,6 +18,7 @@ body {
   margin: 0;
   overflow-x: clip;
   background:
+    radial-gradient(circle at 78% 8%, rgb(25 96 180 / 0.13), transparent 34rem),
     linear-gradient(
       180deg,
       var(--ritwik-color-background-elevated) 0%,
@@ -31,6 +32,70 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes signal-route {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+@keyframes signal-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.72);
+  }
+  55% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+@keyframes signal-travel {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  12%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.signal-grid {
+  background-image:
+    linear-gradient(rgb(102 168 255 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(102 168 255 / 0.055) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 18%,
+    black 82%,
+    transparent
+  );
+}
+
+.signal-route {
+  stroke-dasharray: 4 8;
+  animation: signal-route var(--duration-signal) linear infinite;
+}
+
+.signal-ripple {
+  animation: signal-pulse 1.8s var(--ease-standard) infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-route,
+  .signal-ripple {
+    animation: none !important;
+  }
 }
 
 body,

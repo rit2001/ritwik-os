@@ -123,6 +123,7 @@ function validateContent() {
   const allowedRelationships = new Set([
     "current-base",
     "engineering-experience",
+    "country-marker",
   ]);
   for (const signal of professionalSignals) {
     if (
