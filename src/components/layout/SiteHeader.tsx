@@ -13,7 +13,7 @@ export function SiteHeader() {
     { label: "Systems", href: "#systems" },
     { label: "Experience", href: "#experience" },
     { label: "Capabilities", href: "#capabilities" },
-    { label: "Algorithms", href: "#algorithms" },
+    { label: "Foundations", href: "#foundations" },
     { label: "Contact", href: "#contact" },
   ] as const;
 
@@ -33,6 +33,13 @@ export function SiteHeader() {
             aria-hidden="true"
           />
           {siteConfig.name}
+        </Link>
+
+        <Link
+          className="inline-flex min-h-11 items-center rounded-sm px-3 py-2 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-foreground-secondary uppercase transition-colors hover:text-foreground sm:hidden"
+          href="/work"
+        >
+          Work
         </Link>
 
         <HeaderNavigation

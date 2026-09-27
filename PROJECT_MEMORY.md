@@ -361,12 +361,17 @@ Phase 8.3 is complete on branch `feat/ritwik-os-v2` in the canonical workspace
 
 ## Next Expected Phase
 
-The next implementation phase is Phase 8.4: redesign the homepage around the V2 flagship hierarchy and professional-signal presentation without adding unpublished case-study routes or changing the resume PDF.
+Phase 8.4 static homepage hierarchy is complete on `feat/ritwik-os-v2`:
 
-1. Configure a real preview URL through `NEXT_PUBLIC_SITE_URL`.
-2. Run `npm run verify`.
-3. Deploy a preview without merging or promoting to production until reviewed.
-4. Complete the manual checks in `docs/LAUNCH_CHECKLIST.md`.
-5. Do not add fake domains, placeholder routes, screenshots, demos, metrics, or unsupported deployment claims.
+- Homepage order is Hero, Credibility Rail, Flagship Systems, Experience, Capability Evidence Map, Foundations, Contact, and Footer.
+- ThesisLens, TraceForge, and Converge are presented as distinct editorial flagship sections with static semantic architecture flows and evidence-first hierarchy.
+- The hero includes a static SVG professional topology with adjacent text; it requires no client JavaScript and does not imply relocation or residence for remote work.
+- Standalone Current Build, Recruiter Brief, and legacy-project homepage cards are no longer rendered.
+- ThesisLens and Converge do not expose placeholder actions or routes. TraceForge retains its real case-study action.
+- Existing client boundaries are limited to the established navigation, scroll progress, provider, and restrained section reveal primitives; homepage content remains present without motion.
+
+The recommended Phase 8.5 scope is the V2 Work index hierarchy: present flagship, selected, and archive tiers from the canonical project registry while continuing to route only registered MDX case studies.
+
+Do not add case-study MDX, placeholder routes, resume changes, SEO reconciliation, or animated topology work to Phase 8.5 unless separately approved.
 
 Do not start implementation until the user explicitly asks for it.

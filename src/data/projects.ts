@@ -107,9 +107,21 @@ export const projects: readonly Project[] = [
     evidence: [
       {
         kind: "proof",
-        label: "Current foundation",
+        label: "Capture foundation",
         detail:
-          "Non-blocking telemetry ingestion, versioned capture contracts, schema validation, idempotent processing, Kafka-backed asynchronous delivery, and replay fixtures with original-versus-replay diffing.",
+          "Non-blocking telemetry ingestion, versioned capture contracts, schema validation, idempotent processing, Kafka-backed asynchronous delivery, and execution-context capture.",
+      },
+      {
+        kind: "proof",
+        label: "Replay foundation",
+        detail:
+          "Nondeterministic LLM and tool boundaries are frozen into replay fixtures with original-versus-replay diffing and regression testing.",
+      },
+      {
+        kind: "proof",
+        label: "Reliability evidence",
+        detail:
+          "Failure-path testing, API-key isolation, and consumer lag, throughput, and latency observability shape the current reliability work.",
       },
       {
         kind: "proof",
@@ -145,6 +157,13 @@ export const projects: readonly Project[] = [
     ],
     evidence: [
       {
+        kind: "count",
+        label: "PostgreSQL integration tests",
+        value: "190+",
+        context:
+          "Integration coverage for ordering, recovery, and collaborative state behavior",
+      },
+      {
         kind: "proof",
         label: "Consistency model",
         detail:
@@ -158,8 +177,8 @@ export const projects: readonly Project[] = [
       },
       {
         kind: "count",
-        label: "System depth",
-        value: "25+ components / 190+ PostgreSQL integration tests",
+        label: "System-design components",
+        value: "25+",
         context:
           "With Playwright, k6, and multi-replica failure-injection and recovery suites",
       },
@@ -255,19 +274,6 @@ export const projects: readonly Project[] = [
     supersededBy: "converge",
   },
 ] as const;
-
-/**
- * Temporary V1 homepage projection. Phase 8.4 will replace this surface with
- * the tiered V2 portfolio presentation.
- */
-export const legacyHomepageProjects = projects.filter((project) =>
-  [
-    "traceforge",
-    "stateful-agentic-ai-assistant",
-    "ai-mock-interview-platform",
-    "real-time-collaborative-whiteboard",
-  ].includes(project.id),
-);
 
 export function getProject(id: string) {
   const project = projects.find((item) => item.id === id);

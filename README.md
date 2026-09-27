@@ -50,7 +50,7 @@ Current status:
 - Semantic CSS design tokens and base global styles are implemented.
 - Minimal layout primitives and the global application shell are implemented.
 - Typed canonical identity and external link data are implemented.
-- The app currently renders a complete single-page RITWIK OS homepage control plane.
+- The app renders the V2 static-first homepage hierarchy with editorial flagship systems, evidence placement, professional topology, concise experience, capability mapping, Foundations, and contact.
 - A restrained Motion-powered interaction, scroll rhythm, and final homepage polish layer is implemented.
 - The official Next.js MDX pipeline is implemented for local Work content.
 - `/work` and `/work/traceforge` are implemented as static-first App Router routes.
@@ -67,6 +67,7 @@ Current implemented structure:
 src/
   app/
   components/
+    home/
     layout/
     motion/
     ui/
