@@ -10,303 +10,432 @@ type VisualProps = {
   reduced: boolean;
 };
 
-function nodeClass(active: boolean) {
-  return active
-    ? "fill-[rgb(12_41_72_/_0.92)] stroke-[var(--ritwik-color-signal-cyan)]"
-    : "fill-[rgb(7_16_27_/_0.9)] stroke-[var(--ritwik-color-border-strong)]";
-}
-
 function ThesisLensVisual({ activeStep, reduced }: Readonly<VisualProps>) {
+  const rerankingActive = activeStep === 1 || activeStep === 3;
+  const evidenceActive = activeStep === 2;
+  const order = rerankingActive ? [2, 0, 3, 1, 4] : [0, 1, 2, 3, 4];
+
   return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 720 460">
+    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 820 500">
       <defs>
-        <linearGradient id="tl-doc" x1="0" x2="1">
-          <stop stopColor="#102746" />
-          <stop offset="1" stopColor="#081321" />
+        <linearGradient id="tl-filing" x1="0" x2="1" y1="0" y2="1">
+          <stop stopColor="#15375f" />
+          <stop offset="1" stopColor="#07101b" />
         </linearGradient>
-        <filter id="tl-glow">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <path
-          id="tl-route"
-          d="M118 230 C180 230 170 114 240 114 S300 230 354 230 S430 110 486 110 S560 230 624 230"
-        />
+        <radialGradient id="tl-answer">
+          <stop stopColor="rgb(94 231 247 / 0.3)" />
+          <stop offset="1" stopColor="rgb(47 127 255 / 0.04)" />
+        </radialGradient>
       </defs>
 
-      <g className="opacity-30">
-        {Array.from({ length: 12 }, (_, index) => (
-          <line
-            key={index}
-            stroke="var(--ritwik-color-border-subtle)"
-            x1="0"
-            x2="720"
-            y1={38 + index * 34}
-            y2={38 + index * 34}
-          />
-        ))}
-      </g>
-
-      <g className={activeStep === 0 ? "opacity-100" : "opacity-[0.58]"}>
+      <g opacity={activeStep === 0 ? 1 : 0.68}>
         <rect
-          fill="url(#tl-doc)"
-          height="154"
+          fill="url(#tl-filing)"
+          height="190"
           rx="8"
           stroke="var(--ritwik-color-accent)"
-          width="108"
-          x="36"
-          y="153"
+          width="126"
+          x="34"
+          y="143"
         />
         <path
-          d="M54 184 H124 M54 202 H114 M54 220 H124 M54 238 H103 M54 256 H120"
+          d="M54 178 H138 M54 199 H128 M54 220 H138 M54 241 H118 M54 262 H136 M54 283 H124"
           stroke="var(--ritwik-color-foreground-muted)"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M126 143 L160 177 H126 Z"
+          fill="rgb(102 168 255 / 0.22)"
+          stroke="var(--ritwik-color-accent)"
         />
         <text
           fill="var(--ritwik-color-signal-cyan)"
           fontFamily="monospace"
           fontSize="10"
-          x="52"
-          y="283"
+          textAnchor="middle"
+          x="97"
+          y="360"
         >
           FINANCIAL FILING
         </text>
       </g>
 
-      <g className={activeStep === 1 ? "opacity-100" : "opacity-[0.64]"}>
-        {[72, 112, 152, 192].map((y, index) => (
-          <rect
-            className={nodeClass(activeStep === 1 && index < 3)}
-            height="28"
-            key={y}
-            rx="4"
-            width={index % 2 ? 104 : 86}
-            x="212"
-            y={y}
-          />
+      <path
+        d="M174 238 H201"
+        stroke="var(--ritwik-color-border-strong)"
+        strokeWidth="2"
+      />
+      <path
+        d="M194 231 L203 238 L194 245"
+        fill="none"
+        stroke="var(--ritwik-color-signal-cyan)"
+        strokeWidth="2"
+      />
+
+      <g opacity={activeStep === 0 ? 1 : 0.72}>
+        {[0, 1, 2, 3, 4].map((index) => (
+          <g
+            className={!reduced ? "thesis-split" : undefined}
+            key={index}
+            style={{ animationDelay: `${index * 110}ms` }}
+            transform={`translate(206 ${116 + index * 54})`}
+          >
+            <rect
+              fill="rgb(8 25 43 / 0.96)"
+              height="38"
+              rx="4"
+              stroke={
+                index < 3
+                  ? "var(--ritwik-color-signal-cyan)"
+                  : "var(--ritwik-color-border-strong)"
+              }
+              width={index % 2 === 0 ? 112 : 96}
+            />
+            <text
+              fill="var(--ritwik-color-foreground-secondary)"
+              fontFamily="monospace"
+              fontSize="9"
+              x="12"
+              y="23"
+            >
+              CHUNK {String(index + 1).padStart(2, "0")}
+            </text>
+          </g>
         ))}
         <text
           fill="var(--ritwik-color-foreground-muted)"
           fontFamily="monospace"
-          fontSize="10"
-          x="212"
-          y="252"
+          fontSize="9"
+          x="206"
+          y="408"
         >
-          SEMANTIC CHUNKS
+          DOCUMENT SPLITS
         </text>
       </g>
 
-      <g className={activeStep === 2 ? "opacity-100" : "opacity-[0.64]"}>
-        <path
-          d="M350 188 L390 230 L350 272 L310 230 Z"
-          className={nodeClass(activeStep === 2)}
+      <path
+        d="M326 238 H356"
+        stroke="var(--ritwik-color-border-strong)"
+        strokeWidth="2"
+      />
+      <g opacity={rerankingActive ? 1 : 0.75}>
+        <rect
+          fill="rgb(13 42 80 / 0.48)"
+          height="286"
+          rx="8"
+          stroke={
+            rerankingActive
+              ? "var(--ritwik-color-signal-cyan)"
+              : "var(--ritwik-color-border-strong)"
+          }
+          width="142"
+          x="358"
+          y="91"
         />
         <text
-          fill="var(--ritwik-color-foreground)"
-          fontFamily="monospace"
-          fontSize="10"
-          textAnchor="middle"
-          x="350"
-          y="226"
-        >
-          HYBRID
-        </text>
-        <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-signal-cyan)"
           fontFamily="monospace"
           fontSize="9"
           textAnchor="middle"
-          x="350"
-          y="241"
+          x="429"
+          y="76"
         >
-          RETRIEVAL
+          RETRIEVAL CANDIDATES
         </text>
-      </g>
-
-      <g className={activeStep === 3 ? "opacity-100" : "opacity-[0.64]"}>
-        {[0, 1, 2, 3].map((index) => {
-          const order = activeStep === 3 ? [1, 3, 0, 2][index] : index;
+        {[0, 1, 2, 3, 4].map((candidate, slot) => {
+          const rank = order[slot];
+          const survives = rank < 2;
           return (
-            <g key={index} transform={`translate(442 ${126 + order * 48})`}>
+            <g
+              className="transition-[opacity,transform] duration-700"
+              key={candidate}
+              style={{
+                opacity: rerankingActive && !survives ? 0.28 : 1,
+                transform: `translate(373px, ${110 + rank * 49}px)`,
+              }}
+            >
               <rect
-                className={nodeClass(activeStep === 3 && order === 0)}
-                height="34"
+                className={
+                  !reduced && rerankingActive && survives
+                    ? "thesis-selected"
+                    : undefined
+                }
+                fill={survives ? "rgb(10 48 69 / 0.9)" : "rgb(7 16 27 / 0.95)"}
+                height="36"
                 rx="4"
-                width="90"
+                stroke={
+                  survives
+                    ? "var(--ritwik-color-signal-cyan)"
+                    : "var(--ritwik-color-border-strong)"
+                }
+                width="112"
               />
               <text
                 fill="var(--ritwik-color-foreground-secondary)"
                 fontFamily="monospace"
-                fontSize="10"
-                x="12"
-                y="21"
+                fontSize="9"
+                x="10"
+                y="22"
               >
-                CANDIDATE {index + 1}
+                CANDIDATE {candidate + 1}
               </text>
             </g>
           );
         })}
-        <text
-          fill="var(--ritwik-color-signal-amber)"
-          fontFamily="monospace"
-          fontSize="10"
-          x="442"
-          y="338"
-        >
-          CROSS-ENCODER ORDER
-        </text>
       </g>
 
-      <g className={activeStep >= 3 ? "opacity-100" : "opacity-72"}>
-        <circle
-          cx="630"
-          cy="230"
-          fill="rgb(94 231 247 / 0.12)"
-          filter="url(#tl-glow)"
-          r="70"
-          stroke="var(--ritwik-color-signal-cyan)"
-        />
-        <circle
-          cx="630"
-          cy="230"
-          fill="none"
-          r="49"
-          stroke="rgb(94 231 247 / 0.45)"
+      <g opacity={rerankingActive ? 1 : 0.68}>
+        <path
+          d="M518 151 H590 L612 234 L590 317 H518 L540 234 Z"
+          fill="rgb(47 127 255 / 0.1)"
+          stroke={
+            rerankingActive
+              ? "var(--ritwik-color-signal-amber)"
+              : "var(--ritwik-color-border-strong)"
+          }
+          strokeWidth={rerankingActive ? 2.5 : 1.5}
         />
         <text
           fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
-          fontSize="11"
+          fontSize="10"
           textAnchor="middle"
-          x="630"
-          y="224"
+          x="565"
+          y="218"
         >
-          GROUNDED
+          RERANK
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-amber)"
+          fontFamily="monospace"
+          fontSize="12"
+          fontWeight="700"
+          textAnchor="middle"
+          x="565"
+          y="241"
+        >
+          0.704 → 0.811
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground-muted)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="565"
+          y="258"
+        >
+          nDCG@5 · FROZEN HOLDOUT
+        </text>
+      </g>
+
+      <g opacity={evidenceActive || rerankingActive ? 1 : 0.7}>
+        <path
+          d="M613 205 C644 205 645 185 674 185 M613 264 C644 264 645 284 674 284"
+          fill="none"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeWidth="2"
+        />
+        <circle
+          cx="718"
+          cy="234"
+          fill="url(#tl-answer)"
+          r="74"
+          stroke={
+            evidenceActive
+              ? "var(--ritwik-color-signal-cyan)"
+              : "var(--ritwik-color-accent)"
+          }
+          strokeWidth={evidenceActive ? 3 : 1.5}
+        />
+        <rect
+          fill="rgb(6 23 38 / 0.95)"
+          height="34"
+          rx="4"
+          stroke="var(--ritwik-color-signal-cyan)"
+          width="82"
+          x="677"
+          y="168"
+        />
+        <rect
+          fill="rgb(6 23 38 / 0.95)"
+          height="34"
+          rx="4"
+          stroke="var(--ritwik-color-signal-cyan)"
+          width="82"
+          x="677"
+          y="267"
+        />
+        <text
+          fill="var(--ritwik-color-foreground-secondary)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="718"
+          y="188"
+        >
+          EVIDENCE 01
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground-secondary)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="718"
+          y="287"
+        >
+          EVIDENCE 02
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="10"
+          fontWeight="700"
+          textAnchor="middle"
+          x="718"
+          y="229"
+        >
+          CITED ANSWER
         </text>
         <text
           fill="var(--ritwik-color-signal-cyan)"
           fontFamily="monospace"
-          fontSize="11"
+          fontSize="8"
           textAnchor="middle"
-          x="630"
-          y="242"
+          x="718"
+          y="246"
         >
-          EVIDENCE
+          GROUNDED EVIDENCE
         </text>
       </g>
 
-      <use
-        fill="none"
-        href="#tl-route"
-        stroke="rgb(94 231 247 / 0.28)"
-        strokeWidth="2"
-      />
-      {!reduced ? (
-        <circle fill="var(--ritwik-color-signal-cyan)" r="5">
-          <animateMotion dur="3.8s" repeatCount="indefinite">
-            <mpath href="#tl-route" />
-          </animateMotion>
-        </circle>
-      ) : (
-        <circle
-          cx="624"
-          cy="230"
-          fill="var(--ritwik-color-signal-cyan)"
-          r="5"
-        />
-      )}
+      <text
+        fill="var(--ritwik-color-foreground-muted)"
+        fontFamily="monospace"
+        fontSize="8"
+        textAnchor="middle"
+        x="410"
+        y="466"
+      >
+        FILING → SPLITS → CANDIDATES → REORDER → STRONG EVIDENCE → CITATION
+      </text>
     </svg>
   );
 }
 
 function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
+  const captureActive = activeStep === 0;
+  const sealActive = activeStep === 1;
+  const replayActive = activeStep === 2;
+  const diffActive = activeStep === 3;
+
   return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 720 460">
+    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 820 500">
       <defs>
-        <linearGradient id="tf-capsule" x1="0" x2="1" y1="0" y2="1">
-          <stop stopColor="rgb(94 231 247 / 0.32)" />
-          <stop offset="0.45" stopColor="rgb(47 127 255 / 0.12)" />
-          <stop offset="1" stopColor="rgb(242 185 95 / 0.12)" />
-        </linearGradient>
-        <filter id="tf-glow">
-          <feGaussianBlur stdDeviation="7" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <path id="tf-in" d="M76 108 C156 108 180 178 258 190" />
-        <path
-          id="tf-out"
-          d="M384 230 C450 230 472 136 536 136 M384 230 C450 230 472 324 536 324"
-        />
+        <radialGradient id="tf-core">
+          <stop stopColor="rgb(94 231 247 / 0.3)" />
+          <stop offset="0.6" stopColor="rgb(47 127 255 / 0.12)" />
+          <stop offset="1" stopColor="rgb(4 7 13 / 0.92)" />
+        </radialGradient>
       </defs>
 
-      <g className={activeStep === 0 ? "opacity-100" : "opacity-[0.62]"}>
+      <g opacity={captureActive ? 1 : 0.68}>
         <rect
-          className={nodeClass(activeStep === 0)}
-          height="64"
+          fill="rgb(7 20 34 / 0.96)"
+          height="70"
           rx="8"
-          width="126"
-          x="42"
-          y="76"
+          stroke="var(--ritwik-color-accent)"
+          width="138"
+          x="34"
+          y="74"
         />
         <text
           fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
-          fontSize="11"
+          fontSize="10"
           textAnchor="middle"
-          x="105"
+          x="103"
           y="104"
         >
-          CONTROLLED RUN
+          LIVE EXECUTION
         </text>
         <text
           fill="var(--ritwik-color-foreground-muted)"
           fontFamily="monospace"
-          fontSize="9"
+          fontSize="8"
           textAnchor="middle"
-          x="105"
-          y="122"
+          x="103"
+          y="123"
         >
           MODEL · HTTP · EVENTS
         </text>
-        {[0, 1, 2, 3, 4].map((index) => (
-          <circle
-            cx={95 + index * 17}
-            cy={168 + (index % 2) * 18}
-            fill={index % 2 ? "#f2b95f" : "#5ee7f7"}
-            key={index}
-            opacity="0.75"
-            r="4"
-          />
+        {["MODEL", "HTTP", "TOOL", "STATE"].map((label, index) => (
+          <g
+            className={
+              !reduced && captureActive ? "trace-capture-event" : undefined
+            }
+            key={label}
+            style={{ animationDelay: `${index * 180}ms` }}
+            transform={`translate(${54 + index * 26} ${176 + index * 48})`}
+          >
+            <circle
+              fill={
+                index % 2
+                  ? "var(--ritwik-color-signal-amber)"
+                  : "var(--ritwik-color-signal-cyan)"
+              }
+              r="5"
+            />
+            <text
+              fill="var(--ritwik-color-foreground-muted)"
+              fontFamily="monospace"
+              fontSize="7"
+              x="12"
+              y="3"
+            >
+              {label}
+            </text>
+          </g>
         ))}
+        <path
+          d="M168 112 C236 112 228 218 286 232"
+          fill="none"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeDasharray="3 7"
+          strokeWidth="2"
+        />
       </g>
 
-      <g
-        className={activeStep === 1 ? "opacity-100" : "opacity-[0.76]"}
-        filter="url(#tf-glow)"
-      >
-        <path
-          d="M264 162 L354 136 L414 190 L390 298 L296 322 L238 266 Z"
-          fill="url(#tf-capsule)"
-          stroke="var(--ritwik-color-signal-cyan)"
-          strokeWidth={activeStep === 1 ? 3 : 1.5}
-        />
-        <path
-          d="M264 162 L296 236 L296 322 M354 136 L356 235 L414 190 M356 235 L390 298 M296 236 L238 266"
+      <g opacity={sealActive || captureActive ? 1 : 0.82}>
+        <circle
+          className={!reduced && sealActive ? "trace-seal-pulse" : undefined}
+          cx="376"
+          cy="248"
           fill="none"
-          stroke="rgb(94 231 247 / 0.42)"
+          r="132"
+          stroke="var(--ritwik-color-signal-cyan)"
         />
+        {[0, 1, 2, 3].map((layer) => (
+          <path
+            d={`M376 ${113 + layer * 13} L${485 - layer * 10} ${190 + layer * 8} L${448 - layer * 8} ${331 - layer * 9} L${304 + layer * 7} ${347 - layer * 11} L${259 + layer * 11} ${209 + layer * 7} Z`}
+            fill={layer === 3 ? "url(#tf-core)" : "none"}
+            key={layer}
+            opacity={0.34 + layer * 0.17}
+            stroke={
+              layer === 3
+                ? "var(--ritwik-color-signal-cyan)"
+                : "var(--ritwik-color-accent)"
+            }
+            strokeWidth={layer === 3 && sealActive ? 3 : 1.4}
+          />
+        ))}
         <text
           fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
-          fontSize="12"
+          fontSize="13"
+          fontWeight="700"
           textAnchor="middle"
-          x="330"
-          y="226"
+          x="376"
+          y="236"
         >
           REPLAY CAPSULE
         </text>
@@ -315,82 +444,116 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="9"
           textAnchor="middle"
-          x="330"
-          y="244"
+          x="376"
+          y="257"
         >
-          SEALED · VERSIONED · SHA-256
+          {sealActive ? "SEALED · SHA-256" : "CAPTURING BOUNDARIES"}
         </text>
         <text
           fill="var(--ritwik-color-foreground-muted)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="330"
-          y="264"
+          x="376"
+          y="276"
         >
-          REQUEST FINGERPRINTS
+          SEQUENCE + REQUEST FINGERPRINT
         </text>
       </g>
 
-      <g className={activeStep === 2 ? "opacity-100" : "opacity-[0.62]"}>
-        <rect
-          className={nodeClass(activeStep === 2)}
-          height="56"
-          rx="8"
-          width="112"
-          x="518"
-          y="108"
-        />
-        <rect
-          className={nodeClass(activeStep === 2)}
-          height="56"
-          rx="8"
-          width="112"
-          x="518"
-          y="296"
-        />
-        <text
-          fill="#c8d0da"
-          fontFamily="monospace"
-          fontSize="11"
-          x="541"
-          y="141"
-        >
-          ORIGINAL
-        </text>
-        <text
-          fill="#c8d0da"
-          fontFamily="monospace"
-          fontSize="11"
-          x="548"
-          y="329"
-        >
-          REPLAY
-        </text>
-      </g>
-
-      <g className={activeStep === 3 ? "opacity-100" : "opacity-[0.7]"}>
+      <g opacity={replayActive ? 1 : 0.68}>
         <path
-          d="M574 164 V214 M574 296 V246"
-          stroke="var(--ritwik-color-signal-amber)"
+          d="M490 214 C536 214 536 128 582 128 M490 282 C536 282 536 370 582 370"
+          fill="none"
+          stroke="var(--ritwik-color-accent)"
           strokeWidth="2"
         />
         <rect
-          fill="rgb(242 185 95 / 0.12)"
-          height="56"
-          rx="8"
+          fill="rgb(8 25 43 / 0.96)"
+          height="76"
+          rx="38"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeWidth={replayActive ? 2.5 : 1.4}
+          width="144"
+          x="574"
+          y="90"
+        />
+        <rect
+          fill="rgb(8 25 43 / 0.96)"
+          height="76"
+          rx="38"
           stroke="var(--ritwik-color-signal-amber)"
-          width="132"
-          x="508"
-          y="202"
+          strokeWidth={replayActive ? 2.5 : 1.4}
+          width="144"
+          x="574"
+          y="332"
         />
         <text
           fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
           fontSize="11"
           textAnchor="middle"
-          x="574"
-          y="225"
+          x="646"
+          y="121"
+        >
+          ORIGINAL
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-cyan)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="646"
+          y="141"
+        >
+          FINGERPRINT ✓
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="11"
+          textAnchor="middle"
+          x="646"
+          y="363"
+        >
+          REPLAY
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-amber)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="646"
+          y="383"
+        >
+          NO LIVE FALLBACK
+        </text>
+      </g>
+
+      <g opacity={diffActive ? 1 : 0.72}>
+        <path
+          d="M646 166 V206 M646 332 V292"
+          stroke="var(--ritwik-color-border-strong)"
+          strokeWidth="2"
+        />
+        <rect
+          fill="rgb(242 185 95 / 0.09)"
+          height="86"
+          rx="8"
+          stroke="var(--ritwik-color-signal-amber)"
+          strokeWidth={diffActive ? 3 : 1.5}
+          width="164"
+          x="564"
+          y="206"
+        />
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="11"
+          fontWeight="700"
+          textAnchor="middle"
+          x="646"
+          y="239"
         >
           STRUCTURAL DIFF
         </text>
@@ -399,225 +562,284 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="9"
           textAnchor="middle"
-          x="574"
-          y="242"
+          x="646"
+          y="261"
         >
-          → REGRESSION
+          REGRESSION RESULT
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground-muted)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="646"
+          y="278"
+        >
+          EXACT MATCH / REVIEW
         </text>
       </g>
-
-      <use
-        fill="none"
-        href="#tf-in"
-        stroke="rgb(94 231 247 / 0.35)"
-        strokeWidth="2"
-      />
-      <use
-        fill="none"
-        href="#tf-out"
-        stroke="rgb(102 168 255 / 0.32)"
-        strokeWidth="2"
-      />
-      {!reduced ? (
-        <circle fill="var(--ritwik-color-signal-cyan)" r="5">
-          <animateMotion dur="2.2s" repeatCount="indefinite">
-            <mpath href="#tf-in" />
-          </animateMotion>
-        </circle>
-      ) : null}
     </svg>
   );
 }
 
 function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
-  return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 720 460">
-      <defs>
-        <path
-          id="cv-main"
-          d="M112 118 C198 118 200 214 286 214 H404 C470 214 470 118 548 118"
-        />
-        <path id="cv-branch" d="M404 214 C478 214 478 328 558 328" />
-        <filter id="cv-glow">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
+  const offlineActive = activeStep === 0 || activeStep === 2;
+  const authorityActive = activeStep === 1;
+  const deliveryActive = activeStep === 3;
 
-      <g className={activeStep === 0 ? "opacity-100" : "opacity-[0.64]"}>
-        {[68, 154, 240].map((y, index) => (
-          <g key={y}>
+  return (
+    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 860 500">
+      <g opacity={activeStep === 0 ? 1 : 0.72}>
+        {[
+          [42, 72, "CLIENT A"],
+          [42, 204, "CLIENT B"],
+          [42, 354, "OFFLINE CLIENT"],
+        ].map(([x, y, label], index) => (
+          <g key={String(label)}>
             <rect
-              className={nodeClass(activeStep === 0)}
-              height="52"
-              rx="7"
-              width="118"
-              x="36"
-              y={y}
+              fill="rgb(7 20 34 / 0.96)"
+              height="66"
+              rx="8"
+              stroke={
+                index === 2
+                  ? "var(--ritwik-color-signal-amber)"
+                  : "var(--ritwik-color-accent)"
+              }
+              width="142"
+              x={Number(x)}
+              y={Number(y)}
+            />
+            <circle
+              cx={Number(x) + 20}
+              cy={Number(y) + 20}
+              fill={
+                index === 2
+                  ? "var(--ritwik-color-signal-amber)"
+                  : "var(--ritwik-color-success)"
+              }
+              r="4"
             />
             <text
-              fill="var(--ritwik-color-foreground-secondary)"
+              fill="var(--ritwik-color-foreground)"
               fontFamily="monospace"
               fontSize="10"
-              x="58"
-              y={y + 30}
+              x={Number(x) + 20}
+              y={Number(y) + 43}
             >
-              {index === 2
-                ? "OFFLINE CLIENT"
-                : `CLIENT ${index === 0 ? "A" : "B"}`}
+              {String(label)}
             </text>
           </g>
         ))}
-        <path
-          d="M96 292 V342 H218"
-          fill="none"
-          stroke="var(--ritwik-color-signal-amber)"
-          strokeDasharray="5 6"
-        />
-        <text
-          fill="var(--ritwik-color-signal-amber)"
-          fontFamily="monospace"
-          fontSize="9"
-          x="54"
-          y="365"
-        >
-          INDEXEDDB · PENDING
-        </text>
+        <g opacity={offlineActive ? 1 : 0.55}>
+          <rect
+            fill="rgb(242 185 95 / 0.08)"
+            height="34"
+            rx="4"
+            stroke="var(--ritwik-color-signal-amber)"
+            width="118"
+            x="54"
+            y="433"
+          />
+          <text
+            fill="var(--ritwik-color-signal-amber)"
+            fontFamily="monospace"
+            fontSize="8"
+            textAnchor="middle"
+            x="113"
+            y="454"
+          >
+            QUEUED OP · IDB
+          </text>
+        </g>
       </g>
 
-      <g className={activeStep === 1 ? "opacity-100" : "opacity-[0.76]"}>
+      <path
+        d="M184 105 C230 105 224 222 270 222 M184 237 H270"
+        fill="none"
+        stroke="var(--ritwik-color-accent)"
+        strokeWidth="2"
+      />
+      <path
+        className={!reduced && offlineActive ? "converge-reconnect" : undefined}
+        d="M184 387 C238 387 218 276 270 258"
+        fill="none"
+        stroke="var(--ritwik-color-signal-amber)"
+        strokeDasharray="6 7"
+        strokeWidth="2"
+      />
+
+      <g opacity={authorityActive ? 1 : 0.82}>
         <path
-          d="M232 154 H364 L390 214 L364 274 H232 L206 214 Z"
-          fill="rgb(47 127 255 / 0.14)"
-          filter="url(#cv-glow)"
+          d="M292 162 H408 L436 237 L408 312 H292 L264 237 Z"
+          fill="rgb(47 127 255 / 0.13)"
           stroke="var(--ritwik-color-signal-cyan)"
-          strokeWidth={activeStep === 1 ? 3 : 1.5}
+          strokeWidth={authorityActive ? 3 : 1.6}
         />
         <text
-          fill="#f5f7fa"
+          fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
-          fontSize="11"
+          fontSize="12"
+          fontWeight="700"
           textAnchor="middle"
-          x="298"
-          y="205"
+          x="350"
+          y="223"
         >
-          API / BOARD
+          BOARD AUTHORITY
         </text>
         <text
-          fill="#5ee7f7"
+          fill="var(--ritwik-color-signal-cyan)"
           fontFamily="monospace"
-          fontSize="10"
+          fontSize="9"
           textAnchor="middle"
-          x="298"
-          y="224"
+          x="350"
+          y="244"
         >
-          AUTHORITY
+          ORDER COMMAND
         </text>
         <text
-          fill="#8f9aa8"
+          fill="var(--ritwik-color-foreground-muted)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="298"
-          y="243"
+          x="350"
+          y="263"
         >
-          NEXT SEQUENCE
+          IDEMPOTENT RECEIPT
         </text>
       </g>
 
-      <g className={activeStep === 2 ? "opacity-100" : "opacity-[0.68]"}>
+      <g opacity={activeStep === 2 ? 1 : 0.8}>
         <ellipse
-          cx="420"
-          cy="172"
-          fill="rgb(16 40 62 / 0.92)"
-          rx="70"
-          ry="22"
+          cx="508"
+          cy="190"
+          fill="rgb(16 40 62 / 0.95)"
+          rx="62"
+          ry="20"
           stroke="var(--ritwik-color-accent)"
         />
         <path
-          d="M350 172 V250 C350 262 381 274 420 274 S490 262 490 250 V172"
-          fill="rgb(8 22 36 / 0.9)"
+          d="M446 190 V277 C446 288 474 298 508 298 S570 288 570 277 V190"
+          fill="rgb(7 20 34 / 0.96)"
           stroke="var(--ritwik-color-accent)"
+          strokeWidth={activeStep === 2 ? 2.5 : 1.4}
         />
         <ellipse
-          cx="420"
-          cy="250"
+          cx="508"
+          cy="277"
           fill="none"
-          rx="70"
-          ry="22"
+          rx="62"
+          ry="20"
           stroke="var(--ritwik-color-accent)"
         />
         <text
-          fill="#f5f7fa"
+          fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
-          fontSize="11"
+          fontSize="10"
           textAnchor="middle"
-          x="420"
-          y="209"
+          x="508"
+          y="228"
         >
           POSTGRESQL
         </text>
         <text
-          fill="#8f9aa8"
+          fill="var(--ritwik-color-signal-cyan)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="420"
-          y="228"
+          x="508"
+          y="246"
         >
-          OP · RECEIPT · OUTBOX
+          COMMIT + OUTBOX
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground-muted)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="508"
+          y="264"
+        >
+          BOARD SEQUENCE
         </text>
       </g>
 
-      <g className={activeStep === 3 ? "opacity-100" : "opacity-[0.68]"}>
+      <g opacity={deliveryActive ? 1 : 0.7}>
         <rect
-          fill="rgb(242 185 95 / 0.1)"
-          height="54"
+          fill="rgb(242 185 95 / 0.08)"
+          height="58"
           rx="7"
           stroke="var(--ritwik-color-signal-amber)"
-          width="112"
-          x="512"
-          y="78"
+          width="120"
+          x="612"
+          y="105"
+        />
+        <rect
+          fill="rgb(94 231 247 / 0.07)"
+          height="58"
+          rx="7"
+          stroke="var(--ritwik-color-signal-cyan)"
+          width="120"
+          x="612"
+          y="186"
         />
         <text
-          fill="#f2b95f"
+          fill="var(--ritwik-color-signal-amber)"
           fontFamily="monospace"
-          fontSize="9"
+          fontSize="8"
           textAnchor="middle"
-          x="568"
-          y="101"
+          x="672"
+          y="129"
         >
           OUTBOX WORKER
         </text>
         <text
-          fill="#c8d0da"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
-          fontSize="9"
+          fontSize="8"
           textAnchor="middle"
-          x="568"
-          y="118"
+          x="672"
+          y="147"
+        >
+          PUBLISH
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-cyan)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="672"
+          y="210"
         >
           REDIS STREAM
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground-muted)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="672"
+          y="228"
+        >
+          AT LEAST ONCE
         </text>
         {[0, 1].map((index) => (
           <g key={index}>
             <rect
-              className={nodeClass(activeStep === 3)}
-              height="52"
+              fill="rgb(7 20 34 / 0.96)"
+              height="54"
               rx="7"
-              width="110"
-              x="512"
-              y={284 + index * 72}
+              stroke="var(--ritwik-color-accent)"
+              width="102"
+              x="750"
+              y={116 + index * 128}
             />
             <text
-              fill="#c8d0da"
+              fill="var(--ritwik-color-foreground-secondary)"
               fontFamily="monospace"
-              fontSize="10"
-              x="535"
-              y={315 + index * 72}
+              fontSize="8"
+              textAnchor="middle"
+              x="801"
+              y={148 + index * 128}
             >
               REPLICA {index === 0 ? "A" : "B"}
             </text>
@@ -625,32 +847,44 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
         ))}
       </g>
 
-      <use
+      <path
+        d="M436 237 H446 M570 215 H612 M732 215 C758 215 750 143 750 143 M732 215 C758 215 750 271 750 271"
         fill="none"
-        href="#cv-main"
-        stroke="rgb(94 231 247 / 0.34)"
+        stroke="var(--ritwik-color-border-strong)"
         strokeWidth="2"
       />
-      <use
-        fill="none"
-        href="#cv-branch"
-        stroke="rgb(242 185 95 / 0.3)"
-        strokeWidth="2"
-      />
-      {!reduced ? (
-        <>
-          <circle fill="var(--ritwik-color-signal-cyan)" r="5">
-            <animateMotion dur="3s" repeatCount="indefinite">
-              <mpath href="#cv-main" />
-            </animateMotion>
-          </circle>
-          <circle fill="var(--ritwik-color-signal-amber)" r="4">
-            <animateMotion begin="1.2s" dur="3s" repeatCount="indefinite">
-              <mpath href="#cv-branch" />
-            </animateMotion>
-          </circle>
-        </>
-      ) : null}
+      {["041", "042", "043"].map((sequence, index) => (
+        <g
+          className={!reduced ? "converge-sequence-token" : undefined}
+          key={sequence}
+          style={{ animationDelay: `${index * 700}ms` }}
+          transform={`translate(${420 + index * 92} ${348 - index * 22})`}
+        >
+          <circle
+            fill="rgb(4 7 13 / 0.96)"
+            r="18"
+            stroke="var(--ritwik-color-signal-cyan)"
+          />
+          <text
+            fill="var(--ritwik-color-signal-cyan)"
+            fontFamily="monospace"
+            fontSize="8"
+            textAnchor="middle"
+            y="3"
+          >
+            {sequence}
+          </text>
+        </g>
+      ))}
+      <text
+        fill="var(--ritwik-color-signal-amber)"
+        fontFamily="monospace"
+        fontSize="8"
+        x="208"
+        y="408"
+      >
+        RECONNECT → FIXED-WATERMARK CATCH-UP → CURRENT STATE
+      </text>
     </svg>
   );
 }
@@ -658,24 +892,24 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
 const fallbackLabels: Record<SignalProjectId, readonly string[]> = {
   thesislens: [
     "Financial filing",
-    "Semantic chunks",
-    "Hybrid retrieval",
+    "Document splits",
+    "Retrieval candidates",
     "Reranking",
-    "Grounded evidence",
+    "Cited answer",
   ],
   traceforge: [
-    "Controlled run",
-    "Sealed capsule",
-    "Original / replay",
+    "Live execution",
+    "Sealed Replay Capsule",
+    "Original and replay branches",
     "Structural diff",
-    "Regression test",
+    "Regression result",
   ],
   converge: [
-    "Persisted client command",
+    "Connected and offline clients",
     "Board authority",
     "PostgreSQL commit",
-    "At-least-once delivery",
-    "Replica catch-up",
+    "Outbox and Redis Stream",
+    "Replica delivery and catch-up",
   ],
 };
 
@@ -709,14 +943,26 @@ export function SystemVisualStage({
     return () => observer.disconnect();
   }, []);
 
+  const atmosphere =
+    project === "thesislens"
+      ? "bg-[radial-gradient(circle_at_72%_48%,rgb(47_127_255_/_0.14),transparent_38%),linear-gradient(145deg,rgb(10_20_33_/_0.98),rgb(4_7_13_/_0.94))]"
+      : project === "traceforge"
+        ? "bg-[radial-gradient(circle_at_46%_52%,rgb(94_231_247_/_0.12),transparent_32%),linear-gradient(160deg,rgb(5_18_31_/_0.98),rgb(4_7_13_/_0.96))]"
+        : "bg-[radial-gradient(circle_at_42%_52%,rgb(47_127_255_/_0.12),transparent_34%),linear-gradient(135deg,rgb(7_18_31_/_0.98),rgb(4_7_13_/_0.95))]";
+
   return (
     <div
-      className={`relative min-h-[23rem] overflow-hidden border border-border bg-[linear-gradient(145deg,rgb(10_20_33_/_0.96),rgb(4_7_13_/_0.92))] sm:min-h-[28rem] ${className}`}
+      className={`relative min-h-[23rem] overflow-hidden border border-border ${atmosphere} sm:min-h-[30rem] ${className}`}
+      data-project-stage={project}
       ref={hostRef}
     >
-      <div className="signal-grid pointer-events-none absolute inset-0 opacity-45" />
-      <div className="absolute top-4 left-4 z-10 font-mono text-[0.65rem] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
-        Live system view / {project}
+      <div className="signal-grid pointer-events-none absolute inset-0 opacity-25" />
+      <div className="absolute top-4 left-4 z-10 font-mono text-[0.62rem] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
+        {project === "thesislens"
+          ? "Evidence transformation"
+          : project === "traceforge"
+            ? "Deterministic replay capsule"
+            : "Authoritative collaboration topology"}
       </div>
       <ol className="sr-only">
         {fallbackLabels[project].map((label) => (
@@ -724,7 +970,7 @@ export function SystemVisualStage({
         ))}
       </ol>
       {nearViewport ? (
-        <div className="absolute inset-0 pt-8">
+        <div className="absolute inset-0 pt-7">
           {project === "thesislens" ? (
             <ThesisLensVisual
               activeStep={activeStep}
@@ -743,8 +989,8 @@ export function SystemVisualStage({
           )}
         </div>
       ) : (
-        <div className="absolute inset-0 grid place-items-center">
-          <p className="font-mono text-xs tracking-[0.12em] text-foreground-muted uppercase">
+        <div className="absolute inset-0 grid place-items-center px-8 text-center">
+          <p className="font-mono text-xs leading-6 tracking-[0.1em] text-foreground-muted uppercase">
             {fallbackLabels[project].join(" → ")}
           </p>
         </div>

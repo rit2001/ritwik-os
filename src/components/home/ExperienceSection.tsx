@@ -1,6 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  useReducedMotion,
+} from "motion/react";
+import { useRef, useState } from "react";
 
 import {
   type SignalLocationId,
@@ -15,11 +21,16 @@ const locationByCompany: Record<string, SignalLocationId> = {
 };
 
 export function ExperienceSection() {
+  const hostRef = useRef<HTMLDivElement>(null);
   const roles = [...experience].reverse();
   const [activeCompany, setActiveCompany] = useState<string>(
     roles[0]?.company ?? "",
   );
   const { setActiveLocation } = useSignalState();
+  const reduced = useReducedMotion() === true;
+  const inView = useInView(hostRef, { margin: "120px" });
+  const activeRole =
+    roles.find((role) => role.company === activeCompany) ?? roles[0];
 
   const activate = (company: string) => {
     setActiveCompany(company);
@@ -27,93 +38,139 @@ export function ExperienceSection() {
   };
 
   return (
-    <div className="relative mt-12">
-      <div
-        className="absolute top-7 right-[10%] left-[10%] hidden h-px bg-border sm:block"
-        aria-hidden="true"
-      >
-        <span className="block h-px bg-gradient-to-r from-signal-amber via-signal-cyan to-accent" />
-        <span className="signal-sweep-x absolute -top-[0.22rem] h-2 w-2 rounded-full bg-signal-cyan shadow-[0_0_14px_var(--ritwik-color-signal-cyan)]" />
-      </div>
-      <div
-        className="absolute top-6 bottom-6 left-2 w-px bg-gradient-to-b from-signal-amber via-signal-cyan to-accent sm:hidden"
-        aria-hidden="true"
-      />
-      <span
-        className="signal-sweep-y absolute left-[0.17rem] h-2 w-2 rounded-full bg-signal-cyan shadow-[0_0_14px_var(--ritwik-color-signal-cyan)] sm:hidden"
-        aria-hidden="true"
-      />
+    <div className="relative mt-14" ref={hostRef}>
+      <div className="relative hidden min-h-40 sm:block">
+        <div
+          className="absolute top-9 right-[8%] left-[8%] h-px bg-border-strong"
+          aria-hidden="true"
+        >
+          <span className="block h-px bg-gradient-to-r from-signal-amber via-signal-cyan to-accent" />
+          <span
+            className={`${inView && !reduced ? "signal-sweep-x" : ""} absolute -top-[0.24rem] h-2.5 w-2.5 rounded-full bg-signal-cyan shadow-[0_0_18px_var(--ritwik-color-signal-cyan)]`}
+          />
+        </div>
 
-      <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
-        {roles.map((role, index) => {
-          const active = activeCompany === role.company;
-          const contentId = `experience-${index}`;
-
-          return (
-            <article
-              className={`relative ml-6 border transition-[border-color,background-color,transform] duration-[var(--duration-base)] sm:ml-0 sm:pt-8 ${
-                active
-                  ? "border-signal-cyan bg-accent-muted/24 sm:-translate-y-1"
-                  : "border-border bg-background-elevated/35"
-              }`}
-              key={role.company}
-            >
-              <span
-                className={`absolute top-5 -left-[1.68rem] h-3.5 w-3.5 rounded-full border-2 sm:top-0 sm:left-1/2 sm:-translate-x-1/2 ${
-                  active
-                    ? "border-signal-cyan bg-signal-cyan shadow-[0_0_20px_var(--ritwik-color-signal-cyan)]"
-                    : "border-border-strong bg-background"
-                }`}
-                aria-hidden="true"
-              />
+        <div className="relative grid grid-cols-3 gap-10">
+          {roles.map((role, index) => {
+            const active = activeCompany === role.company;
+            return (
               <button
-                className="w-full px-5 py-5 text-left sm:pt-4"
-                aria-controls={contentId}
-                aria-expanded={active}
+                className="group relative pt-[4.3rem] text-left"
+                key={role.company}
                 onClick={() => activate(role.company)}
                 onFocus={() => activate(role.company)}
                 onMouseEnter={() => activate(role.company)}
                 type="button"
+                aria-pressed={active}
               >
-                <span className="font-mono text-[0.68rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
-                  0{index + 1} / {role.dates}
+                <span
+                  className={`absolute top-[1.58rem] left-1/2 grid h-7 w-7 -translate-x-1/2 place-items-center rotate-45 border transition-[border-color,background-color,box-shadow,transform] group-hover:scale-110 group-focus-visible:scale-110 ${
+                    active
+                      ? "border-signal-cyan bg-accent-muted shadow-[0_0_28px_var(--ritwik-color-signal-glow)]"
+                      : "border-border-strong bg-background"
+                  }`}
+                  aria-hidden="true"
+                >
+                  <span
+                    className={`h-2 w-2 rounded-full -rotate-45 ${active ? "bg-signal-cyan" : "bg-foreground-muted"}`}
+                  />
+                  {active ? (
+                    <span className="signal-ripple absolute inset-[-0.45rem] rounded-full border border-signal-cyan" />
+                  ) : null}
                 </span>
-                <span className="mt-3 block text-xl font-semibold text-foreground">
-                  {role.company}
+                <span className="block text-center font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
+                  0{index + 1} · {role.dates}
                 </span>
-                <span className="mt-2 block text-sm leading-6 text-foreground-secondary">
-                  {role.role}
+                <span
+                  className={`mt-3 block text-center text-lg font-semibold transition-colors ${active ? "text-foreground" : "text-foreground-secondary"}`}
+                >
+                  {role.company.replace(" INC.", "")}
                 </span>
-                <span className="mt-3 block font-mono text-[0.68rem] tracking-[0.06em] text-foreground-muted uppercase">
+                <span className="mt-1 block text-center font-mono text-[0.65rem] tracking-[0.06em] text-foreground-muted uppercase">
                   {role.location}
                 </span>
               </button>
-              <div
-                className={`grid transition-[grid-template-rows] duration-[var(--duration-slow)] ${active ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-                id={contentId}
-              >
-                <div className="overflow-hidden">
-                  <div className="border-t border-border px-5 py-5">
-                    <p className="text-sm leading-6 text-foreground-secondary">
-                      {role.summary}
-                    </p>
-                    <ul className="mt-4 space-y-3">
-                      {role.evidence.slice(0, 2).map((evidence) => (
-                        <li
-                          className="border-l border-signal-cyan/45 pl-3 text-xs leading-5 text-foreground-muted"
-                          key={evidence}
-                        >
-                          {evidence}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </article>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="relative grid gap-2 pl-6 sm:hidden">
+        <span
+          className="absolute top-2 bottom-2 left-1.5 w-px bg-gradient-to-b from-signal-amber via-signal-cyan to-accent"
+          aria-hidden="true"
+        />
+        {roles.map((role, index) => {
+          const active = activeCompany === role.company;
+          return (
+            <button
+              className={`relative border-l px-4 py-3 text-left ${active ? "border-signal-cyan bg-accent-muted/25" : "border-border-strong"}`}
+              key={role.company}
+              onClick={() => activate(role.company)}
+              onFocus={() => activate(role.company)}
+              type="button"
+              aria-pressed={active}
+            >
+              <span
+                className={`absolute top-5 -left-[1.55rem] h-3 w-3 rotate-45 border ${active ? "border-signal-cyan bg-signal-cyan" : "border-border-strong bg-background"}`}
+                aria-hidden="true"
+              />
+              <span className="font-mono text-[0.63rem] tracking-[0.1em] text-signal-cyan uppercase">
+                0{index + 1} · {role.dates}
+              </span>
+              <span className="mt-1 block font-semibold text-foreground">
+                {role.company}
+              </span>
+              <span className="mt-1 block text-xs text-foreground-muted">
+                {role.role} · {role.location}
+              </span>
+            </button>
           );
         })}
       </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.article
+          animate={{ opacity: 1, y: 0 }}
+          className="relative mt-7 overflow-hidden border-y border-border bg-[linear-gradient(110deg,rgb(13_42_80_/_0.32),rgb(7_16_27_/_0.28))] px-5 py-6 sm:px-8 sm:py-7"
+          exit={reduced ? undefined : { opacity: 0, y: 5 }}
+          initial={reduced ? false : { opacity: 0, y: 7 }}
+          key={activeRole.company}
+          transition={{ duration: reduced ? 0 : 0.2 }}
+        >
+          <span
+            className="absolute top-0 left-0 h-px w-1/3 bg-gradient-to-r from-signal-cyan to-transparent"
+            aria-hidden="true"
+          />
+          <div className="grid gap-7 lg:grid-cols-[minmax(16rem,0.34fr)_minmax(0,0.66fr)] lg:gap-12">
+            <div>
+              <p className="font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
+                Active milestone · {activeRole.location}
+              </p>
+              <h3 className="mt-3 text-2xl font-semibold text-foreground">
+                {activeRole.role}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-foreground-secondary">
+                {activeRole.summary}
+              </p>
+            </div>
+            <ol className="grid gap-3 sm:grid-cols-2">
+              {activeRole.evidence.map((evidence, index) => (
+                <li
+                  className="relative border-l border-border-strong pl-5 text-sm leading-6 text-foreground-muted"
+                  key={evidence}
+                >
+                  <span className="absolute top-1.5 -left-1 h-2 w-2 rounded-full bg-signal-amber" />
+                  <span className="mb-1 block font-mono text-[0.6rem] tracking-[0.1em] text-foreground-muted uppercase">
+                    Evidence {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {evidence}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </motion.article>
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   type SignalLocationId,
@@ -14,148 +14,125 @@ const ThreeGlobeCanvas = dynamic(() => import("./ThreeGlobeCanvas"), {
 });
 
 export function ProfessionalTopology() {
+  const figureRef = useRef<HTMLElement>(null);
   const { activeLocation, setActiveLocation } = useSignalState();
   const [hoveredLocation, setHoveredLocation] =
     useState<SignalLocationId | null>(null);
+  const [lockedLocation, setLockedLocation] = useState<SignalLocationId | null>(
+    null,
+  );
   const publicSignals = useMemo(
     () =>
       professionalSignals.filter((signal) => signal.visibility === "public"),
     [],
   );
-  const displayedId = hoveredLocation ?? activeLocation ?? "kolkata";
+  const displayedId = hoveredLocation ?? lockedLocation ?? activeLocation;
   const displayedSignal = publicSignals.find(
     (signal) => signal.id === displayedId,
   );
 
+  useEffect(() => {
+    if (!lockedLocation) return;
+
+    const releaseOutside = (event: PointerEvent) => {
+      if (!figureRef.current?.contains(event.target as Node)) {
+        setLockedLocation(null);
+        setActiveLocation(null);
+      }
+    };
+    document.addEventListener("pointerdown", releaseOutside);
+    return () => document.removeEventListener("pointerdown", releaseOutside);
+  }, [lockedLocation, setActiveLocation]);
+
+  const selectLocation = (id: SignalLocationId) => {
+    const next = lockedLocation === id ? null : id;
+    setLockedLocation(next);
+    setActiveLocation(next);
+  };
+
   return (
-    <figure className="relative isolate min-h-[31rem] lg:min-h-[41rem]">
+    <figure
+      className="relative isolate min-h-[25rem] sm:min-h-[29rem] lg:min-h-[31rem]"
+      ref={figureRef}
+    >
       <div
-        className="pointer-events-none absolute inset-[-8%] -z-10 rounded-full opacity-80 blur-3xl"
+        className="pointer-events-none absolute inset-[2%] -z-10 rounded-full opacity-75 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgb(47 127 255 / 0.24), transparent 64%)",
+            "radial-gradient(circle, rgb(47 127 255 / 0.26), rgb(47 127 255 / 0.07) 42%, transparent 70%)",
         }}
         aria-hidden="true"
       />
 
-      <div className="relative h-[25rem] overflow-hidden sm:h-[31rem] lg:h-[35rem]">
+      <div className="relative h-[23rem] overflow-visible sm:h-[27rem] lg:h-[29rem]">
         <svg
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full opacity-75"
+          className="absolute inset-0 h-full w-full opacity-70"
           viewBox="0 0 680 560"
         >
           <defs>
-            <radialGradient id="globe-fallback-fill">
-              <stop offset="0" stopColor="rgb(47 127 255 / 0.18)" />
-              <stop offset="0.72" stopColor="rgb(9 31 57 / 0.22)" />
+            <radialGradient id="globe-fallback-fill" cx="42%" cy="36%">
+              <stop offset="0" stopColor="rgb(63 142 225 / 0.28)" />
+              <stop offset="0.58" stopColor="rgb(9 31 57 / 0.24)" />
               <stop offset="1" stopColor="transparent" />
             </radialGradient>
           </defs>
-          <circle cx="340" cy="280" r="206" fill="url(#globe-fallback-fill)" />
+          <circle cx="340" cy="280" r="176" fill="url(#globe-fallback-fill)" />
           <circle
             cx="340"
             cy="280"
             fill="none"
-            r="190"
+            r="176"
             stroke="rgb(102 168 255 / 0.24)"
           />
-          {[122, 164, 206, 248, 290, 332, 374, 416].map((x) => (
-            <ellipse
-              cx="340"
-              cy="280"
-              fill="none"
-              key={x}
-              rx={Math.abs(x - 340) * 0.85 + 32}
-              ry="190"
-              stroke="rgb(102 168 255 / 0.09)"
-            />
-          ))}
-          {[146, 202, 258, 314, 370, 426].map((y) => (
-            <ellipse
-              cx="340"
-              cy="280"
-              fill="none"
-              key={y}
-              rx="190"
-              ry={Math.abs(y - 280) * 0.55 + 26}
-              stroke="rgb(94 231 247 / 0.09)"
-            />
-          ))}
+          <circle
+            cx="340"
+            cy="280"
+            fill="none"
+            r="192"
+            stroke="rgb(47 127 255 / 0.1)"
+          />
         </svg>
 
         <ThreeGlobeCanvas
-          activeLocation={activeLocation}
+          activeLocation={displayedId ?? null}
           onHover={setHoveredLocation}
-          onSelect={setActiveLocation}
+          onSelect={selectLocation}
+          rotationPaused={Boolean(hoveredLocation || lockedLocation)}
         />
 
-        <div className="pointer-events-none absolute top-5 left-0 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.16em] text-signal-cyan uppercase">
+        <div className="pointer-events-none absolute top-2 left-0 z-20 font-mono text-[0.62rem] font-semibold tracking-[0.14em] text-signal-cyan uppercase sm:text-[length:var(--text-label-size)]">
           Professional signal map / drag to rotate
         </div>
 
         {displayedSignal ? (
           <div
-            className="pointer-events-none absolute right-0 bottom-5 max-w-[15rem] border-l-2 border-signal-cyan bg-background/75 px-4 py-3 backdrop-blur-sm"
+            className="pointer-events-none absolute right-0 bottom-0 z-30 max-w-[15rem] border-r-2 border-signal-amber bg-background/82 px-3 py-2 text-right backdrop-blur-sm sm:hidden"
             aria-live="polite"
           >
-            <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.13em] text-signal-cyan uppercase">
-              {displayedSignal.label}
+            <p className="font-mono text-[0.62rem] font-semibold tracking-[0.1em] text-signal-cyan uppercase">
+              {displayedSignal.label} · {displayedSignal.country}
             </p>
-            <p className="mt-1 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
+            <p className="mt-1 text-[0.65rem] leading-4 text-foreground-secondary">
               {displayedSignal.detail}
             </p>
           </div>
         ) : null}
       </div>
 
-      <figcaption className="relative -mt-2 border-t border-border pt-4">
-        <p className="sr-only">
+      <figcaption className="sr-only">
+        <p>
           Interactive globe of public professional signals. Remote engineering
-          experience does not imply physical residence. The USA marker carries
-          no employment or residence claim.
+          experience does not imply physical residence. The United States marker
+          represents Scale AI LLM evaluation work on a freelance or part-time
+          basis, not residence.
         </p>
-        <ol className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-          {publicSignals.map((signal) => {
-            const id = signal.id as SignalLocationId;
-            const isActive = displayedId === id;
-
-            return (
-              <li key={signal.id}>
-                <button
-                  className={`group relative min-h-16 w-full overflow-hidden border px-3 py-2 text-left transition-[border-color,background-color,transform] duration-[var(--duration-base)] focus-visible:border-signal-cyan ${
-                    isActive
-                      ? "border-signal-cyan bg-accent-muted/45"
-                      : "border-border bg-background-elevated/35 hover:border-border-strong hover:bg-surface/50"
-                  }`}
-                  onClick={() => setActiveLocation(id)}
-                  onFocus={() => setActiveLocation(id)}
-                  onMouseEnter={() => setHoveredLocation(id)}
-                  onMouseLeave={() => setHoveredLocation(null)}
-                  type="button"
-                  aria-pressed={activeLocation === id}
-                >
-                  {isActive ? (
-                    <span
-                      className="signal-ripple absolute top-3 left-3 h-3 w-3 rounded-full border border-signal-cyan"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                  <span className="block pl-5 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground uppercase">
-                    {signal.label}
-                  </span>
-                  <span className="mt-1 block pl-5 text-[0.68rem] leading-4 text-foreground-muted">
-                    {signal.relationship === "current-base"
-                      ? "Current base"
-                      : signal.relationship === "country-marker"
-                        ? "United States"
-                        : signal.id === "toronto"
-                          ? "Remote experience"
-                          : "Engineering experience"}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
+        <ol>
+          {publicSignals.map((signal) => (
+            <li key={signal.id}>
+              {signal.label}, {signal.country}: {signal.detail}
+            </li>
+          ))}
         </ol>
       </figcaption>
     </figure>

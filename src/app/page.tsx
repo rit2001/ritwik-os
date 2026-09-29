@@ -4,6 +4,7 @@ import { FlagshipSystems } from "@/components/home/FlagshipSystems";
 import { FoundationsSection } from "@/components/home/FoundationsSection";
 import { JourneyTimeline } from "@/components/home/JourneyTimeline";
 import { ProfessionalTopology } from "@/components/home/ProfessionalTopology";
+import { SelectedEarlierSystems } from "@/components/home/SelectedEarlierSystems";
 import { Reveal } from "@/components/motion/Reveal";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ActionLink } from "@/components/ui/ActionLink";
@@ -65,17 +66,19 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container
-          className="grid min-h-[calc(100dvh-var(--layout-header-height))] items-center gap-8 py-14 sm:py-18 lg:grid-cols-[minmax(0,0.43fr)_minmax(30rem,0.57fr)] lg:gap-8 lg:py-16"
+          className="grid min-h-[calc(100dvh-var(--layout-header-height))] items-center gap-8 py-14 sm:py-18 lg:grid-cols-[minmax(0,0.58fr)_minmax(25rem,0.42fr)] lg:gap-10 lg:py-16"
           width="wide"
         >
           <div className="relative z-10">
             <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.18em] text-signal-cyan uppercase">
               {profile.displayName}
             </p>
-            <h1 className="mt-6 max-w-[13ch] text-[clamp(3.05rem,7.1vw,6.8rem)] leading-[0.84] font-semibold tracking-[-0.065em] text-foreground uppercase">
-              <span className="block">Engineering</span>
-              <span className="block text-transparent [-webkit-text-stroke:1px_var(--ritwik-color-foreground-secondary)]">
-                Intelligence
+            <h1 className="mt-6 max-w-[15ch] text-[clamp(3rem,3.5vw,3.8rem)] leading-[0.9] font-semibold tracking-[-0.055em] text-foreground uppercase min-[1200px]:max-w-none">
+              <span className="block min-[1200px]:whitespace-nowrap">
+                Engineering{" "}
+                <span className="text-transparent [-webkit-text-stroke:1px_var(--ritwik-color-foreground-secondary)]">
+                  Intelligence
+                </span>
               </span>
               <span className="block">Into Production.</span>
             </h1>
@@ -198,6 +201,23 @@ export default function Home() {
         </Container>
       </section>
 
+      <section className="relative overflow-hidden border-b border-border py-20 lg:py-24">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_50%,rgb(47_127_255_/_0.09),transparent_30rem)]"
+          aria-hidden="true"
+        />
+        <Container className="relative" width="wide">
+          <Reveal>
+            <SectionHeader
+              eyebrow="Selected Earlier Systems"
+              title="Earlier builds show the progression behind today’s flagship systems."
+              description="A lower-tier evolution strip: real shipped scope, canonical actions, and explicit learning trajectories without claiming direct code lineage."
+            />
+          </Reveal>
+          <SelectedEarlierSystems />
+        </Container>
+      </section>
+
       <section id="capabilities" className="scroll-mt-32 py-20 lg:py-24">
         <Container width="wide">
           <Reveal>
@@ -247,18 +267,32 @@ export default function Home() {
               viewBox="0 0 1200 420"
             >
               <path
-                className="signal-route"
                 d="M30 74 C300 74 390 210 660 210 S880 250 1010 250"
                 fill="none"
                 stroke="var(--ritwik-color-signal-cyan)"
+                strokeDasharray="3 9"
                 strokeWidth="1.5"
               />
               <path
-                className="signal-route"
                 d="M80 350 C310 350 420 240 660 240 S850 250 1010 250"
                 fill="none"
                 stroke="var(--ritwik-color-accent)"
+                strokeDasharray="3 9"
                 strokeWidth="1.5"
+              />
+              <circle
+                cx="948"
+                cy="249"
+                fill="var(--ritwik-color-signal-cyan)"
+                opacity="0.38"
+                r="3"
+              />
+              <circle
+                cx="978"
+                cy="250"
+                fill="var(--ritwik-color-signal-cyan)"
+                opacity="0.66"
+                r="3.5"
               />
               <circle
                 className="signal-ripple"
@@ -279,7 +313,7 @@ export default function Home() {
               <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
                 Contact / Final signal destination
               </p>
-              <h2 className="mt-5 max-w-4xl text-[clamp(2.8rem,6vw,5.7rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-balance text-foreground uppercase">
+              <h2 className="mt-5 max-w-4xl text-[clamp(2.6rem,5vw,5rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-balance text-foreground">
                 Build systems that survive contact with production.
               </h2>
               <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
@@ -302,9 +336,18 @@ export default function Home() {
                 {profile.email}
               </a>
               <div className="mt-7 flex flex-wrap gap-3">
-                <ActionLink href={`mailto:${profile.email}`} variant="primary">
-                  Email Me
-                </ActionLink>
+                <span className="group relative inline-flex">
+                  <span
+                    className="pointer-events-none absolute inset-[-0.45rem] rounded-lg border border-signal-cyan opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 motion-safe:group-hover:animate-ping motion-safe:group-focus-within:animate-ping"
+                    aria-hidden="true"
+                  />
+                  <ActionLink
+                    href={`mailto:${profile.email}`}
+                    variant="primary"
+                  >
+                    Email Me
+                  </ActionLink>
+                </span>
                 <ActionLink href={profile.resumePath}>View Résumé</ActionLink>
               </div>
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">

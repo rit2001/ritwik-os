@@ -97,6 +97,81 @@ body {
   }
 }
 
+@keyframes thesis-split-arrive {
+  0%,
+  9% {
+    opacity: 0.32;
+  }
+  18%,
+  84% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.32;
+  }
+}
+
+@keyframes thesis-selection-flash {
+  0%,
+  72%,
+  100% {
+    filter: drop-shadow(0 0 0 rgb(94 231 247 / 0));
+  }
+  80% {
+    filter: drop-shadow(0 0 8px rgb(94 231 247 / 0.85));
+  }
+}
+
+@keyframes trace-capture-flash {
+  0%,
+  12% {
+    opacity: 0.28;
+  }
+  22%,
+  82% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgb(94 231 247 / 0.7));
+  }
+  100% {
+    opacity: 0.28;
+    filter: none;
+  }
+}
+
+@keyframes trace-seal {
+  0%,
+  66%,
+  100% {
+    opacity: 0.16;
+    transform: scale(0.9);
+  }
+  76% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+  88% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes converge-ack {
+  0%,
+  18% {
+    opacity: 0.28;
+  }
+  27%,
+  68% {
+    opacity: 1;
+    filter: drop-shadow(0 0 7px rgb(94 231 247 / 0.68));
+  }
+  80%,
+  100% {
+    opacity: 0.28;
+    filter: none;
+  }
+}
+
 .signal-grid {
   background-image:
     linear-gradient(rgb(102 168 255 / 0.055) 1px, transparent 1px),
@@ -117,7 +192,7 @@ body {
 }
 
 .signal-ripple {
-  animation: signal-pulse 1.8s var(--ease-standard) infinite;
+  animation: signal-pulse 1.2s var(--ease-standard) 1;
   transform-origin: center;
 }
 
@@ -129,11 +204,43 @@ body {
   animation: signal-sweep-y 3.2s var(--ease-standard) infinite;
 }
 
+.thesis-split {
+  animation: thesis-split-arrive 5.2s var(--ease-standard) infinite;
+}
+
+.thesis-selected {
+  animation: thesis-selection-flash 3.8s var(--ease-standard) infinite;
+}
+
+.trace-capture-event {
+  animation: trace-capture-flash 4.4s var(--ease-standard) infinite;
+}
+
+.trace-seal-pulse {
+  animation: trace-seal 4.4s var(--ease-standard) infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.converge-reconnect {
+  animation: signal-route 1.6s linear infinite;
+}
+
+.converge-sequence-token {
+  animation: converge-ack 4.2s var(--ease-standard) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .signal-route,
   .signal-ripple,
   .signal-sweep-x,
-  .signal-sweep-y {
+  .signal-sweep-y,
+  .thesis-split,
+  .thesis-selected,
+  .trace-capture-event,
+  .trace-seal-pulse,
+  .converge-reconnect,
+  .converge-sequence-token {
     animation: none !important;
   }
 }

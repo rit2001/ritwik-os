@@ -4,6 +4,7 @@ export type ProfessionalSignalRelationship =
 export type ProfessionalSignal = {
   id: string;
   label: string;
+  country: string;
   relationship: ProfessionalSignalRelationship;
   detail: string;
   latitude: number;
@@ -15,6 +16,7 @@ export const professionalSignals = [
   {
     id: "kolkata",
     label: "Kolkata",
+    country: "India",
     relationship: "current-base",
     detail: "Current base",
     latitude: 22.5726,
@@ -24,8 +26,9 @@ export const professionalSignals = [
   {
     id: "bengaluru",
     label: "Bengaluru",
+    country: "India",
     relationship: "engineering-experience",
-    detail: "Search-in",
+    detail: "Search-in · Engineering experience",
     latitude: 12.9716,
     longitude: 77.5946,
     visibility: "public",
@@ -33,8 +36,9 @@ export const professionalSignals = [
   {
     id: "pune",
     label: "Pune",
+    country: "India",
     relationship: "engineering-experience",
-    detail: "Pepcorns",
+    detail: "Pepcorns · Engineering experience",
     latitude: 18.5204,
     longitude: 73.8567,
     visibility: "public",
@@ -42,6 +46,7 @@ export const professionalSignals = [
   {
     id: "toronto",
     label: "Toronto",
+    country: "Canada",
     relationship: "engineering-experience",
     detail: "Taskly Technologies · Remote engineering experience",
     latitude: 43.6532,
@@ -51,8 +56,9 @@ export const professionalSignals = [
   {
     id: "usa",
     label: "USA",
+    country: "United States",
     relationship: "country-marker",
-    detail: "United States",
+    detail: "Scale AI · LLM evaluation work · Freelance / part-time",
     latitude: 39.8283,
     longitude: -98.5795,
     visibility: "public",

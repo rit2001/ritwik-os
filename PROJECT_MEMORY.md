@@ -470,3 +470,38 @@ H1.2 is implemented as a two-commit human-review correction on
 Do not treat H1.2 as launch approval. Review the homepage, `/work`, ThesisLens,
 TraceForge, Converge, and Stateful Agentic AI Assistant at desktop, tablet, and
 320–390px mobile widths before any Phase 8.9 work.
+
+## H1.3 — Visual Fidelity Pass
+
+H1.3 refines the cinematic system experience on `feat/ritwik-os-v2` without
+changing the audited technical record or beginning Phase 8.9:
+
+- The desktop hero enforces the approved two-line headline composition. The
+  globe is smaller, shaded, atmosphere-lit, and labelled directly from real
+  latitude/longitude markers; the detached location-card row is removed.
+- Kolkata, Bengaluru, Pune, Toronto, and USA remain the public professional
+  geography. USA is explicitly described as “Scale AI · LLM evaluation work ·
+  Freelance / part-time” and never as residence.
+- The globe retains lazy client loading, offscreen/document-visibility pausing,
+  reduced-motion behavior, draggable rotation, selectable labels, projected
+  marker positions, restrained node pulses, and traveling arc lights.
+- The journey timeline positions every milestone on its path, advances route
+  energy chronologically, and links IIT Kharagpur, Pepcorns, Search-in, Taskly,
+  and the 2026 flagship systems to shared geography/project state.
+- ThesisLens uses a filing-to-citation evidence funnel; TraceForge uses a
+  center-weighted Replay Capsule with seal, branch, and diff semantics;
+  Converge uses a distributed client/authority/commit/stream/replica topology
+  with offline catch-up. Evidence interactions activate the relevant stage.
+- Experience is a continuous milestone rail with one active evidence panel.
+  Capabilities are an explicit capability → system → concrete evidence model.
+- Foundations uses an institutional IIT Kharagpur anchor plus distinct symbolic
+  LeetCode knight/streak and Codeforces ranking-ladder proof modules. No rating
+  history or campus imagery is invented.
+- Selected Earlier Systems returns to the homepage as an evolution strip for
+  the Stateful Agentic AI Assistant, AI Mock Interview Platform, and Real-Time
+  Collaborative Whiteboard. Progression language does not claim direct code
+  lineage.
+- The three published flagship case-study covers inherit the richer project-
+  specific visual stages. The audited MDX case-study content remains unchanged.
+
+The mandatory human visual review gate remains active. Do not begin Phase 8.9.

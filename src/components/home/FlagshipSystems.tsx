@@ -14,6 +14,7 @@ type InteractiveEvidenceItem = {
   label: string;
   summary: string;
   detail: string;
+  stage: number;
 };
 
 type FlagshipPresentation = {
@@ -48,24 +49,28 @@ const flagships: readonly FlagshipPresentation[] = [
       {
         label: "Evaluation set",
         summary: "44 queries · 1,012 judged pairs",
+        stage: 1,
         detail:
           "The exhaustive Apple and Tesla FY2024 benchmark is content-adjudicated. The published before/after metric uses only its eight-query frozen holdout.",
       },
       {
         label: "Recall movement",
         summary: "Recall@3 0.448 → 0.604",
+        stage: 1,
         detail:
           "The same frozen holdout compares local BM25 with the fine-tuned MiniLM reranker; it is benchmark evidence, not production impact.",
       },
       {
         label: "Grounding path",
         summary: "SQL · RAG · combined routing",
+        stage: 2,
         detail:
           "Deterministic routing separates structured KPI answers from retrieval and combined research, then validates current-request evidence provenance.",
       },
       {
         label: "Ranking trade-off",
         summary: "~3.19s reranking-only CPU mean",
+        stage: 3,
         detail:
           "Top-rank MRR declined on the holdout, so the experimental reranker remains offline and lexical retrieval remains the serving default.",
       },
@@ -95,24 +100,28 @@ const flagships: readonly FlagshipPresentation[] = [
       {
         label: "Evidence integrity",
         summary: "Versioned capsule · RFC 8785 · SHA-256",
+        stage: 1,
         detail:
           "Sanitized dependency requests receive canonical fingerprints, while the whole capsule is content-addressed and fails validation when altered.",
       },
       {
         label: "Frozen boundaries",
         summary: "Recorded model and HTTP outcomes",
+        stage: 0,
         detail:
           "Exact replay consumes dependency fixtures in order and terminates on missing, extra, reordered, mismatched, or unused outcomes.",
       },
       {
         label: "Regression path",
         summary: "Structural compare · approved assertions",
+        stage: 3,
         detail:
           "Normalized structural comparison is separate from developer-authored regression specifications and optional offline pytest export.",
       },
       {
         label: "Capture transport",
         summary: "Go queue · Kafka at least once · SQLite dedupe",
+        stage: 0,
         detail:
           "The optional distributed path accepts into a bounded queue, transports capture events at least once, and applies durable single-writer event idempotency.",
       },
@@ -137,24 +146,28 @@ const flagships: readonly FlagshipPresentation[] = [
       {
         label: "Authority",
         summary: "Strict monotonic order per board",
+        stage: 1,
         detail:
           "A transaction-scoped advisory lock allocates the next sequence. Operation, projection, heads, receipt, undo evidence, and outbox commit together.",
       },
       {
         label: "Offline intent",
         summary: "IndexedDB persistence before optimism",
+        stage: 0,
         detail:
           "Stable operation IDs survive reload and reconnect in the same browser profile; PostgreSQL acknowledgement remains the commit boundary.",
       },
       {
         label: "Recovery",
         summary: "Fixed watermark · verified snapshot + tail",
+        stage: 2,
         detail:
           "Generation fences reject stale async work; canonical hashing verifies reconstructed state before the client rebases and reapplies pending intent.",
       },
       {
         label: "Delivery",
         summary: "Redis Stream · at least once",
+        stage: 3,
         detail:
           "Every API replica reads retained evidence independently. Duplicates are suppressed and gaps recover from PostgreSQL; exactly-once delivery is not claimed.",
       },
@@ -201,11 +214,11 @@ function EvidenceInteraction({
               aria-controls={detailsId}
               aria-expanded={open}
               onClick={() => {
-                onActiveStep(index);
+                onActiveStep(item.stage);
                 setExpanded(open ? null : index);
               }}
-              onFocus={() => onActiveStep(index)}
-              onMouseEnter={() => onActiveStep(index)}
+              onFocus={() => onActiveStep(item.stage)}
+              onMouseEnter={() => onActiveStep(item.stage)}
               type="button"
             >
               <span
@@ -247,91 +260,154 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
   const [activeStep, setActiveStep] = useState(0);
   const { activeProject, setActiveProject } = useSignalState();
   const active = activeProject === item.id;
+  const centered = item.id === "traceforge";
+
+  const intro = (
+    <div className={centered ? "text-center" : undefined}>
+      <div
+        className={`flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] uppercase ${centered ? "justify-center" : ""}`}
+      >
+        <span className="text-signal-cyan">System / {item.sequence}</span>
+        <span className="text-foreground-muted">{item.project.category}</span>
+      </div>
+      <h3
+        className={`mt-6 text-[clamp(3rem,6.5vw,6.4rem)] leading-[0.87] font-semibold tracking-[-0.055em] transition-colors duration-[var(--duration-base)] ${active ? "text-white" : "text-foreground"}`}
+      >
+        {item.project.title}
+      </h3>
+      <p
+        className={`mt-7 text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary ${centered ? "mx-auto max-w-3xl" : ""}`}
+      >
+        {item.thesis}
+      </p>
+
+      <div
+        className={`relative mt-8 border-signal-cyan ${centered ? "mx-auto max-w-2xl border-y py-5" : "border-l-2 pl-5"}`}
+      >
+        {!centered ? (
+          <span
+            className="signal-ripple absolute top-0 -left-[0.43rem] h-3 w-3 rounded-full border border-signal-cyan"
+            aria-hidden="true"
+          />
+        ) : null}
+        <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
+          Primary proof / {item.proof.label}
+        </p>
+        <p className="mt-3 font-mono text-[clamp(1.8rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.04em] text-foreground">
+          {item.proof.value}
+        </p>
+        <p className="mt-4 text-sm leading-6 text-foreground-muted">
+          {item.proof.context}
+        </p>
+      </div>
+    </div>
+  );
+
+  const evidence = (
+    <EvidenceInteraction
+      items={item.evidence}
+      onActiveStep={setActiveStep}
+      projectId={item.id}
+    />
+  );
+
+  const details = (
+    <div className={centered ? "text-center" : undefined}>
+      {item.scopeNote ? (
+        <p
+          className={`mt-5 text-sm leading-6 text-foreground-muted ${centered ? "border-y border-signal-amber/45 py-4" : "border-l border-signal-amber/60 pl-4"}`}
+        >
+          {item.scopeNote}
+        </p>
+      ) : null}
+
+      <ul
+        className={`mt-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[0.68rem] tracking-[0.06em] text-foreground-muted uppercase ${centered ? "justify-center" : ""}`}
+      >
+        {item.stack.map((technology) => (
+          <li key={technology}>{technology}</li>
+        ))}
+      </ul>
+
+      <div
+        className={`mt-8 flex flex-wrap gap-3 ${centered ? "justify-center" : ""}`}
+      >
+        {item.project.caseStudyPath ? (
+          <ActionLink href={item.project.caseStudyPath} variant="primary">
+            Enter Case Study
+          </ActionLink>
+        ) : null}
+        {item.project.repositoryUrl ? (
+          <ActionLink
+            href={item.project.repositoryUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            GitHub ↗
+          </ActionLink>
+        ) : null}
+      </div>
+    </div>
+  );
+
+  const stage = (
+    <div>
+      <SystemVisualStage activeStep={activeStep} project={item.id} />
+      <div className="mt-3 flex items-center justify-between font-mono text-[0.64rem] tracking-[0.1em] text-foreground-muted uppercase">
+        <span>Evidence-linked view</span>
+        <span>Signal {String(activeStep + 1).padStart(2, "0")}</span>
+      </div>
+    </div>
+  );
 
   return (
     <article
-      className="relative scroll-mt-28 border-t border-border py-20 lg:min-h-[110vh] lg:py-28"
+      className={`relative scroll-mt-28 border-t border-border py-20 lg:py-28 ${item.id === "traceforge" ? "lg:min-h-[125vh]" : "lg:min-h-[110vh]"}`}
       id={item.project.id}
       onFocusCapture={() => setActiveProject(item.id)}
       onMouseEnter={() => setActiveProject(item.id)}
     >
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(34rem,0.58fr)] lg:items-start lg:gap-14">
-        <div className="relative z-10">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] uppercase">
-            <span className="text-signal-cyan">System / {item.sequence}</span>
-            <span className="text-foreground-muted">
-              {item.project.category}
-            </span>
+      {item.id === "thesislens" ? (
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.38fr)_minmax(36rem,0.62fr)] lg:items-start lg:gap-14">
+          <div className="relative z-10">
+            {intro}
+            {evidence}
+            {details}
           </div>
-          <h3
-            className={`mt-6 text-[clamp(3rem,6.5vw,6.4rem)] leading-[0.87] font-semibold tracking-[-0.055em] transition-colors duration-[var(--duration-base)] ${active ? "text-white" : "text-foreground"}`}
-          >
-            {item.project.title}
-          </h3>
-          <p className="mt-7 text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
-            {item.thesis}
-          </p>
-
-          <div className="relative mt-8 border-l-2 border-signal-cyan pl-5">
-            <span
-              className="signal-ripple absolute top-0 -left-[0.43rem] h-3 w-3 rounded-full border border-signal-cyan"
-              aria-hidden="true"
-            />
-            <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-              Primary proof / {item.proof.label}
-            </p>
-            <p className="mt-3 font-mono text-[clamp(1.8rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.04em] text-foreground">
-              {item.proof.value}
-            </p>
-            <p className="mt-4 text-sm leading-6 text-foreground-muted">
-              {item.proof.context}
-            </p>
-          </div>
-
-          <EvidenceInteraction
-            items={item.evidence}
-            onActiveStep={setActiveStep}
-            projectId={item.id}
-          />
-
-          {item.scopeNote ? (
-            <p className="mt-5 border-l border-signal-amber/60 pl-4 text-sm leading-6 text-foreground-muted">
-              {item.scopeNote}
-            </p>
-          ) : null}
-
-          <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[0.68rem] tracking-[0.06em] text-foreground-muted uppercase">
-            {item.stack.map((technology) => (
-              <li key={technology}>{technology}</li>
-            ))}
-          </ul>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            {item.project.caseStudyPath ? (
-              <ActionLink href={item.project.caseStudyPath} variant="primary">
-                Enter Case Study
-              </ActionLink>
-            ) : null}
-            {item.project.repositoryUrl ? (
-              <ActionLink
-                href={item.project.repositoryUrl}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                GitHub ↗
-              </ActionLink>
-            ) : null}
+          <div className="lg:sticky lg:top-[calc(var(--layout-header-height)+2.5rem)]">
+            {stage}
           </div>
         </div>
-
-        <div className="lg:sticky lg:top-[calc(var(--layout-header-height)+2.5rem)]">
-          <SystemVisualStage activeStep={activeStep} project={item.id} />
-          <div className="mt-3 flex items-center justify-between font-mono text-[0.64rem] tracking-[0.1em] text-foreground-muted uppercase">
-            <span>Evidence-linked view</span>
-            <span>Signal {String(activeStep + 1).padStart(2, "0")}</span>
+      ) : item.id === "traceforge" ? (
+        <div>
+          <div className="mx-auto max-w-5xl">{intro}</div>
+          <div className="mx-auto mt-12 max-w-6xl lg:mt-16">{stage}</div>
+          <div className="mx-auto mt-8 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)] lg:items-start">
+            {evidence}
+            {details}
           </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <div className="grid gap-12 lg:grid-cols-[minmax(36rem,0.62fr)_minmax(0,0.38fr)] lg:items-start lg:gap-14">
+            <div className="lg:sticky lg:top-[calc(var(--layout-header-height)+2.5rem)]">
+              {stage}
+            </div>
+            <div className="relative z-10">
+              {intro}
+              {details}
+            </div>
+          </div>
+          <div className="mt-10 grid gap-8 border-t border-border pt-3 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)]">
+            {evidence}
+            <p className="mt-7 self-start border-l border-signal-cyan/50 pl-5 text-sm leading-6 text-foreground-muted">
+              Select Authority, Offline intent, Recovery, or Delivery to move
+              the topology between commit ordering, queued local work, verified
+              catch-up, and replica broadcast.
+            </p>
+          </div>
+        </div>
+      )}
     </article>
   );
 }

@@ -1,7 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  useReducedMotion,
+} from "motion/react";
+import { useRef, useState } from "react";
 
 import {
   type SignalLocationId,
@@ -18,8 +23,12 @@ type JourneyEvent = {
   evidence: string;
   locationId?: SignalLocationId;
   projectIds?: readonly SignalProjectId[];
-  desktopPosition: string;
+  x: number;
+  y: number;
 };
+
+const timelinePath =
+  "M90 166 C170 166 230 70 330 76 S470 178 570 164 S730 70 840 78 S1010 180 1110 150";
 
 const journeyEvents: readonly JourneyEvent[] = [
   {
@@ -30,7 +39,9 @@ const journeyEvents: readonly JourneyEvent[] = [
     location: "Kharagpur, India",
     evidence:
       "B.Tech + M.Tech in Mechanical Engineering, with algorithms and systems work becoming the software foundation.",
-    desktopPosition: "left-[2%] top-[67%]",
+    locationId: "kolkata",
+    x: 7.5,
+    y: 166,
   },
   {
     id: "pepcorns",
@@ -41,7 +52,8 @@ const journeyEvents: readonly JourneyEvent[] = [
     evidence:
       "Built referral attribution, reward issuance, backend integrations, and reusable React workflows.",
     locationId: "pune",
-    desktopPosition: "left-[24%] top-[25%]",
+    x: 27.5,
+    y: 76,
   },
   {
     id: "search-in",
@@ -52,7 +64,8 @@ const journeyEvents: readonly JourneyEvent[] = [
     evidence:
       "Built operational APIs and interfaces, with indexed queries, Redis caching, and measured workflow improvement.",
     locationId: "bengaluru",
-    desktopPosition: "left-[46%] top-[58%]",
+    x: 47.5,
+    y: 164,
   },
   {
     id: "taskly",
@@ -63,22 +76,25 @@ const journeyEvents: readonly JourneyEvent[] = [
     evidence:
       "Delivered AI-assisted JobSense modules across Next.js, FastAPI, PostgreSQL, authentication, and deployment workflows.",
     locationId: "toronto",
-    desktopPosition: "left-[67%] top-[18%]",
+    x: 70,
+    y: 78,
   },
   {
     id: "flagship-systems",
     date: "2026",
-    title: "Building Flagship Systems",
+    title: "Flagship systems",
     role: "Applied AI · Replay · Distributed Collaboration",
     location: "ThesisLens · TraceForge · Converge",
     evidence:
       "Current engineering depth spans retrieval evaluation, deterministic agent replay, and authoritative collaborative state.",
     projectIds: ["thesislens", "traceforge", "converge"],
-    desktopPosition: "right-[1%] top-[52%]",
+    x: 92.5,
+    y: 150,
   },
 ] as const;
 
 export function JourneyTimeline() {
+  const hostRef = useRef<HTMLDivElement>(null);
   const {
     activeTimelineEvent,
     setActiveTimelineEvent,
@@ -89,95 +105,104 @@ export function JourneyTimeline() {
     activeTimelineEvent ?? journeyEvents[0].id,
   );
   const reduceMotion = useReducedMotion() === true;
+  const inView = useInView(hostRef, { margin: "120px" });
   const activeEvent =
     journeyEvents.find((event) => event.id === activeId) ?? journeyEvents[0];
+  const activeIndex = journeyEvents.findIndex(
+    (event) => event.id === activeEvent.id,
+  );
 
   const activate = (event: JourneyEvent) => {
     setActiveId(event.id);
     setActiveTimelineEvent(event.id);
-    if (event.locationId) setActiveLocation(event.locationId);
-    if (event.projectIds?.[0]) setActiveProject(event.projectIds[0]);
+    setActiveLocation(event.locationId ?? null);
+    setActiveProject(event.projectIds?.[0] ?? null);
   };
 
   return (
-    <div className="mt-12">
-      <div className="relative hidden h-[23rem] lg:block">
+    <div className="mt-12" ref={hostRef}>
+      <div className="relative hidden h-[20rem] lg:block">
         <svg
           aria-hidden="true"
-          className="absolute inset-x-0 top-8 h-[15rem] w-full"
+          className="absolute inset-x-0 top-0 h-[15rem] w-full overflow-visible"
           viewBox="0 0 1200 240"
           preserveAspectRatio="none"
         >
           <path
-            d="M32 170 C150 170 188 50 310 62 S520 206 642 150 S810 32 930 68 S1068 186 1170 146"
+            d={timelinePath}
             fill="none"
             stroke="var(--ritwik-color-border-strong)"
             strokeWidth="2"
           />
           <motion.path
-            d="M32 170 C150 170 188 50 310 62 S520 206 642 150 S810 32 930 68 S1068 186 1170 146"
+            animate={{ pathLength: (activeIndex + 1) / journeyEvents.length }}
+            d={timelinePath}
             fill="none"
+            initial={false}
             stroke="var(--ritwik-color-signal-cyan)"
             strokeLinecap="round"
-            strokeWidth="2"
-            initial={reduceMotion ? false : { pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true, amount: 0.45 }}
+            strokeWidth="3"
             transition={{
-              duration: reduceMotion ? 0 : 1.1,
+              duration: reduceMotion ? 0 : 0.7,
               ease: [0.2, 0, 0, 1],
             }}
           />
-          {!reduceMotion ? (
-            <circle fill="var(--ritwik-color-signal-amber)" r="5">
+          {!reduceMotion && inView ? (
+            <circle
+              fill="var(--ritwik-color-signal-amber)"
+              filter="drop-shadow(0 0 6px var(--ritwik-color-signal-amber))"
+              r="4.5"
+            >
               <animateMotion
-                begin="0.35s"
-                dur="1.15s"
-                fill="freeze"
-                path="M32 170 C150 170 188 50 310 62 S520 206 642 150 S810 32 930 68 S1068 186 1170 146"
+                dur="5.5s"
+                path={timelinePath}
+                repeatCount="indefinite"
               />
             </circle>
-          ) : (
-            <circle
-              cx="1170"
-              cy="146"
-              fill="var(--ritwik-color-signal-amber)"
-              r="5"
-            />
-          )}
+          ) : null}
         </svg>
 
-        {journeyEvents.map((event) => {
+        {journeyEvents.map((event, index) => {
           const active = activeEvent.id === event.id;
+          const reached = index <= activeIndex;
           return (
             <button
-              className={`absolute w-[13.5rem] text-left transition-transform duration-[var(--duration-base)] hover:-translate-y-1 focus-visible:-translate-y-1 ${event.desktopPosition}`}
+              className="group absolute w-[11.5rem] -translate-x-1/2 text-center"
               key={event.id}
               onClick={() => activate(event)}
               onFocus={() => activate(event)}
               onMouseEnter={() => activate(event)}
+              style={{ left: `${event.x}%`, top: `${event.y - 8}px` }}
               type="button"
               aria-expanded={active}
             >
               <span
-                className={`relative mb-3 block h-4 w-4 rounded-full border-2 ${
+                className={`relative mx-auto block h-4 w-4 rounded-full border-2 transition-[border-color,background-color,box-shadow,transform] duration-[var(--duration-base)] group-hover:scale-125 group-focus-visible:scale-125 ${
                   active
-                    ? "border-signal-cyan bg-signal-cyan shadow-[0_0_24px_var(--ritwik-color-signal-cyan)]"
-                    : "border-border-strong bg-background"
+                    ? "scale-125 border-signal-cyan bg-signal-cyan shadow-[0_0_26px_var(--ritwik-color-signal-cyan)]"
+                    : reached
+                      ? "border-signal-cyan bg-background"
+                      : "border-border-strong bg-background"
                 }`}
               >
                 {active ? (
-                  <span className="signal-ripple absolute inset-[-0.35rem] rounded-full border border-signal-cyan" />
+                  <span className="signal-ripple absolute inset-[-0.45rem] rounded-full border border-signal-cyan" />
                 ) : null}
               </span>
-              <span className="block font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
-                {event.date}
-              </span>
-              <span className="mt-1 block text-base font-semibold text-foreground">
-                {event.title}
-              </span>
-              <span className="mt-1 block text-xs leading-5 text-foreground-muted">
-                {event.location}
+              <span
+                className={`mt-3 block border-t px-2 pt-3 transition-colors ${
+                  active ? "border-signal-cyan" : "border-border"
+                }`}
+              >
+                <span className="block font-mono text-[0.63rem] font-semibold tracking-[0.1em] text-signal-cyan uppercase">
+                  {event.date}
+                </span>
+                <span className="mt-1 block text-sm font-semibold text-foreground">
+                  {event.title}
+                </span>
+                <span className="mt-1 block text-[0.68rem] leading-4 text-foreground-muted">
+                  {event.location}
+                </span>
               </span>
             </button>
           );
@@ -194,10 +219,10 @@ export function JourneyTimeline() {
           return (
             <li key={event.id}>
               <button
-                className={`relative w-full border px-4 py-4 text-left transition-colors ${
+                className={`relative w-full border-l px-4 py-4 text-left transition-colors ${
                   active
                     ? "border-signal-cyan bg-accent-muted/35"
-                    : "border-border bg-background-elevated/35"
+                    : "border-border-strong bg-background-elevated/25"
                 }`}
                 onClick={() => activate(event)}
                 onFocus={() => activate(event)}
@@ -207,7 +232,7 @@ export function JourneyTimeline() {
                 <span
                   className={`absolute top-5 -left-[1.25rem] h-3 w-3 rounded-full border ${
                     active
-                      ? "border-signal-cyan bg-signal-cyan"
+                      ? "border-signal-cyan bg-signal-cyan shadow-[0_0_16px_var(--ritwik-color-signal-cyan)]"
                       : "border-border-strong bg-background"
                   }`}
                   aria-hidden="true"
@@ -232,39 +257,52 @@ export function JourneyTimeline() {
         })}
       </ol>
 
-      <div className="mt-5 grid gap-6 border-y border-border bg-background-elevated/35 px-5 py-6 sm:px-7 lg:grid-cols-[12rem_minmax(0,1fr)_auto] lg:items-center">
-        <div>
-          <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
-            Active signal / {activeEvent.date}
-          </p>
-          <p className="mt-2 text-xl font-semibold text-foreground">
-            {activeEvent.title}
-          </p>
-        </div>
-        <div>
-          <p className="font-medium text-foreground-secondary">
-            {activeEvent.role}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-foreground-muted">
-            {activeEvent.evidence}
-          </p>
-        </div>
-        {activeEvent.projectIds ? (
-          <div className="flex flex-wrap gap-2">
-            {activeEvent.projectIds.map((project) => (
-              <a
-                className="inline-flex min-h-10 items-center border border-border-strong px-3 font-mono text-xs font-semibold tracking-[0.08em] text-foreground uppercase transition-colors hover:border-signal-cyan hover:text-signal-cyan focus-visible:border-signal-cyan focus-visible:text-signal-cyan"
-                href={`#${project}`}
-                key={project}
-                onFocus={() => setActiveProject(project)}
-                onMouseEnter={() => setActiveProject(project)}
-              >
-                {project}
-              </a>
-            ))}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-5 grid gap-6 border-y border-border bg-[linear-gradient(90deg,rgb(13_42_80_/_0.34),rgb(7_16_27_/_0.35))] px-5 py-6 sm:px-7 lg:grid-cols-[12rem_minmax(0,1fr)_auto] lg:items-center"
+          exit={reduceMotion ? undefined : { opacity: 0, y: 5 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 7 }}
+          key={activeEvent.id}
+          transition={{ duration: reduceMotion ? 0 : 0.22 }}
+        >
+          <div>
+            <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
+              Active milestone / {activeEvent.date}
+            </p>
+            <p className="mt-2 text-xl font-semibold text-foreground">
+              {activeEvent.title}
+            </p>
           </div>
-        ) : null}
-      </div>
+          <div>
+            <p className="font-medium text-foreground-secondary">
+              {activeEvent.role}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-foreground-muted">
+              {activeEvent.evidence}
+            </p>
+          </div>
+          {activeEvent.projectIds ? (
+            <div className="flex flex-wrap gap-2">
+              {activeEvent.projectIds.map((project) => (
+                <a
+                  className="inline-flex min-h-10 items-center border border-border-strong px-3 font-mono text-xs font-semibold tracking-[0.08em] text-foreground uppercase transition-colors hover:border-signal-cyan hover:text-signal-cyan focus-visible:border-signal-cyan focus-visible:text-signal-cyan"
+                  href={`#${project}`}
+                  key={project}
+                  onFocus={() => setActiveProject(project)}
+                  onMouseEnter={() => setActiveProject(project)}
+                >
+                  {project}
+                </a>
+              ))}
+            </div>
+          ) : (
+            <span className="font-mono text-[0.65rem] tracking-[0.1em] text-foreground-muted uppercase">
+              Geography linked to globe
+            </span>
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

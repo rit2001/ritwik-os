@@ -5,77 +5,103 @@ import {
 import { profile } from "@/data/profile";
 
 export function FoundationsSection() {
+  const leetcode = algorithmProfiles[0];
+  const codeforces = algorithmProfiles[1];
+
   return (
-    <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1.12fr)_minmax(22rem,0.88fr)]">
-      <section className="relative isolate min-h-[31rem] overflow-hidden border border-border bg-[linear-gradient(145deg,rgb(11_25_42_/_0.95),rgb(4_7_13_/_0.96))] px-6 py-8 sm:px-10 sm:py-10">
-        <div className="signal-grid pointer-events-none absolute inset-0 -z-10 opacity-55" />
+    <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(23rem,0.94fr)]">
+      <section className="relative isolate min-h-[34rem] overflow-hidden border-y border-border bg-[radial-gradient(circle_at_75%_32%,rgb(47_127_255_/_0.15),transparent_25rem),linear-gradient(145deg,rgb(11_25_42_/_0.94),rgb(4_7_13_/_0.97))] px-6 py-8 sm:px-10 sm:py-10">
+        <div className="signal-grid pointer-events-none absolute inset-0 -z-10 opacity-35" />
         <svg
           aria-hidden="true"
-          className="pointer-events-none absolute right-[-8%] bottom-[-4%] h-[76%] w-[74%] opacity-30"
-          viewBox="0 0 520 380"
+          className="pointer-events-none absolute right-[-2%] bottom-0 h-[82%] w-[68%] opacity-38"
+          viewBox="0 0 520 420"
         >
           <path
-            d="M42 328 L42 124 L124 66 L206 124 V328 M206 328 V84 L302 28 L398 84 V328 M398 328 V154 L470 108 V328"
+            d="M28 380 H500 M92 380 V148 L180 90 L268 148 V380 M268 380 V112 L350 54 L432 112 V380"
             fill="none"
             stroke="var(--ritwik-color-accent)"
             strokeWidth="2"
           />
           <path
-            d="M18 328 H500 M70 170 H174 M70 214 H174 M70 258 H174 M238 112 H364 M238 164 H364 M238 216 H364 M238 268 H364 M422 194 H460 M422 238 H460 M422 282 H460"
+            d="M62 380 V214 H122 M122 380 V186 H180 M180 380 V214 H238 M296 380 V160 H350 M350 380 V132 H406 M406 380 V160 H468"
             fill="none"
             stroke="var(--ritwik-color-signal-cyan)"
             strokeWidth="1"
           />
+          <path
+            d="M74 250 H244 M74 294 H244 M292 222 H458 M292 272 H458 M292 322 H458"
+            fill="none"
+            stroke="var(--ritwik-color-border-strong)"
+          />
           <circle
-            cx="302"
-            cy="28"
+            cx="350"
+            cy="54"
             fill="var(--ritwik-color-signal-amber)"
             r="5"
           />
+          <circle
+            cx="350"
+            cy="54"
+            fill="none"
+            r="16"
+            stroke="var(--ritwik-color-signal-amber)"
+          />
         </svg>
 
-        <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.15em] text-signal-cyan uppercase">
-          Institution / 01
-        </p>
-        <h3 className="mt-6 max-w-xl text-[clamp(2.8rem,7vw,5.8rem)] leading-[0.88] font-semibold tracking-[-0.055em] text-foreground uppercase">
-          IIT
-          <br />
-          Kharagpur
-        </h3>
-        <p className="mt-7 max-w-xl text-lg leading-7 text-foreground-secondary">
-          Dual Degree
-          <br />
-          B.Tech + M.Tech
-          <br />
-          Mechanical Engineering
-        </p>
+        <div className="relative flex items-center gap-4">
+          <span className="grid h-14 w-14 place-items-center rounded-full border border-signal-cyan bg-accent-muted/25 font-mono text-[0.62rem] font-semibold tracking-[0.08em] text-signal-cyan uppercase shadow-[0_0_30px_rgb(47_127_255_/_0.15)]">
+            IIT
+            <br />
+            KGP
+          </span>
+          <div>
+            <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.15em] text-signal-cyan uppercase">
+              Institutional foundation
+            </p>
+            <p className="mt-1 text-sm text-foreground-muted">
+              Indian Institute of Technology Kharagpur
+            </p>
+          </div>
+        </div>
 
-        <dl className="relative mt-10 grid max-w-xl grid-cols-2 gap-px border-y border-border bg-border sm:grid-cols-3">
-          <div className="bg-background/85 px-4 py-4">
-            <dt className="font-mono text-[0.65rem] tracking-[0.1em] text-foreground-muted uppercase">
-              Period
-            </dt>
-            <dd className="mt-2 font-mono text-sm font-semibold text-foreground">
-              {profile.education.dates}
-            </dd>
+        <h3 className="mt-8 max-w-xl text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-foreground uppercase">
+          Engineering depth,
+          <br />
+          built over time.
+        </h3>
+
+        <div className="relative mt-9 max-w-2xl border-l border-border-strong pl-6">
+          <div className="relative pb-6">
+            <span className="absolute top-1 -left-[1.72rem] h-3 w-3 rounded-full border border-signal-cyan bg-background" />
+            <p className="font-mono text-[0.65rem] tracking-[0.11em] text-signal-cyan uppercase">
+              2021 · Foundation begins
+            </p>
+            <p className="mt-2 text-sm leading-6 text-foreground-secondary">
+              Dual Degree in Mechanical Engineering, alongside algorithms and
+              software systems work.
+            </p>
           </div>
-          <div className="bg-background/85 px-4 py-4">
-            <dt className="font-mono text-[0.65rem] tracking-[0.1em] text-foreground-muted uppercase">
-              CGPA
-            </dt>
-            <dd className="mt-2 font-mono text-sm font-semibold text-foreground">
-              7.84 / 10
-            </dd>
+          <div className="relative">
+            <span className="absolute top-1 -left-[1.72rem] h-3 w-3 rounded-full border border-signal-amber bg-signal-amber shadow-[0_0_16px_rgb(242_185_95_/_0.45)]" />
+            <p className="font-mono text-[0.65rem] tracking-[0.11em] text-signal-amber uppercase">
+              2026 · Academic period
+            </p>
+            <p className="mt-2 text-sm leading-6 text-foreground-secondary">
+              B.Tech + M.Tech · {profile.education.dates} · CGPA{" "}
+              {profile.education.cgpa}
+            </p>
           </div>
-          <div className="col-span-2 bg-background/85 px-4 py-4 sm:col-span-1">
-            <dt className="font-mono text-[0.65rem] tracking-[0.1em] text-foreground-muted uppercase">
-              Academic honour
-            </dt>
-            <dd className="mt-2 text-xs leading-5 text-foreground-secondary">
-              {achievementSignals[3]}
-            </dd>
-          </div>
-        </dl>
+        </div>
+
+        <div className="relative mt-9 max-w-2xl border-y border-border bg-background/65 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
+          <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-foreground-muted uppercase">
+            Academic honour
+          </p>
+          <p className="mt-2 text-sm font-semibold text-foreground-secondary sm:mt-0 sm:text-right">
+            {achievementSignals[3]}
+          </p>
+        </div>
       </section>
 
       <section
@@ -84,7 +110,7 @@ export function FoundationsSection() {
       >
         <div className="border-b border-border pb-5">
           <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.15em] text-signal-cyan uppercase">
-            Algorithmic foundations
+            Algorithmic proof
           </p>
           <h3
             className="mt-3 text-2xl font-semibold tracking-[-0.025em] text-foreground"
@@ -94,53 +120,120 @@ export function FoundationsSection() {
           </h3>
         </div>
 
-        {algorithmProfiles.map((algorithm, index) => (
-          <a
-            className="group relative overflow-hidden border border-border bg-background-elevated/40 px-5 py-5 transition-[border-color,transform,box-shadow] duration-[var(--duration-base)] hover:-translate-y-1 hover:border-signal-cyan hover:shadow-[0_16px_50px_rgb(47_127_255_/_0.1)] focus-visible:-translate-y-1 focus-visible:border-signal-cyan"
-            href={algorithm.profileUrl}
-            key={algorithm.platform}
-            rel="noopener noreferrer"
-            target="_blank"
+        <a
+          className="group relative min-h-[16rem] overflow-hidden border border-border bg-[radial-gradient(circle_at_82%_30%,rgb(47_127_255_/_0.16),transparent_13rem),rgb(7_16_27_/_0.6)] px-5 py-5 transition-[border-color,transform,box-shadow] duration-[var(--duration-base)] hover:-translate-y-1 hover:border-signal-cyan hover:shadow-[0_18px_55px_rgb(47_127_255_/_0.12)] focus-visible:-translate-y-1 focus-visible:border-signal-cyan"
+          href={leetcode.profileUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg
+            aria-hidden="true"
+            className="absolute top-5 right-5 h-28 w-28 opacity-24 transition-opacity group-hover:opacity-55 group-focus-visible:opacity-55"
+            viewBox="0 0 120 120"
           >
-            <span
-              className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-gradient-to-r from-signal-cyan to-accent transition-transform duration-[var(--duration-route)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
-              aria-hidden="true"
+            <path
+              d="M28 101 H94 M38 90 C42 67 54 58 71 48 L57 43 L48 22 C70 24 89 42 88 65 C87 77 82 84 78 90 M44 67 L66 69"
+              fill="none"
+              stroke="var(--ritwik-color-signal-cyan)"
+              strokeWidth="3"
             />
-            <span className="flex items-center justify-between gap-4">
-              <span>
-                <span className="font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-                  Proof module / 0{index + 1}
-                </span>
-                <span className="mt-2 block text-xl font-semibold text-foreground">
-                  {algorithm.platform}
-                </span>
-              </span>
-              <span className="font-mono text-sm font-semibold text-signal-cyan">
-                {algorithm.status} ↗
-              </span>
+            <path
+              d="M18 18 H102 V102 H18 Z M46 18 V102 M74 18 V102 M18 46 H102 M18 74 H102"
+              fill="none"
+              opacity="0.35"
+              stroke="var(--ritwik-color-border-strong)"
+            />
+          </svg>
+          <p className="font-mono text-[0.62rem] tracking-[0.11em] text-foreground-muted uppercase">
+            Knight geometry · consistency trail
+          </p>
+          <div className="mt-4 flex items-end gap-3">
+            <h4 className="text-2xl font-semibold text-foreground">LeetCode</h4>
+            <span className="font-mono text-sm font-semibold text-signal-cyan">
+              {leetcode.status} ↗
             </span>
-            <dl className="mt-5 grid grid-cols-2 gap-x-5 gap-y-4">
-              {algorithm.stats.map((stat) => (
-                <div
-                  className="border-l border-border-strong pl-3"
-                  key={stat.label}
-                >
-                  <dt className="text-[0.68rem] text-foreground-muted">
-                    {stat.label}
-                  </dt>
-                  <dd className="mt-1 font-mono text-xs leading-5 font-semibold text-foreground-secondary">
-                    {stat.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <span className="mt-5 block border-t border-border pt-4 text-xs leading-5 text-foreground-muted transition-colors group-hover:text-foreground-secondary group-focus-visible:text-foreground-secondary">
-              {index === 0
-                ? "600+ consecutive Problem-of-the-Day submissions support long-horizon consistency."
-                : "Global Rank 818 in Codeforces Round 952 anchors the specialist signal."}
+          </div>
+          <div className="mt-6 flex items-center gap-2" aria-hidden="true">
+            {Array.from({ length: 12 }, (_, index) => (
+              <span
+                className={`h-1 flex-1 ${index < 9 ? "bg-signal-cyan/70" : "bg-border-strong"}`}
+                key={index}
+              />
+            ))}
+            <span className="h-3 w-3 rounded-full bg-signal-amber shadow-[0_0_14px_rgb(242_185_95_/_0.5)]" />
+          </div>
+          <dl className="mt-6 grid grid-cols-2 gap-x-5 gap-y-3">
+            {leetcode.stats.map((stat) => (
+              <div
+                className="border-l border-border-strong pl-3"
+                key={stat.label}
+              >
+                <dt className="text-[0.65rem] text-foreground-muted">
+                  {stat.label}
+                </dt>
+                <dd className="mt-1 font-mono text-xs font-semibold text-foreground-secondary">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <span className="mt-4 block max-h-0 overflow-hidden border-t border-border pt-0 text-xs leading-5 text-foreground-muted opacity-0 transition-all group-hover:max-h-20 group-hover:pt-4 group-hover:opacity-100 group-focus-visible:max-h-20 group-focus-visible:pt-4 group-focus-visible:opacity-100">
+            Peak rating and percentile are point-in-time proof; the streak is a
+            consistency signal, not a fabricated rating history.
+          </span>
+        </a>
+
+        <a
+          className="group relative min-h-[13rem] overflow-hidden border border-border bg-[linear-gradient(135deg,rgb(242_185_95_/_0.06),rgb(7_16_27_/_0.58))] px-5 py-5 transition-[border-color,transform,box-shadow] duration-[var(--duration-base)] hover:-translate-y-1 hover:border-signal-amber hover:shadow-[0_18px_55px_rgb(242_185_95_/_0.08)] focus-visible:-translate-y-1 focus-visible:border-signal-amber"
+          href={codeforces.profileUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <div
+            className="absolute top-6 right-5 flex h-32 w-24 flex-col-reverse gap-2 opacity-35 transition-opacity group-hover:opacity-75 group-focus-visible:opacity-75"
+            aria-hidden="true"
+          >
+            {["818", "1415", "SPECIALIST"].map((label, index) => (
+              <span
+                className="border-t border-signal-amber pt-1 text-right font-mono text-[0.55rem] text-signal-amber"
+                key={label}
+                style={{ width: `${58 + index * 21}%` }}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+          <p className="font-mono text-[0.62rem] tracking-[0.11em] text-foreground-muted uppercase">
+            Ranking ladder · contest signal
+          </p>
+          <div className="mt-4 flex items-end gap-3">
+            <h4 className="text-2xl font-semibold text-foreground">
+              Codeforces
+            </h4>
+            <span className="font-mono text-sm font-semibold text-signal-amber">
+              {codeforces.status} ↗
             </span>
-          </a>
-        ))}
+          </div>
+          <dl className="mt-6 max-w-sm space-y-3">
+            {codeforces.stats.map((stat) => (
+              <div
+                className="grid grid-cols-[7rem_minmax(0,1fr)] border-l border-border-strong pl-3"
+                key={stat.label}
+              >
+                <dt className="text-[0.65rem] text-foreground-muted">
+                  {stat.label}
+                </dt>
+                <dd className="font-mono text-xs leading-5 font-semibold text-foreground-secondary">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <span className="mt-4 block max-h-0 overflow-hidden border-t border-border pt-0 text-xs leading-5 text-foreground-muted opacity-0 transition-all group-hover:max-h-20 group-hover:pt-4 group-hover:opacity-100 group-focus-visible:max-h-20 group-focus-visible:pt-4 group-focus-visible:opacity-100">
+            The ladder is symbolic; only the verified peak and Round 952 result
+            are shown.
+          </span>
+        </a>
 
         <ul className="grid gap-2 border-t border-border pt-4 sm:grid-cols-3 lg:grid-cols-1">
           {achievementSignals.slice(0, 3).map((achievement) => (

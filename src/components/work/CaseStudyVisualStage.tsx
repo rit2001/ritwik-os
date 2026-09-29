@@ -6,9 +6,17 @@ import { SystemVisualStage } from "@/components/signal/SystemVisualStage";
 import type { SignalProjectId } from "@/components/signal/SignalProvider";
 
 const stageLabels: Record<SignalProjectId, readonly string[]> = {
-  thesislens: ["Ingest", "Chunk", "Retrieve", "Rerank"],
+  thesislens: ["Split", "Rerank", "Ground", "Evaluate"],
   traceforge: ["Capture", "Seal", "Replay", "Compare"],
-  converge: ["Persist", "Order", "Commit", "Deliver"],
+  converge: ["Offline", "Order", "Commit", "Deliver"],
+};
+
+const coverNarratives: Record<SignalProjectId, string> = {
+  thesislens:
+    "Filing → candidates → reordered evidence → cited research answer",
+  traceforge:
+    "Live boundaries → sealed Replay Capsule → original / replay → diff",
+  converge: "Clients → board authority → PostgreSQL commit → replica catch-up",
 };
 
 const proofs: Record<
@@ -43,6 +51,12 @@ export function CaseStudyVisualStage({
       className="mt-10"
       aria-label={`${project} interactive system cover`}
     >
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-y border-border py-3 font-mono text-[0.62rem] tracking-[0.1em] uppercase">
+        <span className="text-signal-cyan">Interactive system cover</span>
+        <span className="text-foreground-muted">
+          {coverNarratives[project]}
+        </span>
+      </div>
       <SystemVisualStage
         activeStep={activeStep}
         className="min-h-[25rem] sm:min-h-[34rem]"

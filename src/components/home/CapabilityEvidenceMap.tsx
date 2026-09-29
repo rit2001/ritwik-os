@@ -8,13 +8,126 @@ import {
 } from "@/components/signal/SignalProvider";
 import { capabilityGroups } from "@/data/capabilities";
 
-const projectLabels: Record<SignalProjectId, string> = {
-  thesislens: "ThesisLens",
-  traceforge: "TraceForge",
-  converge: "Converge",
+type EvidenceRecord = {
+  project: string;
+  techniques: readonly string[];
+  evidence: string;
 };
 
-const projectIds = Object.keys(projectLabels) as SignalProjectId[];
+const capabilityEvidence: Record<string, readonly EvidenceRecord[]> = {
+  "Backend & Distributed Systems": [
+    {
+      project: "TraceForge",
+      techniques: ["Kafka", "Replay boundaries", "OpenTelemetry"],
+      evidence:
+        "Bounded capture queues, at-least-once transport, SQLite event-ID dedupe, and recorded dependency replay.",
+    },
+    {
+      project: "Converge",
+      techniques: [
+        "PostgreSQL sequencing",
+        "Redis Stream",
+        "Idempotent commands",
+      ],
+      evidence:
+        "Board-local ordering, stable operation receipts, transactional outbox commit, and gap recovery.",
+    },
+  ],
+  "AI & Retrieval Systems": [
+    {
+      project: "ThesisLens",
+      techniques: ["Hybrid retrieval", "Cross-encoder reranking", "Citations"],
+      evidence:
+        "A content-adjudicated benchmark measures ranking changes before current-request evidence IDs ground the answer.",
+    },
+    {
+      project: "Stateful Agentic AI Assistant",
+      techniques: ["LangGraph", "FAISS RAG", "HITL"],
+      evidence:
+        "Tool routing, HuggingFace embeddings, thread-scoped checkpoints, and simulated purchase approval.",
+    },
+    {
+      project: "TraceForge",
+      techniques: ["Model capture", "Request fingerprints", "Offline replay"],
+      evidence:
+        "Recorded model and HTTP boundaries fail closed when sequence or canonical request fingerprints differ.",
+    },
+  ],
+  "Data & State": [
+    {
+      project: "Converge",
+      techniques: ["PostgreSQL", "IndexedDB", "Transactional outbox"],
+      evidence:
+        "Pending intent persists before optimism; authoritative state and delivery evidence commit together.",
+    },
+    {
+      project: "ThesisLens",
+      techniques: ["PostgreSQL", "Structured KPIs", "Evidence provenance"],
+      evidence:
+        "Deterministic routing separates structured SQL answers from retrieval and combined research paths.",
+    },
+    {
+      project: "Stateful Agentic AI Assistant",
+      techniques: ["SQLite checkpoints", "FAISS", "Thread state"],
+      evidence:
+        "Thread-scoped memory and local retrieval state are bounded to the audited container deployment.",
+    },
+  ],
+  "Cloud & Platform": [
+    {
+      project: "TraceForge",
+      techniques: ["Docker", "Kubernetes", "Terraform"],
+      evidence:
+        "Non-root images, one locally verified kind deployment, and a narrow Terraform-managed kind foundation.",
+    },
+    {
+      project: "Stateful Agentic AI Assistant",
+      techniques: ["GitHub Actions", "Docker Hub", "AWS EC2"],
+      evidence:
+        "Image publishing, EC2 container replacement, and health verification support on-demand deployment.",
+    },
+    {
+      project: "ThesisLens",
+      techniques: ["Docker", "Azure OpenAI", "Azure AI Search"],
+      evidence:
+        "Containerized services integrate hosted generation and search while the audited benchmark remains reproducible locally.",
+    },
+  ],
+  "Product Engineering": [
+    {
+      project: "Converge",
+      techniques: ["TypeScript", "Konva", "Playwright"],
+      evidence:
+        "The canvas product combines offline intent, collaborative recovery, and 93 recorded production-build Chromium scenarios.",
+    },
+    {
+      project: "AI Mock Interview Platform",
+      techniques: ["Node / Express", "PDF reports", "LLM workflow"],
+      evidence:
+        "Role-aware questions, submitted-answer evaluation, structured feedback, and downloadable reports form the product loop.",
+    },
+  ],
+  "Algorithmic Foundations": [
+    {
+      project: "LeetCode",
+      techniques: ["1,550+ solved", "Knight", "600+ POTD"],
+      evidence:
+        "Peak 1923 and Top 5.6% provide a bounded problem-solving signal supported by long-horizon practice.",
+    },
+    {
+      project: "Codeforces",
+      techniques: ["Specialist", "Peak 1415", "Global Rank 818"],
+      evidence:
+        "The recorded Round 952 result anchors competitive speed and implementation under contest constraints.",
+    },
+  ],
+};
+
+const signalProjectByLabel: Partial<Record<string, SignalProjectId>> = {
+  ThesisLens: "thesislens",
+  TraceForge: "traceforge",
+  Converge: "converge",
+};
 
 function slugify(value: string) {
   return value
@@ -24,183 +137,137 @@ function slugify(value: string) {
 }
 
 export function CapabilityEvidenceMap() {
-  const { activeProject, setActiveCapability, setActiveProject } =
-    useSignalState();
-  const [activeCapabilityId, setActiveCapabilityId] = useState(
-    slugify(capabilityGroups[0].title),
+  const { setActiveCapability, setActiveProject } = useSignalState();
+  const [activeCapabilityTitle, setActiveCapabilityTitle] = useState<string>(
+    capabilityGroups[0].title,
   );
-  const [localProject, setLocalProject] = useState<SignalProjectId | null>(
-    activeProject,
+  const records = useMemo(
+    () => capabilityEvidence[activeCapabilityTitle] ?? [],
+    [activeCapabilityTitle],
   );
-
-  const activeCapability = useMemo(
-    () =>
-      capabilityGroups.find(
-        (group) => slugify(group.title) === activeCapabilityId,
-      ) ?? capabilityGroups[0],
-    [activeCapabilityId],
-  );
-  const displayedProject = localProject ?? activeProject;
+  const [selectedProject, setSelectedProject] = useState(records[0]?.project);
+  const selectedRecord =
+    records.find((record) => record.project === selectedProject) ?? records[0];
 
   const activateCapability = (title: string) => {
-    const id = slugify(title);
-    setActiveCapabilityId(id);
-    setActiveCapability(id);
-    setLocalProject(null);
+    const nextRecords = capabilityEvidence[title] ?? [];
+    setActiveCapabilityTitle(title);
+    setSelectedProject(nextRecords[0]?.project);
+    setActiveCapability(slugify(title));
+    const signalProject = signalProjectByLabel[nextRecords[0]?.project ?? ""];
+    setActiveProject(signalProject ?? null);
   };
 
-  const activateProject = (project: SignalProjectId) => {
-    setLocalProject(project);
-    setActiveProject(project);
+  const activateProject = (project: string) => {
+    setSelectedProject(project);
+    setActiveProject(signalProjectByLabel[project] ?? null);
   };
 
   return (
-    <div className="relative mt-12 overflow-hidden border-y border-border bg-background-elevated/25 px-4 py-8 sm:px-7 lg:min-h-[38rem] lg:px-10 lg:py-10">
-      <div className="signal-grid pointer-events-none absolute inset-0 opacity-40" />
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
-        preserveAspectRatio="none"
-        viewBox="0 0 1200 600"
-      >
-        {[
-          [255, 92, 560, 190],
-          [255, 250, 560, 190],
-          [255, 410, 560, 300],
-          [945, 92, 640, 190],
-          [945, 250, 640, 300],
-          [945, 410, 640, 410],
-        ].map(([x1, y1, x2, y2], index) => (
-          <path
-            className="signal-route"
-            d={`M${x1} ${y1} C${(x1 + x2) / 2} ${y1}, ${(x1 + x2) / 2} ${y2}, ${x2} ${y2}`}
-            fill="none"
-            key={index}
-            stroke="var(--ritwik-color-route)"
-            strokeWidth="1.5"
-          />
-        ))}
-      </svg>
-
-      <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem_minmax(0,1fr)] lg:items-center lg:gap-12">
-        <div className="grid gap-3">
-          {capabilityGroups.slice(0, 3).map((group, index) => {
-            const id = slugify(group.title);
-            const linkedToProject = displayedProject
-              ? (group.demonstratedIn as readonly string[]).includes(
-                  projectLabels[displayedProject],
-                )
-              : false;
-            const active = id === activeCapabilityId || linkedToProject;
-            return (
-              <button
-                className={`relative min-h-24 border px-5 py-4 text-left transition-[border-color,background-color,transform] duration-[var(--duration-base)] hover:translate-x-1 focus-visible:translate-x-1 ${
-                  active
-                    ? "border-signal-cyan bg-accent-muted/35"
-                    : "border-border bg-background/55"
-                }`}
-                key={group.title}
-                onClick={() => activateCapability(group.title)}
-                onFocus={() => activateCapability(group.title)}
-                onMouseEnter={() => activateCapability(group.title)}
-                type="button"
-                aria-pressed={id === activeCapabilityId}
-              >
-                <span className="font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
-                  Capability / 0{index + 1}
-                </span>
-                <span className="mt-2 block font-semibold text-foreground">
-                  {group.title}
-                </span>
-                {active ? (
-                  <span className="mt-2 block text-xs leading-5 text-foreground-muted">
-                    {group.items.slice(0, 4).join(" · ")}
-                  </span>
-                ) : null}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="relative grid gap-3 border-y border-border py-6 lg:border-y-0 lg:border-x lg:px-5 lg:py-8">
-          <p className="text-center font-mono text-[0.65rem] font-semibold tracking-[0.14em] text-foreground-muted uppercase">
-            Demonstrated systems
-          </p>
-          {projectIds.map((project) => {
-            const linked = (
-              activeCapability.demonstratedIn as readonly string[]
-            ).includes(projectLabels[project]);
-            const active = displayedProject === project || linked;
-            return (
-              <button
-                className={`relative min-h-16 border px-4 text-center font-mono text-xs font-semibold tracking-[0.08em] uppercase transition-[border-color,background-color,box-shadow] ${
-                  active
-                    ? "border-signal-amber bg-[rgb(242_185_95_/_0.08)] text-foreground shadow-[0_0_24px_rgb(242_185_95_/_0.08)]"
-                    : "border-border bg-background text-foreground-muted"
-                }`}
-                key={project}
-                onClick={() => activateProject(project)}
-                onFocus={() => activateProject(project)}
-                onMouseEnter={() => activateProject(project)}
-                type="button"
-                aria-pressed={displayedProject === project}
-              >
-                {projectLabels[project]}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="grid gap-3">
-          {capabilityGroups.slice(3).map((group, index) => {
-            const id = slugify(group.title);
-            const linkedToProject = displayedProject
-              ? (group.demonstratedIn as readonly string[]).includes(
-                  projectLabels[displayedProject],
-                )
-              : false;
-            const active = id === activeCapabilityId || linkedToProject;
-            return (
-              <button
-                className={`relative min-h-24 border px-5 py-4 text-left transition-[border-color,background-color,transform] duration-[var(--duration-base)] hover:-translate-x-1 focus-visible:-translate-x-1 ${
-                  active
-                    ? "border-signal-cyan bg-accent-muted/35"
-                    : "border-border bg-background/55"
-                }`}
-                key={group.title}
-                onClick={() => activateCapability(group.title)}
-                onFocus={() => activateCapability(group.title)}
-                onMouseEnter={() => activateCapability(group.title)}
-                type="button"
-                aria-pressed={id === activeCapabilityId}
-              >
-                <span className="font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
-                  Capability / 0{index + 4}
-                </span>
-                <span className="mt-2 block font-semibold text-foreground">
-                  {group.title}
-                </span>
-                {active ? (
-                  <span className="mt-2 block text-xs leading-5 text-foreground-muted">
-                    {group.items.slice(0, 4).join(" · ")}
-                  </span>
-                ) : null}
-              </button>
-            );
-          })}
-        </div>
+    <div className="relative mt-12 overflow-hidden border-y border-border bg-background-elevated/20 px-4 py-7 sm:px-7 lg:px-9 lg:py-9">
+      <div className="signal-grid pointer-events-none absolute inset-0 opacity-25" />
+      <div className="relative mb-6 grid gap-3 border-b border-border pb-4 font-mono text-[0.62rem] font-semibold tracking-[0.12em] text-foreground-muted uppercase lg:grid-cols-[minmax(14rem,0.8fr)_2rem_minmax(13rem,0.72fr)_2rem_minmax(18rem,1.48fr)]">
+        <span>01 · Capability</span>
+        <span className="hidden text-center text-signal-cyan lg:block">→</span>
+        <span>02 · Demonstrated systems</span>
+        <span className="hidden text-center text-signal-cyan lg:block">→</span>
+        <span>03 · Concrete evidence</span>
       </div>
 
-      <div className="relative mt-8 border-t border-border pt-5">
-        <p className="font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
-          Active map / {activeCapability.title}
-        </p>
-        <p className="mt-2 text-sm leading-6 text-foreground-secondary">
-          {activeCapability.items.join(" · ")}
-        </p>
-        <p className="mt-2 text-xs leading-5 text-foreground-muted">
-          Demonstrated in {activeCapability.demonstratedIn.join(" · ")}
-        </p>
+      <div className="relative grid gap-7 lg:grid-cols-[minmax(14rem,0.8fr)_2rem_minmax(13rem,0.72fr)_2rem_minmax(18rem,1.48fr)] lg:items-center">
+        <div className="grid gap-2">
+          {capabilityGroups.map((group, index) => {
+            const active = group.title === activeCapabilityTitle;
+            return (
+              <button
+                className={`relative min-h-14 border-l px-4 py-3 text-left transition-[border-color,background-color,transform] hover:translate-x-1 focus-visible:translate-x-1 ${
+                  active
+                    ? "border-signal-cyan bg-accent-muted/35"
+                    : "border-border-strong bg-background/40"
+                }`}
+                key={group.title}
+                onClick={() => activateCapability(group.title)}
+                onFocus={() => activateCapability(group.title)}
+                onMouseEnter={() => activateCapability(group.title)}
+                type="button"
+                aria-pressed={active}
+              >
+                <span className="font-mono text-[0.58rem] tracking-[0.1em] text-signal-cyan uppercase">
+                  Capability {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="mt-1 block text-sm font-semibold text-foreground">
+                  {group.title}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div
+          className="hidden h-px bg-gradient-to-r from-signal-cyan to-signal-amber lg:block"
+          aria-hidden="true"
+        />
+
+        <div className="relative grid gap-3 border-y border-border py-5 lg:border-y-0 lg:py-0">
+          {records.map((record, index) => {
+            const active = selectedRecord?.project === record.project;
+            return (
+              <button
+                className={`relative min-h-16 border px-4 py-3 text-left transition-[border-color,background-color,box-shadow] ${
+                  active
+                    ? "border-signal-amber bg-[rgb(242_185_95_/_0.08)] shadow-[0_0_26px_rgb(242_185_95_/_0.08)]"
+                    : "border-border bg-background/70"
+                }`}
+                key={record.project}
+                onClick={() => activateProject(record.project)}
+                onFocus={() => activateProject(record.project)}
+                onMouseEnter={() => activateProject(record.project)}
+                type="button"
+                aria-pressed={active}
+              >
+                <span className="font-mono text-[0.58rem] tracking-[0.1em] text-foreground-muted uppercase">
+                  System {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="mt-1 block text-sm font-semibold text-foreground">
+                  {record.project}
+                </span>
+                {active ? (
+                  <span
+                    className="signal-ripple absolute top-1/2 -right-1.5 h-3 w-3 -translate-y-1/2 rounded-full border border-signal-amber"
+                    aria-hidden="true"
+                  />
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+
+        <div
+          className="hidden h-px bg-gradient-to-r from-signal-amber to-signal-cyan lg:block"
+          aria-hidden="true"
+        />
+
+        <div className="min-h-64 border-l-2 border-signal-cyan bg-[linear-gradient(110deg,rgb(13_42_80_/_0.28),transparent)] px-5 py-5 sm:px-6">
+          <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
+            {activeCapabilityTitle} → {selectedRecord?.project}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {selectedRecord?.techniques.map((technique) => (
+              <span
+                className="border border-border-strong bg-background/75 px-2.5 py-1.5 font-mono text-[0.65rem] text-foreground-secondary"
+                key={technique}
+              >
+                {technique}
+              </span>
+            ))}
+          </div>
+          <p className="mt-6 text-base leading-7 text-foreground-secondary">
+            {selectedRecord?.evidence}
+          </p>
+          <p className="mt-6 border-t border-border pt-4 font-mono text-[0.6rem] tracking-[0.1em] text-foreground-muted uppercase">
+            Relationship illuminated · capability to implementation proof
+          </p>
+        </div>
       </div>
     </div>
   );
