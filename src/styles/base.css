@@ -346,6 +346,14 @@ body {
   .codeforces-rank-signal {
     animation: none !important;
   }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 body,
@@ -388,15 +396,4 @@ a {
 :focus-visible {
   outline: var(--border-width-strong) solid var(--ritwik-color-focus-ring);
   outline-offset: 0.25rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
 }
