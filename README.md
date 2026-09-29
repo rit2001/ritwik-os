@@ -51,11 +51,13 @@ Current status:
 - Minimal layout primitives and the global application shell are implemented.
 - Typed canonical identity and external link data are implemented.
 - The app renders the V2 static-first homepage hierarchy with editorial flagship systems, evidence placement, professional topology, concise experience, capability mapping, Foundations, and contact.
-- A restrained Motion-powered interaction, scroll rhythm, and final homepage polish layer is implemented.
+- H1.2 implements a living signal system across the homepage: a lazy direct-Three.js professional globe, linked journey timeline, distinct flagship system stages, expandable evidence, connected experience and capability networks, and a routed contact finale.
+- Static semantic content remains server-rendered; WebGL and interactive visual stages are bounded client enhancements with reduced-motion, intersection, and page-visibility controls.
 - The official Next.js MDX pipeline is implemented for local Work content.
 - `/work` plus the ThesisLens, TraceForge, Converge, and Stateful Agentic AI Assistant case studies are implemented as static-first App Router routes.
 - TraceForge is evidence-audited at public Experimental Beta `v0.4.1`; its case study centers exact offline replay and qualifies its optional local Go/Kafka/kind/Terraform path.
 - Converge is evidence-audited at source commit `966525d`; its case study centers board-local PostgreSQL ordering, atomic authority, durable pending intent, at-least-once Redis delivery, and verified recovery.
+- ThesisLens, TraceForge, and Converge use distinct interactive case-study covers while preserving their audited MDX narratives and limitations.
 - Stateful Agentic AI Assistant remains documented as a completed implementation with qualified deployment status.
 - Production-hardening foundations are implemented: centralized launch metadata, generated Open Graph image, JSON-LD, robots, sitemap, custom 404, route integrity checks, and launch checklist.
 - Screenshots, Writing, Builds, and Architecture have not been implemented yet.

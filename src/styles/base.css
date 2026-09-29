@@ -67,6 +67,36 @@ body {
   }
 }
 
+@keyframes signal-sweep-x {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  12%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes signal-sweep-y {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  12%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
 .signal-grid {
   background-image:
     linear-gradient(rgb(102 168 255 / 0.055) 1px, transparent 1px),
@@ -91,9 +121,19 @@ body {
   transform-origin: center;
 }
 
+.signal-sweep-x {
+  animation: signal-sweep-x 3.2s var(--ease-standard) infinite;
+}
+
+.signal-sweep-y {
+  animation: signal-sweep-y 3.2s var(--ease-standard) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .signal-route,
-  .signal-ripple {
+  .signal-ripple,
+  .signal-sweep-x,
+  .signal-sweep-y {
     animation: none !important;
   }
 }

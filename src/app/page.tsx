@@ -226,14 +226,60 @@ export default function Home() {
         </Container>
       </section>
 
-      <section id="contact" className="scroll-mt-32 py-20 lg:py-28">
+      <section
+        id="contact"
+        className="relative isolate scroll-mt-32 overflow-hidden py-24 lg:py-36"
+      >
+        <div
+          className="signal-grid pointer-events-none absolute inset-0 -z-20 opacity-45"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_76%_58%,rgb(47_127_255_/_0.18),transparent_24rem)]"
+          aria-hidden="true"
+        />
         <Container width="wide">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end lg:gap-16">
+          <div className="relative grid gap-12 border-y border-border py-12 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-center lg:gap-20 lg:py-16">
+            <svg
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 hidden h-full w-full opacity-70 lg:block"
+              preserveAspectRatio="none"
+              viewBox="0 0 1200 420"
+            >
+              <path
+                className="signal-route"
+                d="M30 74 C300 74 390 210 660 210 S880 250 1010 250"
+                fill="none"
+                stroke="var(--ritwik-color-signal-cyan)"
+                strokeWidth="1.5"
+              />
+              <path
+                className="signal-route"
+                d="M80 350 C310 350 420 240 660 240 S850 250 1010 250"
+                fill="none"
+                stroke="var(--ritwik-color-accent)"
+                strokeWidth="1.5"
+              />
+              <circle
+                className="signal-ripple"
+                cx="1010"
+                cy="250"
+                fill="none"
+                r="18"
+                stroke="var(--ritwik-color-signal-amber)"
+              />
+              <circle
+                cx="1010"
+                cy="250"
+                fill="var(--ritwik-color-signal-amber)"
+                r="5"
+              />
+            </svg>
             <Reveal>
-              <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
-                Contact
+              <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
+                Contact / Final signal destination
               </p>
-              <h2 className="mt-4 max-w-4xl text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold tracking-[-0.03em] text-balance text-foreground">
+              <h2 className="mt-5 max-w-4xl text-[clamp(2.8rem,6vw,5.7rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-balance text-foreground uppercase">
                 Build systems that survive contact with production.
               </h2>
               <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
@@ -241,8 +287,12 @@ export default function Home() {
               </p>
             </Reveal>
 
-            <div className="border-t border-border pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
-              <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
+            <div className="relative border border-border bg-background/80 px-6 py-7 backdrop-blur-sm lg:px-7">
+              <span
+                className="signal-ripple absolute top-6 right-6 h-4 w-4 rounded-full border border-signal-amber"
+                aria-hidden="true"
+              />
+              <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-signal-cyan uppercase">
                 {profile.location}
               </p>
               <a
@@ -253,9 +303,9 @@ export default function Home() {
               </a>
               <div className="mt-7 flex flex-wrap gap-3">
                 <ActionLink href={`mailto:${profile.email}`} variant="primary">
-                  Email Ritwik
+                  Email Me
                 </ActionLink>
-                <ActionLink href={profile.resumePath}>Résumé</ActionLink>
+                <ActionLink href={profile.resumePath}>View Résumé</ActionLink>
               </div>
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
                 {github ? (

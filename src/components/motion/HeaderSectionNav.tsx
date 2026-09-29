@@ -15,45 +15,64 @@ export function HeaderSectionNav({
   );
 
   useEffect(() => {
-    const sections = links
-      .map((link) => document.querySelector(link.href))
-      .filter((section): section is Element => Boolean(section));
+    const sections = links.flatMap((link) => {
+      const section = document.querySelector<HTMLElement>(link.href);
+      return section ? [{ href: link.href, section }] : [];
+    });
 
     if (!sections.length) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => {
-            const aRect = a.boundingClientRect;
-            const bRect = b.boundingClientRect;
-            const viewportCenter = window.innerHeight / 2;
-            const aDistance = Math.abs(
-              aRect.top + aRect.height / 2 - viewportCenter,
-            );
-            const bDistance = Math.abs(
-              bRect.top + bRect.height / 2 - viewportCenter,
-            );
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const headerHeight = Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--layout-header-height",
+        ),
+      );
+      const activationLine =
+        (Number.isFinite(headerHeight) ? headerHeight : 72) +
+        Math.min(190, window.innerHeight * 0.24);
 
-            return aDistance - bDistance;
-          })[0];
+      const containing = sections.find(({ section }) => {
+        const rect = section.getBoundingClientRect();
+        return rect.top <= activationLine && rect.bottom > activationLine;
+      });
 
-        if (visible?.target.id) {
-          setActiveHref(`#${visible.target.id}`);
-        }
-      },
-      {
-        rootMargin: "-38% 0px -42% 0px",
-        threshold: [0.08, 0.18, 0.32, 0.5],
-      },
-    );
+      if (containing) {
+        setActiveHref(containing.href);
+        return;
+      }
 
-    sections.forEach((section) => observer.observe(section));
+      const dominant = sections
+        .map((entry) => {
+          const rect = entry.section.getBoundingClientRect();
+          const visible = Math.max(
+            0,
+            Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0),
+          );
+          return { ...entry, visible };
+        })
+        .sort((a, b) => b.visible - a.visible)[0];
 
-    return () => observer.disconnect();
+      if (dominant?.visible) setActiveHref(dominant.href);
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    update();
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
   }, [links]);
 
   return (

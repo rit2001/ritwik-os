@@ -125,6 +125,10 @@ Evidence highlights are `delta`, `count`, or `proof`. Delta evidence must includ
 
 `src/data/professional-signals.ts` stores approved public geography signals separately from identity. Public signals are limited to approved relationship labels and must not imply residence or relocation for remote work. Withheld signals must not render.
 
+H1.2 adds the `country-marker` relationship for the public USA marker. It may
+render only the approved country-level wording `USA / United States`; it must not
+imply employment, title, residence, relocation, or a Scale AI relationship.
+
 `src/data/capabilities.ts` expresses techniques/tools plus demonstrated project or experience references; it does not use proficiency labels.
 
 TraceForge is an ongoing case study backed by the verified public repository
@@ -157,6 +161,12 @@ state before rebasing. Multi-replica evidence is locally failure-tested, while
 the recorded deployment uses one API and one worker. Do not claim global order,
 exactly-once delivery, production horizontal scale, complete version history,
 active production compaction, or tested disaster recovery.
+
+Case-study cover visuals are presentation components, not evidence sources.
+ThesisLens, TraceForge, and Converge may share visual-stage infrastructure while
+retaining distinct retrieval, replay, and distributed-state diagrams. Their
+audited MDX narrative, TOCs, limitations, and canonical project metadata remain
+authoritative.
 
 ### Builds
 

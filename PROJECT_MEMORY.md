@@ -433,8 +433,40 @@ Phase 8.8 is complete on `feat/ritwik-os-v2`:
 - No dependencies, resume assets, global SEO, deployment, or interactive
   topology work changed.
 
-## Mandatory Human Review Gate
+## H1.2 — Interactive Visual Experience
 
-Before any further V2 phase, review the homepage, `/work`, ThesisLens,
-TraceForge, and Converge together for public claim accuracy, editorial balance,
-responsive behavior, and recruiter readability.
+H1.2 is implemented as a two-commit human-review correction on
+`feat/ritwik-os-v2`:
+
+- The hero is led by “Engineering Intelligence into Production” and a lazy
+  direct-Three.js globe rather than the name and static topology triangle.
+- Public globe signals are Kolkata, Bengaluru, Pune, Toronto, and a restrained
+  USA country marker. Toronto represents Taskly remote engineering experience;
+  USA carries no employment or residence claim.
+- `SignalProvider` connects selected location, project, capability, and journey
+  context without adding a state-management dependency.
+- The journey timeline links IIT Kharagpur, Pepcorns, Search-in, Taskly, and the
+  2026 flagship systems through clickable/focusable signal nodes.
+- ThesisLens, TraceForge, and Converge use distinct retrieval, Replay Capsule,
+  and authoritative-distribution stages. Evidence rows are real expandable
+  buttons linked to the active stage; the five-box static strips are removed.
+- Experience is a connected Pepcorns → Search-in → Taskly track. Capabilities
+  use a deterministic project relationship network rather than a table.
+- Foundations gives IIT Kharagpur visual priority with code-drawn geometry and
+  no campus photography. Algorithm profiles remain real external links with
+  visible proof.
+- Contact routes the signal language toward the public email CTA. No form is
+  introduced.
+- The three flagship Work routes use interactive visual covers while retaining
+  their audited MDX bodies, TOCs, limitations, and published navigation.
+- Homepage scroll-spy now evaluates a header-offset activation line and dominant
+  visible section rather than a narrow center-band intersection.
+- `three` is the only new runtime dependency; `@types/three` supports TypeScript
+  development. The WebGL chunk is dynamically loaded and pauses offscreen or
+  while the document is hidden.
+
+## Mandatory Human Visual Review Gate
+
+Do not treat H1.2 as launch approval. Review the homepage, `/work`, ThesisLens,
+TraceForge, Converge, and Stateful Agentic AI Assistant at desktop, tablet, and
+320–390px mobile widths before any Phase 8.9 work.
