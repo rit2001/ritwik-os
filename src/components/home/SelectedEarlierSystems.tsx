@@ -22,7 +22,6 @@ const earlierSystems = [
     progression:
       "Portfolio progression toward evidence-grounded AI and replayable workflows in ThesisLens and TraceForge; no direct code lineage is claimed.",
     related: ["ThesisLens", "TraceForge"],
-    position: "lg:top-5 lg:left-[7%]",
   },
   {
     project: getProject("ai-mock-interview-platform"),
@@ -33,7 +32,6 @@ const earlierSystems = [
     progression:
       "A complete product loop spanning inputs, generated interviews, evaluation, structured feedback, and reports.",
     related: ["Product engineering"],
-    position: "lg:top-[12.5rem] lg:left-[32%]",
   },
   {
     project: getProject("real-time-collaborative-whiteboard"),
@@ -44,7 +42,6 @@ const earlierSystems = [
     progression:
       "Earlier collaboration work superseded in portfolio depth by Converge; this is engineering progression, not a direct code-lineage claim.",
     related: ["Converge"],
-    position: "lg:top-[24rem] lg:left-[8%]",
   },
 ] as const;
 
@@ -237,45 +234,86 @@ export function SelectedEarlierSystems() {
 
   return (
     <div className="relative mt-10" ref={hostRef}>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-y border-border py-3 font-mono text-[0.62rem] font-semibold tracking-[0.13em] uppercase">
+      <motion.div
+        className="flex flex-wrap items-center justify-between gap-3 border-y border-border py-3 font-mono text-[0.62rem] font-semibold tracking-[0.13em] uppercase"
+        initial={reduced ? false : { opacity: 0, y: 22 }}
+        transition={{ duration: reduced ? 0 : 0.56, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, amount: 0.35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+      >
         <span className="text-signal-cyan">Engineering progression</span>
         <span className="text-signal-amber">Not code lineage</span>
-      </div>
+      </motion.div>
 
-      <div className="relative mt-6 lg:min-h-[34rem]">
+      <div className="relative mt-8">
         <svg
           aria-hidden="true"
-          className="absolute inset-0 hidden h-full w-full lg:block"
+          className="pointer-events-none absolute top-0 right-[12%] left-[12%] hidden h-7 min-[901px]:block"
           preserveAspectRatio="none"
-          viewBox="0 0 1200 540"
+          viewBox="0 0 1000 28"
         >
-          <path
-            d="M190 82 C390 82 465 74 740 74 M190 82 C380 82 480 160 740 178 M450 240 C580 240 600 286 740 286 M190 405 C410 405 515 408 740 408"
+          <motion.path
+            d="M20 14 H980"
             fill="none"
+            initial={reduced ? false : { pathLength: 0, opacity: 0.25 }}
             stroke="var(--ritwik-color-border-strong)"
             strokeWidth="1.5"
+            transition={{
+              delay: reduced ? 0 : 0.08,
+              duration: reduced ? 0 : 0.58,
+            }}
+            viewport={{ once: true, amount: 0.4 }}
+            whileInView={{ pathLength: 1, opacity: 1 }}
           />
-          <path
-            d="M190 82 C390 82 465 74 740 74 M190 82 C380 82 480 160 740 178 M450 240 C580 240 600 286 740 286 M190 405 C410 405 515 408 740 408"
+          <motion.path
+            d="M20 14 H980"
             fill="none"
+            initial={reduced ? false : { pathLength: 0, opacity: 0 }}
             opacity="0.48"
             stroke="var(--ritwik-color-signal-cyan)"
             strokeDasharray="3 11"
             strokeWidth="1.5"
+            transition={{
+              delay: reduced ? 0 : 0.14,
+              duration: reduced ? 0 : 0.62,
+            }}
+            viewport={{ once: true, amount: 0.4 }}
+            whileInView={{ pathLength: 1, opacity: 0.48 }}
           />
         </svg>
 
-        <ol className="relative grid gap-4 lg:block">
-          {earlierSystems.map((item) => {
+        <span
+          aria-hidden="true"
+          className="absolute top-3 bottom-3 left-3 w-px bg-gradient-to-b from-signal-cyan via-border-strong to-signal-amber min-[901px]:hidden"
+        />
+
+        <ol className="relative grid gap-6 min-[901px]:grid-cols-3 min-[901px]:gap-6">
+          {earlierSystems.map((item, index) => {
             const selected = active.project.id === item.project.id;
             return (
-              <li
-                className={`lg:absolute lg:w-[21rem] ${item.position}`}
+              <motion.li
+                className="relative min-w-0 pl-9 min-[901px]:pt-8 min-[901px]:pl-0"
+                initial={reduced ? false : { opacity: 0, y: 22 }}
                 key={item.project.id}
+                transition={{
+                  delay: reduced ? 0 : 0.12 + index * 0.06,
+                  duration: reduced ? 0 : 0.56,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                viewport={{ once: true, amount: 0.22 }}
+                whileInView={{ opacity: 1, y: 0 }}
               >
+                <span
+                  aria-hidden="true"
+                  className={`absolute top-3 left-[0.42rem] z-10 h-3.5 w-3.5 rotate-45 border bg-background transition-[border-color,box-shadow] min-[901px]:top-[0.48rem] min-[901px]:left-1/2 min-[901px]:-translate-x-1/2 ${
+                    selected
+                      ? "border-signal-cyan shadow-[0_0_18px_rgb(94_231_247_/.62)]"
+                      : "border-border-strong"
+                  }`}
+                />
                 <button
                   aria-pressed={selected}
-                  className={`group relative w-full border-l-2 px-4 py-4 text-left transition-[border-color,background-color,transform,box-shadow] hover:translate-x-1 focus-visible:translate-x-1 ${selected ? "border-signal-cyan bg-accent-muted/30 shadow-[0_18px_45px_rgb(0_0_0_/.2)]" : "border-border-strong bg-background/62"}`}
+                  className={`group relative w-full overflow-hidden border-l-2 px-4 py-4 text-left transition-[border-color,background-color,transform,box-shadow] hover:translate-x-1 focus-visible:translate-x-1 min-[901px]:min-h-full ${selected ? "border-signal-cyan bg-accent-muted/30 shadow-[0_18px_45px_rgb(0_0_0_/.2)]" : "border-border-strong bg-background/62"}`}
                   onClick={() => setActiveId(item.project.id)}
                   onFocus={() => setActiveId(item.project.id)}
                   onMouseEnter={() => setActiveId(item.project.id)}
@@ -300,6 +338,17 @@ export function SelectedEarlierSystems() {
                       reduced={reduced}
                     />
                   </span>
+                  <span className="mt-3 flex min-h-8 flex-wrap items-center gap-2 border-t border-border pt-3 font-mono text-[0.56rem] tracking-[0.08em] text-foreground-muted uppercase">
+                    <span>Progresses toward</span>
+                    {item.related.map((label) => (
+                      <span
+                        className="border border-signal-amber/35 px-1.5 py-1 text-signal-amber"
+                        key={label}
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </span>
                   {selected ? (
                     <span
                       className="signal-ripple absolute top-1/2 -right-2 h-4 w-4 -translate-y-1/2 rounded-full border border-signal-cyan"
@@ -307,48 +356,20 @@ export function SelectedEarlierSystems() {
                     />
                   ) : null}
                 </button>
-              </li>
+              </motion.li>
             );
           })}
         </ol>
-
-        <div
-          className="mt-7 grid gap-3 lg:absolute lg:top-3 lg:right-[4%] lg:mt-0 lg:w-[28%]"
-          aria-label="Current system endpoints"
-        >
-          <p className="font-mono text-[0.62rem] tracking-[0.11em] text-foreground-muted uppercase">
-            Current endpoints
-          </p>
-          {["ThesisLens", "TraceForge", "Product engineering", "Converge"].map(
-            (label) => {
-              const lit = active.related.some((related) => related === label);
-              return (
-                <div
-                  className={`relative border px-4 py-3 font-mono text-xs font-semibold tracking-[0.08em] uppercase transition-colors ${lit ? "border-signal-amber bg-[rgb(242_185_95_/.08)] text-foreground" : "border-border text-foreground-muted"}`}
-                  key={label}
-                >
-                  {label}
-                  {lit ? (
-                    <span
-                      className="absolute top-1/2 -left-1.5 h-3 w-3 -translate-y-1/2 rotate-45 bg-signal-amber"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                </div>
-              );
-            },
-          )}
-        </div>
       </div>
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.article
           animate={{ opacity: 1, y: 0 }}
-          className="grid gap-6 border-y border-border bg-[linear-gradient(105deg,rgb(13_42_80_/.3),transparent)] px-5 py-6 sm:px-7 lg:grid-cols-[minmax(0,.72fr)_minmax(18rem,.28fr)]"
+          className="mt-8 grid gap-6 border-y border-border bg-[linear-gradient(105deg,rgb(13_42_80_/.3),transparent)] px-5 py-6 sm:px-7 lg:grid-cols-[minmax(0,.72fr)_minmax(18rem,.28fr)]"
           exit={reduced ? undefined : { opacity: 0, y: 5 }}
           initial={reduced ? false : { opacity: 0, y: 7 }}
           key={active.project.id}
-          transition={{ duration: reduced ? 0 : 0.2 }}
+          transition={{ duration: reduced ? 0 : 0.22 }}
         >
           <div>
             <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">

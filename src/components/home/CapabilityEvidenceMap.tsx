@@ -228,7 +228,17 @@ export function CapabilityEvidenceMap() {
       </div>
 
       <div className="relative grid gap-7 lg:grid-cols-[minmax(14rem,0.8fr)_2rem_minmax(13rem,0.72fr)_2rem_minmax(18rem,1.48fr)] lg:items-center">
-        <div className="grid gap-2">
+        <motion.div
+          className="grid gap-2"
+          initial={reduced ? false : { opacity: 0, y: 18 }}
+          transition={{
+            delay: reduced ? 0 : 0.15,
+            duration: reduced ? 0 : 0.54,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
           {capabilityGroups.map((group, index) => {
             const active = group.title === activeCapabilityTitle;
             return (
@@ -267,7 +277,7 @@ export function CapabilityEvidenceMap() {
               </button>
             );
           })}
-        </div>
+        </motion.div>
 
         <div
           className="relative hidden h-px overflow-visible bg-border-strong lg:block"
@@ -278,7 +288,17 @@ export function CapabilityEvidenceMap() {
           <span className="capability-packet absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-signal-cyan shadow-[0_0_12px_var(--ritwik-color-signal-cyan)]" />
         </div>
 
-        <div className="relative grid gap-3 border-y border-border py-5 lg:border-y-0 lg:py-0">
+        <motion.div
+          className="relative grid gap-3 border-y border-border py-5 lg:border-y-0 lg:py-0"
+          initial={reduced ? false : { opacity: 0, y: 18 }}
+          transition={{
+            delay: reduced ? 0 : 0.21,
+            duration: reduced ? 0 : 0.54,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
           {records.map((record, index) => {
             const active = selectedRecord?.project === record.project;
             return (
@@ -310,7 +330,7 @@ export function CapabilityEvidenceMap() {
               </button>
             );
           })}
-        </div>
+        </motion.div>
 
         <div
           className="relative hidden h-px overflow-visible bg-border-strong lg:block"
@@ -321,39 +341,50 @@ export function CapabilityEvidenceMap() {
           <span className="capability-packet capability-packet-delay absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-signal-amber shadow-[0_0_12px_var(--ritwik-color-signal-amber)]" />
         </div>
 
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            animate={{ opacity: 1, x: 0 }}
-            className="min-h-64 border-l-2 border-signal-cyan bg-[linear-gradient(110deg,rgb(13_42_80_/_0.28),transparent)] px-5 py-5 sm:px-6"
-            exit={reduced ? undefined : { opacity: 0, x: 6 }}
-            initial={reduced ? false : { opacity: 0, x: 10 }}
-            key={`${activeCapabilityTitle}-${selectedRecord?.project}`}
-            transition={{
-              delay: reduced ? 0 : 0.32,
-              duration: reduced ? 0 : 0.22,
-            }}
-          >
-            <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
-              {activeCapabilityTitle} → {selectedRecord?.project}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {selectedRecord?.techniques.map((technique) => (
-                <span
-                  className="border border-border-strong bg-background/75 px-2.5 py-1.5 font-mono text-[0.65rem] text-foreground-secondary"
-                  key={technique}
-                >
-                  {technique}
-                </span>
-              ))}
-            </div>
-            <p className="mt-6 text-base leading-7 text-foreground-secondary">
-              {selectedRecord?.evidence}
-            </p>
-            <p className="mt-6 border-t border-border pt-4 font-mono text-[0.6rem] tracking-[0.1em] text-foreground-muted uppercase">
-              Relationship illuminated · capability to implementation proof
-            </p>
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 18 }}
+          transition={{
+            delay: reduced ? 0 : 0.27,
+            duration: reduced ? 0 : 0.54,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              animate={{ opacity: 1, x: 0 }}
+              className="min-h-64 border-l-2 border-signal-cyan bg-[linear-gradient(110deg,rgb(13_42_80_/_0.28),transparent)] px-5 py-5 sm:px-6"
+              exit={reduced ? undefined : { opacity: 0, x: 6 }}
+              initial={reduced ? false : { opacity: 0, x: 10 }}
+              key={`${activeCapabilityTitle}-${selectedRecord?.project}`}
+              transition={{
+                delay: reduced ? 0 : 0.32,
+                duration: reduced ? 0 : 0.22,
+              }}
+            >
+              <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
+                {activeCapabilityTitle} → {selectedRecord?.project}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {selectedRecord?.techniques.map((technique) => (
+                  <span
+                    className="border border-border-strong bg-background/75 px-2.5 py-1.5 font-mono text-[0.65rem] text-foreground-secondary"
+                    key={technique}
+                  >
+                    {technique}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-6 text-base leading-7 text-foreground-secondary">
+                {selectedRecord?.evidence}
+              </p>
+              <p className="mt-6 border-t border-border pt-4 font-mono text-[0.6rem] tracking-[0.1em] text-foreground-muted uppercase">
+                Relationship illuminated · capability to implementation proof
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );

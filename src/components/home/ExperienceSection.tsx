@@ -30,6 +30,7 @@ export function ExperienceSection() {
   const [activeCompany, setActiveCompany] = useState<string>(
     roles[0]?.company ?? "",
   );
+  const [entrySignalVisible, setEntrySignalVisible] = useState(false);
   const [manualInteraction, setManualInteraction] = useState(false);
   const { setActiveLocation } = useSignalState();
   const reduced = useReducedMotion() === true;
@@ -58,9 +59,21 @@ export function ExperienceSection() {
     if (!inView || reduced || playedRef.current) return;
     playedRef.current = true;
     const timers = roles.map((role, index) =>
-      window.setTimeout(() => activate(role.company), 380 + index * 640),
+      window.setTimeout(() => activate(role.company), 820 + index * 640),
     );
-    return () => timers.forEach(window.clearTimeout);
+    const signalStart = window.setTimeout(
+      () => setEntrySignalVisible(true),
+      720,
+    );
+    const signalEnd = window.setTimeout(
+      () => setEntrySignalVisible(false),
+      2920,
+    );
+    return () => {
+      timers.forEach(window.clearTimeout);
+      window.clearTimeout(signalStart);
+      window.clearTimeout(signalEnd);
+    };
   }, [activate, inView, reduced, roles]);
 
   return (
@@ -97,7 +110,7 @@ export function ExperienceSection() {
             strokeWidth="3"
             transition={{ duration: reduced ? 0 : 0.58 }}
           />
-          {!reduced && inView ? (
+          {!reduced && entrySignalVisible ? (
             <circle
               fill="var(--ritwik-color-signal-amber)"
               filter="drop-shadow(0 0 8px var(--ritwik-color-signal-amber))"

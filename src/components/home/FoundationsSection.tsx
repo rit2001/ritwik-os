@@ -20,10 +20,20 @@ export function FoundationsSection() {
 
   return (
     <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(23rem,0.94fr)]">
-      <section
+      <motion.section
         aria-label="IIT Kharagpur academic foundation"
         className="foundation-panel group relative isolate min-h-[34rem] overflow-hidden border-y border-border bg-[radial-gradient(circle_at_75%_32%,rgb(47_127_255_/_0.15),transparent_25rem),linear-gradient(145deg,rgb(11_25_42_/_0.94),rgb(4_7_13_/_0.97))] px-6 py-8 outline-none transition-[border-color,box-shadow] hover:border-signal-cyan/45 hover:shadow-[0_24px_80px_rgb(47_127_255_/.08)] focus-visible:border-signal-cyan/55 focus-visible:shadow-[0_24px_80px_rgb(47_127_255_/.1)] sm:px-10 sm:py-10"
+        initial={
+          reduced ? false : { opacity: 0, y: "clamp(22px, 2.2vw, 32px)" }
+        }
         tabIndex={0}
+        transition={{
+          delay: reduced ? 0 : 0.15,
+          duration: reduced ? 0 : 0.62,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        viewport={{ once: true, amount: 0.14 }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <div className="signal-grid pointer-events-none absolute inset-0 -z-10 opacity-35" />
         <span
@@ -41,7 +51,10 @@ export function FoundationsSection() {
             initial={reduced ? false : { pathLength: 0, opacity: 0.25 }}
             stroke="var(--ritwik-color-accent)"
             strokeWidth="2"
-            transition={{ duration: reduced ? 0 : 1.35 }}
+            transition={{
+              delay: reduced ? 0 : 0.28,
+              duration: reduced ? 0 : 1.35,
+            }}
             viewport={{ once: true, amount: 0.35 }}
             whileInView={{ pathLength: 1, opacity: 1 }}
           />
@@ -52,7 +65,7 @@ export function FoundationsSection() {
             stroke="var(--ritwik-color-signal-cyan)"
             strokeWidth="1"
             transition={{
-              delay: reduced ? 0 : 0.24,
+              delay: reduced ? 0 : 0.42,
               duration: reduced ? 0 : 1.25,
             }}
             viewport={{ once: true, amount: 0.35 }}
@@ -200,11 +213,21 @@ export function FoundationsSection() {
         <p className="relative mt-6 max-w-xl text-sm leading-6 text-foreground-muted">
           Engineering depth, built over time.
         </p>
-      </section>
+      </motion.section>
 
-      <section
+      <motion.section
         className="grid gap-4"
         aria-labelledby="algorithm-foundations-title"
+        initial={
+          reduced ? false : { opacity: 0, y: "clamp(22px, 2.2vw, 32px)" }
+        }
+        transition={{
+          delay: reduced ? 0 : 0.25,
+          duration: reduced ? 0 : 0.62,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        viewport={{ once: true, amount: 0.14 }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <div className="border-b border-border pb-5">
           <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.15em] text-signal-cyan uppercase">
@@ -343,7 +366,17 @@ export function FoundationsSection() {
           </span>
         </a>
 
-        <ul className="grid gap-3 border-t border-border pt-5 sm:grid-cols-3 lg:grid-cols-1">
+        <motion.ul
+          className="grid gap-3 border-t border-border pt-5 sm:grid-cols-3 lg:grid-cols-1"
+          initial={reduced ? false : { opacity: 0, y: 18 }}
+          transition={{
+            delay: reduced ? 0 : 0.42,
+            duration: reduced ? 0 : 0.56,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          viewport={{ once: true, amount: 0.2 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
           {[
             [
               "Selected",
@@ -377,8 +410,8 @@ export function FoundationsSection() {
               />
             </li>
           ))}
-        </ul>
-      </section>
+        </motion.ul>
+      </motion.section>
     </div>
   );
 }

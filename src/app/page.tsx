@@ -27,17 +27,23 @@ function SectionHeader({
   return (
     <header className="grid gap-5 lg:grid-cols-[minmax(0,0.72fr)_minmax(20rem,0.28fr)] lg:gap-12">
       <div>
-        <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
-          {eyebrow}
-        </p>
-        <h2 className="mt-4 max-w-4xl text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold tracking-[-0.03em] text-balance text-foreground">
-          {title}
-        </h2>
+        <Reveal y={18}>
+          <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
+            {eyebrow}
+          </p>
+        </Reveal>
+        <Reveal delay={0.06} y={22}>
+          <h2 className="mt-4 max-w-4xl text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold tracking-[-0.03em] text-balance text-foreground">
+            {title}
+          </h2>
+        </Reveal>
       </div>
       {description ? (
-        <p className="self-end text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-muted">
-          {description}
-        </p>
+        <Reveal className="self-end" delay={0.11} y={20}>
+          <p className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-muted">
+            {description}
+          </p>
+        </Reveal>
       ) : null}
     </header>
   );
@@ -163,10 +169,12 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container className="relative" width="wide">
-          <Reveal>
+          <Reveal y={18}>
             <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.16em] text-signal-cyan uppercase">
               My Journey
             </p>
+          </Reveal>
+          <Reveal delay={0.06} y={22}>
             <h2
               className="mt-4 max-w-5xl text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold tracking-[-0.035em] text-foreground uppercase"
               id="journey-title"
@@ -174,19 +182,19 @@ export default function Home() {
               From algorithms to real-world systems.
             </h2>
           </Reveal>
-          <JourneyTimeline />
+          <Reveal delay={0.15}>
+            <JourneyTimeline />
+          </Reveal>
         </Container>
       </section>
 
       <section id="systems" className="scroll-mt-32 py-20 lg:py-28">
         <Container width="wide">
-          <Reveal>
-            <SectionHeader
-              eyebrow="Systems / Flagship Portfolio"
-              title="Three current systems. One engineering thesis: make complex behavior inspectable, deterministic, and credible."
-              description="Applied AI, AI infrastructure, and distributed collaboration—presented through architecture decisions and verifiable evidence."
-            />
-          </Reveal>
+          <SectionHeader
+            eyebrow="Systems / Flagship Portfolio"
+            title="Three current systems. One engineering thesis: make complex behavior inspectable, deterministic, and credible."
+            description="Applied AI, AI infrastructure, and distributed collaboration—presented through architecture decisions and verifiable evidence."
+          />
           <FlagshipSystems />
         </Container>
       </section>
@@ -196,14 +204,14 @@ export default function Home() {
         className="scroll-mt-32 border-y border-border bg-background-elevated/25 py-20 lg:py-24"
       >
         <Container width="wide">
-          <Reveal>
-            <SectionHeader
-              eyebrow="Experience"
-              title="Engineering delivery across AI products, operational systems, and full-stack platforms."
-              description="Three concise role records. Each keeps the system context and the strongest implementation evidence."
-            />
+          <SectionHeader
+            eyebrow="Experience"
+            title="Engineering delivery across AI products, operational systems, and full-stack platforms."
+            description="Three concise role records. Each keeps the system context and the strongest implementation evidence."
+          />
+          <Reveal delay={0.15}>
+            <ExperienceSection />
           </Reveal>
-          <ExperienceSection />
         </Container>
       </section>
 
@@ -213,27 +221,27 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container className="relative" width="wide">
-          <Reveal>
-            <SectionHeader
-              eyebrow="Selected Earlier Systems"
-              title="Earlier builds show the progression behind today’s flagship systems."
-              description="A lower-tier evolution strip: real shipped scope, canonical actions, and explicit learning trajectories without claiming direct code lineage."
-            />
+          <SectionHeader
+            eyebrow="Selected Earlier Systems"
+            title="Earlier builds show the progression behind today’s flagship systems."
+            description="A lower-tier evolution strip: real shipped scope, canonical actions, and explicit learning trajectories without claiming direct code lineage."
+          />
+          <Reveal delay={0.15}>
+            <SelectedEarlierSystems />
           </Reveal>
-          <SelectedEarlierSystems />
         </Container>
       </section>
 
       <section id="capabilities" className="scroll-mt-32 py-20 lg:py-24">
         <Container width="wide">
-          <Reveal>
-            <SectionHeader
-              eyebrow="Capability Evidence Map"
-              title="Techniques are useful only when their application is visible."
-              description="Every capability area maps tools and engineering methods to the systems or experience where they were demonstrated."
-            />
+          <SectionHeader
+            eyebrow="Capability Evidence Map"
+            title="Techniques are useful only when their application is visible."
+            description="Every capability area maps tools and engineering methods to the systems or experience where they were demonstrated."
+          />
+          <Reveal delay={0.15}>
+            <CapabilityEvidenceMap />
           </Reveal>
-          <CapabilityEvidenceMap />
         </Container>
       </section>
 
@@ -242,12 +250,10 @@ export default function Home() {
         className="scroll-mt-32 border-y border-border bg-background-elevated/25 py-20 lg:py-24"
       >
         <Container width="wide">
-          <Reveal>
-            <SectionHeader
-              eyebrow="Foundations"
-              title="Algorithmic depth and engineering education—supporting signals, not the main identity."
-            />
-          </Reveal>
+          <SectionHeader
+            eyebrow="Foundations"
+            title="Algorithmic depth and engineering education—supporting signals, not the main identity."
+          />
           <FoundationsSection />
         </Container>
       </section>
@@ -362,75 +368,84 @@ export default function Home() {
                 r="5"
               />
             </svg>
-            <Reveal>
-              <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
-                Contact / Final signal destination
-              </p>
-              <h2 className="mt-5 max-w-4xl text-[clamp(2.55rem,4.5vw,4.65rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-foreground uppercase">
-                <span className="block lg:whitespace-nowrap">
-                  Build systems that survive
-                </span>
-                <span className="block lg:whitespace-nowrap">
-                  contact with production.
-                </span>
-              </h2>
-              <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
-                {profile.availability.summary} {profile.availability.immediate}
-              </p>
-            </Reveal>
-
-            <div className="relative border border-border bg-background/88 px-6 py-7 shadow-[0_22px_70px_rgb(0_0_0_/.25)] backdrop-blur-sm lg:px-7">
-              <span
-                className="signal-ripple absolute top-6 right-6 h-4 w-4 rounded-full border border-signal-amber"
-                aria-hidden="true"
-              />
-              <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-signal-cyan uppercase">
-                {profile.location}
-              </p>
-              <a
-                className="mt-3 block break-all text-[length:var(--text-body-size)] font-semibold text-foreground underline decoration-border-strong underline-offset-4 transition-[color,transform] hover:translate-x-1 hover:text-accent focus-visible:translate-x-1 focus-visible:text-accent"
-                href={`mailto:${profile.email}`}
-              >
-                {profile.email}
-              </a>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <span className="group relative inline-flex transition-transform hover:translate-x-1 hover:-translate-y-px focus-within:translate-x-1 focus-within:-translate-y-px">
-                  <span
-                    className="pointer-events-none absolute inset-[-0.45rem] rounded-lg border border-signal-cyan opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 motion-safe:group-hover:animate-ping motion-safe:group-focus-within:animate-ping"
-                    aria-hidden="true"
-                  />
-                  <ActionLink
-                    href={`mailto:${profile.email}`}
-                    variant="primary"
-                  >
-                    Email Me
-                  </ActionLink>
-                </span>
-                <ActionLink href={profile.resumePath}>View Résumé</ActionLink>
-              </div>
-              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-                {github ? (
-                  <a
-                    className="min-h-11 content-center transition-colors hover:text-foreground focus-visible:text-foreground"
-                    href={github.href}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    GitHub ↗
-                  </a>
-                ) : null}
-                {linkedIn ? (
-                  <a
-                    className="min-h-11 content-center transition-colors hover:text-foreground focus-visible:text-foreground"
-                    href={linkedIn.href}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    LinkedIn ↗
-                  </a>
-                ) : null}
-              </div>
+            <div>
+              <Reveal y={18}>
+                <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
+                  Contact / Final signal destination
+                </p>
+              </Reveal>
+              <Reveal delay={0.06} y={22}>
+                <h2 className="mt-5 max-w-4xl text-[clamp(2.55rem,4.5vw,4.65rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-foreground uppercase">
+                  <span className="block lg:whitespace-nowrap">
+                    Build systems that survive
+                  </span>
+                  <span className="block lg:whitespace-nowrap">
+                    contact with production.
+                  </span>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.11} y={20}>
+                <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
+                  {profile.availability.summary}{" "}
+                  {profile.availability.immediate}
+                </p>
+              </Reveal>
             </div>
+
+            <Reveal delay={0.15} y={22}>
+              <div className="relative border border-border bg-background/88 px-6 py-7 shadow-[0_22px_70px_rgb(0_0_0_/.25)] backdrop-blur-sm lg:px-7">
+                <span
+                  className="signal-ripple absolute top-6 right-6 h-4 w-4 rounded-full border border-signal-amber"
+                  aria-hidden="true"
+                />
+                <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-signal-cyan uppercase">
+                  {profile.location}
+                </p>
+                <a
+                  className="mt-3 block break-all text-[length:var(--text-body-size)] font-semibold text-foreground underline decoration-border-strong underline-offset-4 transition-[color,transform] hover:translate-x-1 hover:text-accent focus-visible:translate-x-1 focus-visible:text-accent"
+                  href={`mailto:${profile.email}`}
+                >
+                  {profile.email}
+                </a>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <span className="group relative inline-flex transition-transform hover:translate-x-1 hover:-translate-y-px focus-within:translate-x-1 focus-within:-translate-y-px">
+                    <span
+                      className="pointer-events-none absolute inset-[-0.45rem] rounded-lg border border-signal-cyan opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 motion-safe:group-hover:animate-ping motion-safe:group-focus-within:animate-ping"
+                      aria-hidden="true"
+                    />
+                    <ActionLink
+                      href={`mailto:${profile.email}`}
+                      variant="primary"
+                    >
+                      Email Me
+                    </ActionLink>
+                  </span>
+                  <ActionLink href={profile.resumePath}>View Résumé</ActionLink>
+                </div>
+                <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] text-foreground-muted uppercase">
+                  {github ? (
+                    <a
+                      className="min-h-11 content-center transition-colors hover:text-foreground focus-visible:text-foreground"
+                      href={github.href}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      GitHub ↗
+                    </a>
+                  ) : null}
+                  {linkedIn ? (
+                    <a
+                      className="min-h-11 content-center transition-colors hover:text-foreground focus-visible:text-foreground"
+                      href={linkedIn.href}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      LinkedIn ↗
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            </Reveal>
           </ViewportActivity>
         </Container>
       </section>

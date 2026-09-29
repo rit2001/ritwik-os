@@ -1,7 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useReducedMotion } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  useReducedMotion,
+} from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -34,6 +39,7 @@ export function ProfessionalTopology() {
   const showcaseStartRef = useRef<number | null>(null);
   const showcaseEndRef = useRef<number | null>(null);
   const showcaseIndexRef = useRef(0);
+  const lastInteractionAtRef = useRef(0);
   const [hoveredLocation, setHoveredLocation] =
     useState<SignalLocationId | null>(null);
   const [lockedLocation, setLockedLocation] = useState<SignalLocationId | null>(
@@ -42,19 +48,24 @@ export function ProfessionalTopology() {
   const [automatedLocation, setAutomatedLocation] =
     useState<SignalLocationId | null>(null);
   const [showHint, setShowHint] = useState(true);
+  const [pageVisible, setPageVisible] = useState(true);
   const reduced = useReducedMotion() === true;
+  const globeInView = useInView(rootRef, { margin: "120px" });
 
-  const displayedLocation =
-    lockedLocation ?? hoveredLocation ?? activeLocation ?? automatedLocation;
+  const detailLocation = lockedLocation ?? hoveredLocation ?? automatedLocation;
+  const displayedLocation = detailLocation ?? activeLocation;
   const activeSignal = useMemo(
     () =>
-      displayedLocation
-        ? publicSignals.find((signal) => signal.id === displayedLocation)
+      detailLocation
+        ? publicSignals.find((signal) => signal.id === detailLocation)
         : undefined,
-    [displayedLocation],
+    [detailLocation],
   );
 
   const dismissHint = useCallback(() => setShowHint(false), []);
+  const markInteraction = useCallback(() => {
+    lastInteractionAtRef.current = performance.now();
+  }, []);
 
   const clearShowcaseTimers = useCallback(() => {
     if (showcaseStartRef.current) {
@@ -73,9 +84,22 @@ export function ProfessionalTopology() {
   }, [dismissHint]);
 
   useEffect(() => {
+    const updateVisibility = () => setPageVisible(!document.hidden);
+    document.addEventListener("visibilitychange", updateVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", updateVisibility);
+  }, []);
+
+  useEffect(() => {
     clearShowcaseTimers();
     const resetTimer = window.setTimeout(() => setAutomatedLocation(null), 0);
-    if (reduced || hoveredLocation || lockedLocation || activeLocation) {
+    if (
+      reduced ||
+      !globeInView ||
+      !pageVisible ||
+      hoveredLocation ||
+      lockedLocation
+    ) {
       return () => window.clearTimeout(resetTimer);
     }
 
@@ -92,21 +116,32 @@ export function ProfessionalTopology() {
       showcaseStartRef.current = window.setTimeout(beginShowcase, 10000);
     };
 
-    showcaseStartRef.current = window.setTimeout(beginShowcase, 10000);
+    const interactionAge = lastInteractionAtRef.current
+      ? performance.now() - lastInteractionAtRef.current
+      : Number.POSITIVE_INFINITY;
+    const restartBuffer = Number.isFinite(interactionAge)
+      ? Math.max(0, 2000 - interactionAge)
+      : 0;
+    showcaseStartRef.current = window.setTimeout(
+      beginShowcase,
+      7000 + restartBuffer,
+    );
     return () => {
       window.clearTimeout(resetTimer);
       clearShowcaseTimers();
     };
   }, [
-    activeLocation,
     clearShowcaseTimers,
+    globeInView,
     hoveredLocation,
     lockedLocation,
+    pageVisible,
     reduced,
   ]);
 
   useEffect(() => {
     const release = () => {
+      markInteraction();
       setLockedLocation(null);
       setHoveredLocation(null);
       setActiveLocation(null);
@@ -130,10 +165,11 @@ export function ProfessionalTopology() {
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("pointerdown", onPointerDown);
     };
-  }, [lockedLocation, setActiveLocation]);
+  }, [lockedLocation, markInteraction, setActiveLocation]);
 
   const handleHover = useCallback(
     (id: SignalLocationId | null) => {
+      markInteraction();
       clearShowcaseTimers();
       setAutomatedLocation(null);
       if (hoverReleaseRef.current) {
@@ -151,7 +187,13 @@ export function ProfessionalTopology() {
         if (!lockedLocation) setActiveLocation(null);
       }, 420);
     },
-    [clearShowcaseTimers, dismissHint, lockedLocation, setActiveLocation],
+    [
+      clearShowcaseTimers,
+      dismissHint,
+      lockedLocation,
+      markInteraction,
+      setActiveLocation,
+    ],
   );
 
   useEffect(() => () => {
@@ -162,6 +204,7 @@ export function ProfessionalTopology() {
 
   const handleSelect = useCallback(
     (id: SignalLocationId) => {
+      markInteraction();
       clearShowcaseTimers();
       setAutomatedLocation(null);
       dismissHint();
@@ -170,7 +213,13 @@ export function ProfessionalTopology() {
       setLockedLocation(next);
       setActiveLocation(next);
     },
-    [clearShowcaseTimers, dismissHint, lockedLocation, setActiveLocation],
+    [
+      clearShowcaseTimers,
+      dismissHint,
+      lockedLocation,
+      markInteraction,
+      setActiveLocation,
+    ],
   );
 
   return (
@@ -195,27 +244,35 @@ export function ProfessionalTopology() {
           </div>
         ) : null}
 
-        {activeSignal ? (
-          <div
-            aria-live="polite"
-            className="absolute right-3 bottom-2 left-3 z-30 border-y border-signal-cyan/28 bg-[linear-gradient(90deg,rgb(3_10_20_/_0.94),rgb(5_19_34_/_0.86))] px-4 py-3 shadow-[0_16px_46px_rgb(0_0_0_/_0.38)] backdrop-blur-md sm:top-[16%] sm:right-0 sm:bottom-auto sm:left-auto sm:w-[15rem] sm:border-y-0 sm:border-l-2"
-          >
-            <p className="font-mono text-[0.66rem] font-semibold tracking-[0.15em] text-signal-cyan uppercase">
-              {activeSignal.label}
-            </p>
-            <p className="mt-1 font-mono text-[0.6rem] tracking-[0.12em] text-foreground-muted uppercase">
-              {activeSignal.country}
-            </p>
-            {activeSignal.organization ? (
-              <p className="mt-3 text-sm font-semibold text-foreground">
-                {activeSignal.organization}
-              </p>
+        <div aria-live="polite">
+          <AnimatePresence initial={false} mode="wait">
+            {activeSignal ? (
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute right-3 bottom-2 left-3 z-30 border-y border-signal-cyan/24 bg-[linear-gradient(90deg,rgb(3_10_20_/_0.86),rgb(5_19_34_/_0.76))] px-3.5 py-2.5 shadow-[0_14px_38px_rgb(0_0_0_/_0.3)] backdrop-blur-md sm:top-[18%] sm:right-1 sm:bottom-auto sm:left-auto sm:w-[13.5rem] sm:border-y-0 sm:border-l"
+                exit={reduced ? undefined : { opacity: 0, y: 5 }}
+                initial={reduced ? false : { opacity: 0, y: 7 }}
+                key={activeSignal.id}
+                transition={{ duration: reduced ? 0 : 0.24 }}
+              >
+                <p className="font-mono text-[0.64rem] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
+                  {activeSignal.label}
+                </p>
+                <p className="mt-0.5 font-mono text-[0.56rem] tracking-[0.11em] text-foreground-muted uppercase">
+                  {activeSignal.country}
+                </p>
+                {activeSignal.organization ? (
+                  <p className="mt-2 text-[0.82rem] font-semibold text-foreground">
+                    {activeSignal.organization}
+                  </p>
+                ) : null}
+                <p className="mt-1 text-[0.68rem] leading-4 text-foreground-secondary">
+                  {activeSignal.context}
+                </p>
+              </motion.div>
             ) : null}
-            <p className="mt-1 text-xs leading-5 text-foreground-secondary">
-              {activeSignal.context}
-            </p>
-          </div>
-        ) : null}
+          </AnimatePresence>
+        </div>
       </div>
 
       <figcaption className="sr-only">

@@ -105,6 +105,7 @@ export function JourneyTimeline() {
   const [activeId, setActiveId] = useState(
     activeTimelineEvent ?? journeyEvents[0].id,
   );
+  const [entrySignalVisible, setEntrySignalVisible] = useState(false);
   const reduceMotion = useReducedMotion() === true;
   const inView = useInView(hostRef, { margin: "120px" });
   const activeEvent =
@@ -127,9 +128,21 @@ export function JourneyTimeline() {
     if (!inView || reduceMotion || hasPlayedRef.current) return;
     hasPlayedRef.current = true;
     const timers = journeyEvents.map((event, index) =>
-      window.setTimeout(() => activate(event), 430 + index * 570),
+      window.setTimeout(() => activate(event), 820 + index * 570),
     );
-    return () => timers.forEach(window.clearTimeout);
+    const signalStart = window.setTimeout(
+      () => setEntrySignalVisible(true),
+      720,
+    );
+    const signalEnd = window.setTimeout(
+      () => setEntrySignalVisible(false),
+      3800,
+    );
+    return () => {
+      timers.forEach(window.clearTimeout);
+      window.clearTimeout(signalStart);
+      window.clearTimeout(signalEnd);
+    };
   }, [activate, inView, reduceMotion]);
 
   return (
@@ -160,7 +173,7 @@ export function JourneyTimeline() {
               ease: [0.2, 0, 0, 1],
             }}
           />
-          {!reduceMotion && inView ? (
+          {!reduceMotion && entrySignalVisible ? (
             <circle
               fill="var(--ritwik-color-signal-amber)"
               filter="drop-shadow(0 0 6px var(--ritwik-color-signal-amber))"

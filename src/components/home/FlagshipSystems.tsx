@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView, useReducedMotion } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 import { SystemVisualStage } from "@/components/signal/SystemVisualStage";
@@ -261,7 +261,7 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
   const hostRef = useRef<HTMLElement>(null);
   const playedRef = useRef(false);
   const timersRef = useRef<number[]>([]);
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(-1);
   const { activeProject, setActiveProject } = useSignalState();
   const active = activeProject === item.id;
   const centered = item.id === "traceforge";
@@ -278,7 +278,7 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
           ? [0, 1, 2, 3]
           : [0, 1, 3, 2];
     timersRef.current = sequence.map((step, index) =>
-      window.setTimeout(() => setActiveStep(step), 360 + index * 720),
+      window.setTimeout(() => setActiveStep(step), 700 + index * 720),
     );
     return () => timersRef.current.forEach(window.clearTimeout);
   }, [inView, item.id, reduced]);
@@ -287,6 +287,7 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
     timersRef.current.forEach(window.clearTimeout);
     setActiveStep(step);
   };
+  const visualStep = activeStep < 0 ? (reduced ? 0 : -1) : activeStep;
 
   const intro = (
     <div className={centered ? "text-center" : undefined}>
@@ -378,21 +379,30 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
 
   const stage = (
     <div>
-      <SystemVisualStage activeStep={activeStep} project={item.id} />
+      <SystemVisualStage activeStep={visualStep} project={item.id} />
       <div className="mt-3 flex items-center justify-between font-mono text-[0.64rem] tracking-[0.1em] text-foreground-muted uppercase">
         <span>Evidence-linked view</span>
-        <span>Signal {String(activeStep + 1).padStart(2, "0")}</span>
+        <span>
+          Signal {String(Math.max(visualStep + 1, 0)).padStart(2, "0")}
+        </span>
       </div>
     </div>
   );
 
   return (
-    <article
+    <motion.article
+      initial={reduced ? false : { opacity: 0, y: "clamp(22px, 2.2vw, 32px)" }}
       className={`relative scroll-mt-28 border-t border-border py-20 lg:py-28 ${item.id === "traceforge" ? "lg:min-h-[125vh]" : "lg:min-h-[110vh]"}`}
       id={item.project.id}
       onFocusCapture={() => setActiveProject(item.id)}
       onMouseEnter={() => setActiveProject(item.id)}
       ref={hostRef}
+      transition={{
+        duration: reduced ? 0 : 0.62,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      viewport={{ once: true, amount: 0.12 }}
+      whileInView={{ opacity: 1, y: 0 }}
     >
       {item.id === "thesislens" ? (
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.38fr)_minmax(36rem,0.62fr)] lg:items-start lg:gap-14">
@@ -435,7 +445,7 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
           </div>
         </div>
       )}
-    </article>
+    </motion.article>
   );
 }
 

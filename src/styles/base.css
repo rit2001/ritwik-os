@@ -487,6 +487,7 @@ body {
 
 .contact-photon {
   animation: contact-photon-travel 9.6s linear infinite;
+  animation-delay: 0.55s;
 }
 
 .contact-finale[data-ambient-active="false"] .contact-photon {

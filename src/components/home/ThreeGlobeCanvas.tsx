@@ -371,24 +371,26 @@ export default function ThreeGlobeCanvas({
             0.16,
             daySample.b - max(daySample.r, daySample.g * 0.86)
           );
-          vec3 restrainedDay = pow(daySample, vec3(1.12)) * vec3(0.36, 0.40, 0.46);
-          vec3 nightOcean = daySample * vec3(0.08, 0.12, 0.19) + vec3(0.008, 0.018, 0.04);
-          vec3 nightLand = daySample * vec3(0.15, 0.14, 0.13) + vec3(0.022, 0.028, 0.032);
+          vec3 restrainedDay = pow(daySample, vec3(1.1)) * vec3(0.42, 0.44, 0.49);
+          vec3 nightOcean = daySample * vec3(0.12, 0.17, 0.26) + vec3(0.012, 0.028, 0.058);
+          vec3 nightLand = daySample * vec3(0.22, 0.2, 0.18) + vec3(0.035, 0.044, 0.044);
           vec3 darkEarth = mix(nightLand, nightOcean, oceanMask);
           float cityMask = smoothstep(0.12, 0.72, nightLuma);
-          vec3 cityLights = vec3(1.0, 0.68, 0.3) * cityMask * (0.42 + nightLuma * 0.9);
+          vec3 cityLights = vec3(1.0, 0.66, 0.27) * cityMask * (0.55 + nightLuma * 1.05);
           vec3 color = mix(darkEarth + cityLights, restrainedDay, dayFactor);
           float oppositeFill = smoothstep(-0.9, 0.28, dot(normal, normalize(vec3(0.55, -0.12, -0.82))));
-          color += vec3(0.018, 0.055, 0.09) * oppositeFill * (1.0 - dayFactor);
-          color += vec3(0.02, 0.12, 0.18) * twilight * 0.28;
+          color += vec3(0.026, 0.068, 0.115) * (0.34 + oppositeFill * 0.66) * (1.0 - dayFactor);
+          color += vec3(0.025, 0.14, 0.22) * twilight * 0.34;
           float oceanSpecular = pow(
             max(dot(reflect(-normalize(sunDirection), normal), vViewDirection), 0.0),
             34.0
           ) * oceanMask * dayFactor;
           color += vec3(0.18, 0.34, 0.48) * oceanSpecular * 0.22;
-          color += vec3(dayLuma * 0.012) * (1.0 - dayFactor);
+          color += vec3(dayLuma * 0.018) * (1.0 - dayFactor);
           float surfaceFresnel = pow(1.0 - max(dot(normal, vViewDirection), 0.0), 4.0);
-          color += vec3(0.03, 0.22, 0.3) * surfaceFresnel * 0.32;
+          float litLimb = surfaceFresnel * smoothstep(-0.3, 0.62, lightDot);
+          color += vec3(0.04, 0.28, 0.38) * surfaceFresnel * 0.38;
+          color += vec3(0.05, 0.18, 0.26) * litLimb * 0.28;
           gl_FragColor = vec4(color, 1.0);
         }
       `,
@@ -446,7 +448,7 @@ export default function ThreeGlobeCanvas({
           void main() {
             float rim = pow(1.0 - max(dot(vNormal, vView), 0.0), 4.8);
             float edge = smoothstep(0.18, 0.92, rim);
-            gl_FragColor = vec4(0.16, 0.7, 0.96, edge * 0.42);
+            gl_FragColor = vec4(0.16, 0.7, 0.96, edge * 0.5);
           }
         `,
         blending: THREE.AdditiveBlending,
@@ -542,7 +544,7 @@ export default function ThreeGlobeCanvas({
             }),
           );
           const photon = new THREE.Mesh(
-            new THREE.SphereGeometry(0.032, 12, 8),
+            new THREE.SphereGeometry(0.036, 12, 8),
             new THREE.MeshBasicMaterial({
               color,
               depthWrite: false,
@@ -665,7 +667,7 @@ export default function ThreeGlobeCanvas({
         const breath = reduce
           ? 0
           : Math.max(0, Math.sin(time * 0.00072 + phase)) * 0.13;
-        marker.scale.setScalar((selected ? 1.5 : 1) + breath);
+        marker.scale.setScalar((selected ? 1.55 : 1.05) + breath);
         const material = marker.material as THREE.MeshBasicMaterial;
         material.color.setHex(
           selected ? 0xe6fdff : id === "usa" ? 0xf2b95f : 0x80dfff,
@@ -690,7 +692,7 @@ export default function ThreeGlobeCanvas({
             ? 0.06
             : selected
               ? 0.72 * (1 - activationRipple * 0.55)
-              : 0.22 + occasional * 0.38;
+              : 0.28 + occasional * 0.42;
         }
 
         const spark = sparkById.get(id);
@@ -719,7 +721,7 @@ export default function ThreeGlobeCanvas({
             ? index === selectedArcIndex
             : !hasFocusedNode && index === cycleIndex;
         const lineMaterial = arc.line.material as THREE.LineBasicMaterial;
-        lineMaterial.opacity = dominant ? 0.68 : hasFocusedNode ? 0.055 : 0.13;
+        lineMaterial.opacity = dominant ? 0.78 : hasFocusedNode ? 0.07 : 0.19;
 
         if (!reduce && dominant) {
           const selectedProgress = THREE.MathUtils.clamp(
