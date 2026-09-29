@@ -226,9 +226,7 @@ export default function Home() {
             title="Earlier builds show the progression behind today’s flagship systems."
             description="A lower-tier evolution strip: real shipped scope, canonical actions, and explicit learning trajectories without claiming direct code lineage."
           />
-          <Reveal delay={0.15}>
-            <SelectedEarlierSystems />
-          </Reveal>
+          <SelectedEarlierSystems />
         </Container>
       </section>
 
