@@ -8,6 +8,7 @@ import {
 } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAmbientPulse } from "@/components/motion/useAmbientPulse";
 import {
   type SignalLocationId,
   useSignalState,
@@ -29,9 +30,15 @@ export function ExperienceSection() {
   const [activeCompany, setActiveCompany] = useState<string>(
     roles[0]?.company ?? "",
   );
+  const [manualInteraction, setManualInteraction] = useState(false);
   const { setActiveLocation } = useSignalState();
   const reduced = useReducedMotion() === true;
   const inView = useInView(hostRef, { margin: "120px" });
+  const ambientTick = useAmbientPulse(
+    inView && !reduced && !manualInteraction,
+    10400,
+    9400,
+  );
   const activeRole =
     roles.find((role) => role.company === activeCompany) ?? roles[0];
   const activeIndex = roles.findIndex(
@@ -39,7 +46,8 @@ export function ExperienceSection() {
   );
 
   const activate = useCallback(
-    (company: string) => {
+    (company: string, manual = false) => {
+      if (manual) setManualInteraction(true);
       setActiveCompany(company);
       setActiveLocation(locationByCompany[company] ?? null);
     },
@@ -56,7 +64,16 @@ export function ExperienceSection() {
   }, [activate, inView, reduced, roles]);
 
   return (
-    <div className="relative mt-14" ref={hostRef}>
+    <div
+      className="relative mt-14"
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setManualInteraction(false);
+        }
+      }}
+      onMouseLeave={() => setManualInteraction(false)}
+      ref={hostRef}
+    >
       <div className="relative hidden min-h-52 sm:block">
         <svg
           aria-hidden="true"
@@ -94,6 +111,38 @@ export function ExperienceSection() {
               />
             </circle>
           ) : null}
+          {!reduced && ambientTick > 0 ? (
+            <g key={`experience-ambient-${ambientTick}`}>
+              <circle
+                className="experience-ambient-packet"
+                fill="var(--ritwik-color-signal-cyan)"
+                r="4"
+              >
+                <animateMotion
+                  dur="3.4s"
+                  fill="freeze"
+                  path="M80 82 C230 82 310 30 500 38 S760 92 920 82"
+                  repeatCount="1"
+                />
+              </circle>
+              {[
+                [80, 82],
+                [500, 38],
+                [920, 82],
+              ].map(([cx, cy], index) => (
+                <circle
+                  className="experience-ambient-ripple"
+                  cx={cx}
+                  cy={cy}
+                  fill="none"
+                  key={`${cx}-${cy}`}
+                  r="11"
+                  stroke="var(--ritwik-color-signal-cyan)"
+                  style={{ animationDelay: `${index * 1.05}s` }}
+                />
+              ))}
+            </g>
+          ) : null}
         </svg>
 
         <div className="relative grid grid-cols-3 gap-8">
@@ -104,9 +153,9 @@ export function ExperienceSection() {
               <button
                 className={`group relative min-h-48 text-center transition-transform duration-300 ${active ? "-translate-y-2" : ""}`}
                 key={role.company}
-                onClick={() => activate(role.company)}
-                onFocus={() => activate(role.company)}
-                onMouseEnter={() => activate(role.company)}
+                onClick={() => activate(role.company, true)}
+                onFocus={() => activate(role.company, true)}
+                onMouseEnter={() => activate(role.company, true)}
                 type="button"
                 aria-pressed={active}
               >
@@ -157,8 +206,8 @@ export function ExperienceSection() {
             <button
               className={`relative border-l px-4 py-3 text-left ${active ? "border-signal-cyan bg-accent-muted/25" : "border-border-strong"}`}
               key={role.company}
-              onClick={() => activate(role.company)}
-              onFocus={() => activate(role.company)}
+              onClick={() => activate(role.company, true)}
+              onFocus={() => activate(role.company, true)}
               type="button"
               aria-pressed={active}
             >

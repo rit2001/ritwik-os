@@ -1,12 +1,17 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
+import { useRef } from "react";
 
+import { useAmbientPulse } from "@/components/motion/useAmbientPulse";
 import { ActionLink } from "@/components/ui/ActionLink";
 import type { WorkMeta } from "@/types/content";
 
 export function AgenticCaseStudyCover({ meta }: Readonly<{ meta: WorkMeta }>) {
+  const stageRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion() === true;
+  const inView = useInView(stageRef, { margin: "160px" });
+  const ambientTick = useAmbientPulse(inView && !reduced, 8600, 6800);
   const facts = [
     ["Status", meta.statusLabel],
     ["Project period", meta.year],
@@ -76,14 +81,17 @@ export function AgenticCaseStudyCover({ meta }: Readonly<{ meta: WorkMeta }>) {
         ) : null}
       </div>
 
-      <div className="relative min-h-[28rem] overflow-hidden border border-border bg-[radial-gradient(circle_at_50%_42%,rgb(47_127_255_/.11),transparent_18rem),linear-gradient(145deg,rgb(8_20_34_/.96),rgb(4_7_13_/.95))]">
+      <div
+        className="relative min-h-[28rem] overflow-hidden border border-border bg-[radial-gradient(circle_at_50%_42%,rgb(47_127_255_/.11),transparent_18rem),linear-gradient(145deg,rgb(8_20_34_/.96),rgb(4_7_13_/.95))]"
+        ref={stageRef}
+      >
         <div className="signal-grid pointer-events-none absolute inset-0 opacity-20" />
         <p className="absolute top-4 left-4 z-10 font-mono text-[0.6rem] font-semibold tracking-[0.13em] text-signal-cyan uppercase">
           Stateful agent workflow
         </p>
         <svg
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full pt-8"
+          className="system-diagram absolute inset-0 h-full w-full pt-8"
           viewBox="0 0 640 500"
         >
           {routes.map((route, index) => (
@@ -181,7 +189,7 @@ export function AgenticCaseStudyCover({ meta }: Readonly<{ meta: WorkMeta }>) {
                 y="312"
               />
               <text
-                fill="var(--ritwik-color-foreground-secondary)"
+                fill="var(--ritwik-color-foreground)"
                 fontFamily="monospace"
                 fontSize="8"
                 textAnchor="middle"
@@ -191,7 +199,7 @@ export function AgenticCaseStudyCover({ meta }: Readonly<{ meta: WorkMeta }>) {
                 {String(label)}
               </text>
               <text
-                fill="var(--ritwik-color-foreground-muted)"
+                fill="var(--ritwik-color-foreground-secondary)"
                 fontFamily="monospace"
                 fontSize="6"
                 textAnchor="middle"
@@ -223,6 +231,54 @@ export function AgenticCaseStudyCover({ meta }: Readonly<{ meta: WorkMeta }>) {
               RESPONSE
             </text>
           </g>
+          {!reduced && ambientTick > 0 ? (
+            <g key={`agentic-ambient-${ambientTick}`}>
+              <circle
+                className="agentic-ambient-request"
+                fill={
+                  ambientTick % 3 === 0
+                    ? "var(--ritwik-color-signal-amber)"
+                    : "var(--ritwik-color-signal-cyan)"
+                }
+                r="5"
+              >
+                <animateMotion
+                  dur="3.4s"
+                  fill="freeze"
+                  path={
+                    ambientTick % 3 === 1
+                      ? "M320 118 V165 V245 C320 278 120 270 120 312 V368 C120 410 320 396 320 438"
+                      : ambientTick % 3 === 2
+                        ? "M320 118 V165 V245 C320 278 255 270 255 312 V368 C255 410 320 396 320 438"
+                        : "M320 118 V165 V245 C320 278 525 270 525 312 V368 C525 410 320 396 320 438"
+                  }
+                  repeatCount="1"
+                />
+              </circle>
+              {ambientTick % 3 === 0 ? (
+                <rect
+                  className="agentic-hitl-ack"
+                  fill="none"
+                  height="66"
+                  rx="10"
+                  stroke="var(--ritwik-color-signal-amber)"
+                  width="120"
+                  x="455"
+                  y="307"
+                />
+              ) : null}
+              <rect
+                className="agentic-response-ack"
+                fill="none"
+                height="60"
+                rx="30"
+                stroke="var(--ritwik-color-signal-cyan)"
+                width="162"
+                x="239"
+                y="434"
+              />
+            </g>
+          ) : null}
         </svg>
       </div>
     </div>

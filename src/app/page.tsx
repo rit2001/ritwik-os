@@ -6,6 +6,7 @@ import { JourneyTimeline } from "@/components/home/JourneyTimeline";
 import { ProfessionalTopology } from "@/components/home/ProfessionalTopology";
 import { SelectedEarlierSystems } from "@/components/home/SelectedEarlierSystems";
 import { Reveal } from "@/components/motion/Reveal";
+import { ViewportActivity } from "@/components/motion/ViewportActivity";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ActionLink } from "@/components/ui/ActionLink";
 import { Container } from "@/components/ui/Container";
@@ -73,11 +74,15 @@ export default function Home() {
             <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.18em] text-signal-cyan uppercase">
               {profile.displayName}
             </p>
-            <h1 className="mt-6 max-w-[15ch] text-[clamp(3rem,3.5vw,3.8rem)] leading-[0.9] font-semibold tracking-[-0.055em] text-foreground uppercase min-[1200px]:max-w-none">
-              <span className="block min-[1200px]:whitespace-nowrap">
-                Engineering Intelligence
+            <h1 className="mt-6 max-w-[15ch] text-[clamp(2.7rem,3.35vw,3.65rem)] leading-[0.92] font-semibold tracking-[-0.025em] text-white uppercase min-[1200px]:max-w-none">
+              <span className="flex flex-wrap gap-x-[0.32em] min-[1200px]:flex-nowrap">
+                <span>Engineering</span>
+                <span>Intelligence</span>
               </span>
-              <span className="block">Into Production.</span>
+              <span className="mt-[0.08em] flex flex-wrap gap-x-[0.32em] min-[1200px]:flex-nowrap">
+                <span>Into</span>
+                <span>Production.</span>
+              </span>
             </h1>
             <p className="mt-7 whitespace-pre-line font-mono text-[length:var(--text-technical-size)] leading-[1.8] font-semibold tracking-[0.08em] text-signal-cyan uppercase">
               {profile.shortRoleLine}
@@ -260,7 +265,7 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container width="wide">
-          <div className="contact-finale relative grid gap-10 border-y border-border py-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-center lg:gap-16 lg:py-12">
+          <ViewportActivity className="contact-finale relative grid gap-10 border-y border-border py-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-center lg:gap-16 lg:py-12">
             <svg
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 hidden h-full w-full opacity-70 lg:block"
@@ -269,7 +274,7 @@ export default function Home() {
             >
               <path
                 className="contact-route"
-                d="M30 54 C280 54 410 142 660 142 S850 160 1010 160"
+                d="M30 22 H690 C835 22 842 160 1010 160"
                 fill="none"
                 stroke="var(--ritwik-color-signal-cyan)"
                 strokeDasharray="3 9"
@@ -277,7 +282,7 @@ export default function Home() {
               />
               <path
                 className="contact-route"
-                d="M30 160 H1010"
+                d="M646 22 C760 22 760 160 1010 160"
                 fill="none"
                 stroke="var(--ritwik-color-accent)"
                 strokeDasharray="3 9"
@@ -285,7 +290,7 @@ export default function Home() {
               />
               <path
                 className="contact-route"
-                d="M30 274 C280 274 410 178 660 178 S850 160 1010 160"
+                d="M30 298 H690 C835 298 842 160 1010 160"
                 fill="none"
                 stroke="var(--ritwik-color-signal-amber)"
                 strokeDasharray="3 9"
@@ -296,7 +301,7 @@ export default function Home() {
                 fontFamily="monospace"
                 fontSize="10"
                 x="36"
-                y="45"
+                y="16"
               >
                 SYSTEMS
               </text>
@@ -304,8 +309,8 @@ export default function Home() {
                 fill="var(--ritwik-color-foreground-muted)"
                 fontFamily="monospace"
                 fontSize="10"
-                x="36"
-                y="151"
+                x="648"
+                y="16"
               >
                 EXPERIENCE
               </text>
@@ -314,7 +319,7 @@ export default function Home() {
                 fontFamily="monospace"
                 fontSize="10"
                 x="36"
-                y="265"
+                y="316"
               >
                 FOUNDATIONS
               </text>
@@ -325,6 +330,16 @@ export default function Home() {
                 opacity="0.38"
                 r="3"
               />
+              <path
+                className="contact-photon"
+                d="M30 22 H690 C835 22 842 160 1010 160"
+                fill="none"
+                pathLength="1"
+                stroke="var(--ritwik-color-signal-cyan)"
+                strokeDasharray="0.015 0.985"
+                strokeLinecap="round"
+                strokeWidth="4"
+              />
               <circle
                 cx="978"
                 cy="160"
@@ -333,7 +348,7 @@ export default function Home() {
                 r="3.5"
               />
               <circle
-                className="signal-ripple"
+                className="contact-endpoint-ring"
                 cx="1010"
                 cy="160"
                 fill="none"
@@ -416,7 +431,7 @@ export default function Home() {
                 ) : null}
               </div>
             </div>
-          </div>
+          </ViewportActivity>
         </Container>
       </section>
     </SignalProvider>

@@ -222,6 +222,76 @@ body {
   }
 }
 
+@keyframes ambient-arrival {
+  0%,
+  100% {
+    opacity: 0;
+    filter: drop-shadow(0 0 0 rgb(94 231 247 / 0));
+  }
+  18%,
+  76% {
+    opacity: 1;
+    filter: drop-shadow(0 0 7px rgb(94 231 247 / 0.72));
+  }
+}
+
+@keyframes ambient-ring {
+  0%,
+  58%,
+  100% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  72% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  90% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes ambient-scan {
+  0%,
+  100% {
+    opacity: 0.28;
+    stroke-dashoffset: 28;
+  }
+  45%,
+  72% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 5px rgb(94 231 247 / 0.7));
+  }
+}
+
+@keyframes institutional-shimmer {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(210%);
+  }
+}
+
+@keyframes contact-photon-travel {
+  0%,
+  18% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+  30%,
+  64% {
+    opacity: 0.7;
+  }
+  78%,
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
 .signal-grid {
   background-image:
     linear-gradient(rgb(102 168 255 / 0.055) 1px, transparent 1px),
@@ -315,6 +385,82 @@ body {
   animation: rank-climb 0.8s var(--ease-standard) 1 both;
 }
 
+.system-diagram text {
+  paint-order: stroke fill;
+  stroke: rgb(4 7 13 / 0.78);
+  stroke-width: 1.35px;
+  stroke-linejoin: round;
+}
+
+.thesis-ambient-candidate,
+.trace-ambient-event,
+.converge-ambient-operation,
+.converge-ambient-operation-label {
+  animation: ambient-arrival 2.9s var(--ease-standard) 1 both;
+}
+
+.thesis-ambient-rerank,
+.trace-ambient-scan,
+.trace-ambient-compare,
+.converge-queue-ambient {
+  animation: ambient-scan 2.8s var(--ease-standard) 1 both;
+}
+
+.thesis-ambient-answer,
+.converge-ambient-ack {
+  animation: ambient-ring 3.1s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.trace-ambient-event {
+  animation-duration: 1.5s;
+}
+
+.trace-ambient-scan {
+  stroke-dasharray: 8 7;
+}
+
+.trace-ambient-compare {
+  animation-delay: 1.35s;
+}
+
+.converge-ambient-ack {
+  animation-delay: 1.35s;
+}
+
+.experience-ambient-packet,
+.earlier-system-packet,
+.agentic-ambient-request {
+  animation: ambient-arrival 3.4s var(--ease-standard) 1 both;
+}
+
+.experience-ambient-ripple {
+  animation: ambient-ring 1.15s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.agentic-hitl-ack,
+.agentic-response-ack {
+  animation: ambient-ring 3.7s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.agentic-hitl-ack {
+  animation-delay: 1.7s;
+}
+
+.agentic-response-ack {
+  animation-delay: 2.55s;
+}
+
+.foundation-panel:hover .foundation-shimmer,
+.foundation-panel:focus-visible .foundation-shimmer {
+  animation: institutional-shimmer 2.8s var(--ease-standard) 1 both;
+}
+
 .contact-route {
   transition:
     opacity 240ms var(--ease-standard),
@@ -326,6 +472,25 @@ body {
 .contact-finale:focus-within .contact-route {
   opacity: 0.92;
   stroke-width: 2.4;
+}
+
+.contact-endpoint-ring {
+  opacity: 0.28;
+}
+
+.contact-finale:hover .contact-endpoint-ring,
+.contact-finale:focus-within .contact-endpoint-ring {
+  animation: ambient-ring 1.1s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.contact-photon {
+  animation: contact-photon-travel 9.6s linear infinite;
+}
+
+.contact-finale[data-ambient-active="false"] .contact-photon {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -344,6 +509,31 @@ body {
   .capability-packet,
   .leetcode-knight-travel,
   .codeforces-rank-signal {
+    animation: none !important;
+  }
+  .thesis-ambient-candidate,
+  .thesis-ambient-rerank,
+  .thesis-ambient-answer,
+  .trace-ambient-event,
+  .trace-ambient-scan,
+  .trace-ambient-compare,
+  .converge-ambient-operation,
+  .converge-ambient-operation-label,
+  .converge-ambient-ack,
+  .converge-queue-ambient,
+  .experience-ambient-packet,
+  .experience-ambient-ripple,
+  .earlier-system-packet,
+  .agentic-ambient-request,
+  .agentic-hitl-ack,
+  .agentic-response-ack,
+  .foundation-shimmer {
+    animation: none !important;
+  }
+  .contact-photon {
+    animation: none !important;
+  }
+  .contact-endpoint-ring {
     animation: none !important;
   }
   *,

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -29,14 +30,22 @@ const publicSignals: readonly ProfessionalSignal[] = professionalSignals.filter(
 export function ProfessionalTopology() {
   const { activeLocation, setActiveLocation } = useSignalState();
   const rootRef = useRef<HTMLElement>(null);
+  const hoverReleaseRef = useRef<number | null>(null);
+  const showcaseStartRef = useRef<number | null>(null);
+  const showcaseEndRef = useRef<number | null>(null);
+  const showcaseIndexRef = useRef(0);
   const [hoveredLocation, setHoveredLocation] =
     useState<SignalLocationId | null>(null);
   const [lockedLocation, setLockedLocation] = useState<SignalLocationId | null>(
     null,
   );
+  const [automatedLocation, setAutomatedLocation] =
+    useState<SignalLocationId | null>(null);
   const [showHint, setShowHint] = useState(true);
+  const reduced = useReducedMotion() === true;
 
-  const displayedLocation = hoveredLocation ?? lockedLocation ?? activeLocation;
+  const displayedLocation =
+    lockedLocation ?? hoveredLocation ?? activeLocation ?? automatedLocation;
   const activeSignal = useMemo(
     () =>
       displayedLocation
@@ -47,10 +56,54 @@ export function ProfessionalTopology() {
 
   const dismissHint = useCallback(() => setShowHint(false), []);
 
+  const clearShowcaseTimers = useCallback(() => {
+    if (showcaseStartRef.current) {
+      window.clearTimeout(showcaseStartRef.current);
+      showcaseStartRef.current = null;
+    }
+    if (showcaseEndRef.current) {
+      window.clearTimeout(showcaseEndRef.current);
+      showcaseEndRef.current = null;
+    }
+  }, []);
+
   useEffect(() => {
     const timer = window.setTimeout(dismissHint, 5000);
     return () => window.clearTimeout(timer);
   }, [dismissHint]);
+
+  useEffect(() => {
+    clearShowcaseTimers();
+    const resetTimer = window.setTimeout(() => setAutomatedLocation(null), 0);
+    if (reduced || hoveredLocation || lockedLocation || activeLocation) {
+      return () => window.clearTimeout(resetTimer);
+    }
+
+    const beginShowcase = () => {
+      const signal = publicSignals[showcaseIndexRef.current];
+      if (!signal) return;
+      showcaseIndexRef.current =
+        (showcaseIndexRef.current + 1) % publicSignals.length;
+      setAutomatedLocation(signal.id as SignalLocationId);
+      showcaseEndRef.current = window.setTimeout(
+        () => setAutomatedLocation(null),
+        3000,
+      );
+      showcaseStartRef.current = window.setTimeout(beginShowcase, 10000);
+    };
+
+    showcaseStartRef.current = window.setTimeout(beginShowcase, 10000);
+    return () => {
+      window.clearTimeout(resetTimer);
+      clearShowcaseTimers();
+    };
+  }, [
+    activeLocation,
+    clearShowcaseTimers,
+    hoveredLocation,
+    lockedLocation,
+    reduced,
+  ]);
 
   useEffect(() => {
     const release = () => {
@@ -81,24 +134,43 @@ export function ProfessionalTopology() {
 
   const handleHover = useCallback(
     (id: SignalLocationId | null) => {
-      if (id) dismissHint();
-      setHoveredLocation(id);
-      if (!lockedLocation) setActiveLocation(id);
+      clearShowcaseTimers();
+      setAutomatedLocation(null);
+      if (hoverReleaseRef.current) {
+        window.clearTimeout(hoverReleaseRef.current);
+        hoverReleaseRef.current = null;
+      }
+      if (id) {
+        dismissHint();
+        setHoveredLocation(id);
+        if (!lockedLocation) setActiveLocation(id);
+        return;
+      }
+      hoverReleaseRef.current = window.setTimeout(() => {
+        setHoveredLocation(null);
+        if (!lockedLocation) setActiveLocation(null);
+      }, 420);
     },
-    [dismissHint, lockedLocation, setActiveLocation],
+    [clearShowcaseTimers, dismissHint, lockedLocation, setActiveLocation],
   );
+
+  useEffect(() => () => {
+    if (hoverReleaseRef.current) {
+      window.clearTimeout(hoverReleaseRef.current);
+    }
+  });
 
   const handleSelect = useCallback(
     (id: SignalLocationId) => {
+      clearShowcaseTimers();
+      setAutomatedLocation(null);
       dismissHint();
       setHoveredLocation(null);
-      setLockedLocation((current) => {
-        const next = current === id ? null : id;
-        setActiveLocation(next);
-        return next;
-      });
+      const next = lockedLocation === id ? null : id;
+      setLockedLocation(next);
+      setActiveLocation(next);
     },
-    [dismissHint, setActiveLocation],
+    [clearShowcaseTimers, dismissHint, lockedLocation, setActiveLocation],
   );
 
   return (

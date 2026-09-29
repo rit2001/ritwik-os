@@ -21,6 +21,7 @@ type MarkerScreenPosition = {
   labelX: number;
   labelY: number;
   front: boolean;
+  labelVisible: boolean;
 };
 
 const publicSignals = professionalSignals.filter(
@@ -28,12 +29,68 @@ const publicSignals = professionalSignals.filter(
 );
 
 const initialMarkerPositions: MarkerScreenPosition[] = [
-  { id: "kolkata", x: 58, y: 42, labelX: 70, labelY: 33, front: true },
-  { id: "bengaluru", x: 52, y: 56, labelX: 66, labelY: 64, front: true },
-  { id: "pune", x: 47, y: 51, labelX: 33, labelY: 48, front: true },
-  { id: "toronto", x: 32, y: 37, labelX: 20, labelY: 29, front: true },
-  { id: "usa", x: 27, y: 50, labelX: 18, labelY: 58, front: true },
+  {
+    id: "kolkata",
+    x: 58,
+    y: 42,
+    labelX: 70,
+    labelY: 33,
+    front: true,
+    labelVisible: true,
+  },
+  {
+    id: "bengaluru",
+    x: 52,
+    y: 56,
+    labelX: 66,
+    labelY: 64,
+    front: true,
+    labelVisible: true,
+  },
+  {
+    id: "pune",
+    x: 47,
+    y: 51,
+    labelX: 33,
+    labelY: 48,
+    front: true,
+    labelVisible: false,
+  },
+  {
+    id: "toronto",
+    x: 32,
+    y: 37,
+    labelX: 20,
+    labelY: 29,
+    front: true,
+    labelVisible: true,
+  },
+  {
+    id: "usa",
+    x: 27,
+    y: 50,
+    labelX: 18,
+    labelY: 58,
+    front: true,
+    labelVisible: true,
+  },
 ];
+
+const markerPriority: readonly SignalLocationId[] = [
+  "kolkata",
+  "toronto",
+  "usa",
+  "bengaluru",
+  "pune",
+];
+
+const markerPhase: Record<SignalLocationId, number> = {
+  kolkata: 0,
+  bengaluru: 1.4,
+  pune: 2.7,
+  toronto: 4,
+  usa: 5.3,
+};
 
 function pointFromCoordinates(
   latitude: number,
@@ -70,9 +127,13 @@ function createGreatCircle(
 }
 
 function placeCollisionAwareLabels(
-  raw: readonly Omit<MarkerScreenPosition, "labelX" | "labelY">[],
+  raw: readonly Omit<
+    MarkerScreenPosition,
+    "labelX" | "labelY" | "labelVisible"
+  >[],
   width: number,
   height: number,
+  activeId: SignalLocationId | null,
 ) {
   const occupied: Array<{
     left: number;
@@ -110,9 +171,22 @@ function placeCollisionAwareLabels(
     ],
   };
 
-  return raw.map((marker) => {
+  const ordered = [...raw].sort((left, right) => {
+    if (left.id === activeId) return -1;
+    if (right.id === activeId) return 1;
+    return markerPriority.indexOf(left.id) - markerPriority.indexOf(right.id);
+  });
+  const placedById = new Map<SignalLocationId, MarkerScreenPosition>();
+
+  ordered.forEach((marker) => {
     if (!marker.front) {
-      return { ...marker, labelX: marker.x, labelY: marker.y };
+      placedById.set(marker.id, {
+        ...marker,
+        labelX: marker.x,
+        labelY: marker.y,
+        labelVisible: false,
+      });
+      return;
     }
 
     const markerX = (marker.x / 100) * width;
@@ -125,6 +199,7 @@ function placeCollisionAwareLabels(
       [0, 42] as const,
     ];
     let placed = choices[0];
+    let labelVisible = false;
 
     for (const choice of choices) {
       const centerX = THREE.MathUtils.clamp(
@@ -153,6 +228,7 @@ function placeCollisionAwareLabels(
       if (!collides) {
         placed = choice;
         occupied.push(box);
+        labelVisible = true;
         break;
       }
     }
@@ -167,8 +243,17 @@ function placeCollisionAwareLabels(
       7,
       93,
     );
-    return { ...marker, labelX, labelY };
+    placedById.set(marker.id, {
+      ...marker,
+      labelX,
+      labelY,
+      labelVisible,
+    });
   });
+
+  return raw.map(
+    (marker) => placedById.get(marker.id) ?? initialMarkerPositions[0],
+  );
 }
 
 export default function ThreeGlobeCanvas({
@@ -229,20 +314,15 @@ export default function ThreeGlobeCanvas({
     }
 
     renderer.setClearAlpha(0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, window.innerWidth < 640 ? 1.15 : 1.6),
+    );
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.92;
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.className = "h-full w-full touch-none";
     host.append(renderer.domElement);
-
-    scene.add(new THREE.AmbientLight(0x071426, 0.42));
-    scene.add(new THREE.HemisphereLight(0x5ca8df, 0x01030a, 0.48));
-    const dayLight = new THREE.DirectionalLight(0xd8efff, 2.65);
-    dayLight.position.set(-3.7, 2.4, 4.6);
-    scene.add(dayLight);
-    const sideLight = new THREE.DirectionalLight(0x2f9dff, 0.72);
-    sideLight.position.set(3.5, -0.6, 1.2);
-    scene.add(sideLight);
 
     const globe = new THREE.Group();
     globe.rotation.y = -0.36;
@@ -250,18 +330,76 @@ export default function ThreeGlobeCanvas({
     scene.add(globe);
 
     const earthGeometry = new THREE.SphereGeometry(1.58, 72, 48);
-    const earthMaterial = new THREE.MeshPhongMaterial({
-      color: 0x60778e,
-      emissive: 0x020813,
-      emissiveIntensity: 0.28,
-      shininess: 14,
-      specular: 0x315574,
+    const earthMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        dayMap: { value: null },
+        nightMap: { value: null },
+        sunDirection: {
+          value: new THREE.Vector3(-3.7, 2.4, 4.6).normalize(),
+        },
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+        varying vec3 vViewDirection;
+        void main() {
+          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+          vUv = uv;
+          vWorldNormal = normalize(mat3(modelMatrix) * normal);
+          vViewDirection = normalize(cameraPosition - worldPosition.xyz);
+          gl_Position = projectionMatrix * viewMatrix * worldPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D dayMap;
+        uniform sampler2D nightMap;
+        uniform vec3 sunDirection;
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+        varying vec3 vViewDirection;
+        void main() {
+          vec3 normal = normalize(vWorldNormal);
+          float lightDot = dot(normal, normalize(sunDirection));
+          float dayFactor = smoothstep(-0.18, 0.34, lightDot);
+          float twilight = 1.0 - smoothstep(0.02, 0.38, abs(lightDot));
+          vec3 daySample = texture2D(dayMap, vUv).rgb;
+          vec3 nightSample = texture2D(nightMap, vUv).rgb;
+          float dayLuma = dot(daySample, vec3(0.2126, 0.7152, 0.0722));
+          float nightLuma = dot(nightSample, vec3(0.2126, 0.7152, 0.0722));
+          float oceanMask = smoothstep(
+            0.015,
+            0.16,
+            daySample.b - max(daySample.r, daySample.g * 0.86)
+          );
+          vec3 restrainedDay = pow(daySample, vec3(1.12)) * vec3(0.36, 0.40, 0.46);
+          vec3 nightOcean = daySample * vec3(0.08, 0.12, 0.19) + vec3(0.008, 0.018, 0.04);
+          vec3 nightLand = daySample * vec3(0.15, 0.14, 0.13) + vec3(0.022, 0.028, 0.032);
+          vec3 darkEarth = mix(nightLand, nightOcean, oceanMask);
+          float cityMask = smoothstep(0.12, 0.72, nightLuma);
+          vec3 cityLights = vec3(1.0, 0.68, 0.3) * cityMask * (0.42 + nightLuma * 0.9);
+          vec3 color = mix(darkEarth + cityLights, restrainedDay, dayFactor);
+          float oppositeFill = smoothstep(-0.9, 0.28, dot(normal, normalize(vec3(0.55, -0.12, -0.82))));
+          color += vec3(0.018, 0.055, 0.09) * oppositeFill * (1.0 - dayFactor);
+          color += vec3(0.02, 0.12, 0.18) * twilight * 0.28;
+          float oceanSpecular = pow(
+            max(dot(reflect(-normalize(sunDirection), normal), vViewDirection), 0.0),
+            34.0
+          ) * oceanMask * dayFactor;
+          color += vec3(0.18, 0.34, 0.48) * oceanSpecular * 0.22;
+          color += vec3(dayLuma * 0.012) * (1.0 - dayFactor);
+          float surfaceFresnel = pow(1.0 - max(dot(normal, vViewDirection), 0.0), 4.0);
+          color += vec3(0.03, 0.22, 0.3) * surfaceFresnel * 0.32;
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `,
     });
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     globe.add(earth);
 
     let earthTexture: THREE.Texture | null = null;
-    new THREE.TextureLoader().load(
+    let nightTexture: THREE.Texture | null = null;
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(
       "/images/earth/blue-marble-land-ocean-ice-2048.jpg",
       (texture) => {
         earthTexture = texture;
@@ -271,14 +409,26 @@ export default function ThreeGlobeCanvas({
           renderer.capabilities.getMaxAnisotropy(),
         );
         texture.wrapS = THREE.RepeatWrapping;
-        earthMaterial.map = texture;
+        earthMaterial.uniforms.dayMap.value = texture;
         earthMaterial.needsUpdate = true;
         schedule();
       },
     );
+    textureLoader.load("/images/earth/earth-at-night-2048.png", (texture) => {
+      nightTexture = texture;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = Math.min(
+        8,
+        renderer.capabilities.getMaxAnisotropy(),
+      );
+      texture.wrapS = THREE.RepeatWrapping;
+      earthMaterial.uniforms.nightMap.value = texture;
+      earthMaterial.needsUpdate = true;
+      schedule();
+    });
 
     const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(1.71, 64, 42),
+      new THREE.SphereGeometry(1.665, 64, 42),
       new THREE.ShaderMaterial({
         vertexShader: `
           varying vec3 vNormal;
@@ -294,13 +444,14 @@ export default function ThreeGlobeCanvas({
           varying vec3 vNormal;
           varying vec3 vView;
           void main() {
-            float rim = pow(1.0 - max(dot(vNormal, vView), 0.0), 3.2);
-            gl_FragColor = vec4(0.20, 0.72, 1.0, rim * 0.55);
+            float rim = pow(1.0 - max(dot(vNormal, vView), 0.0), 4.8);
+            float edge = smoothstep(0.18, 0.92, rim);
+            gl_FragColor = vec4(0.16, 0.7, 0.96, edge * 0.42);
           }
         `,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
-        side: THREE.BackSide,
+        side: THREE.FrontSide,
         transparent: true,
       }),
     );
@@ -310,6 +461,7 @@ export default function ThreeGlobeCanvas({
     const markerMeshes: THREE.Mesh[] = [];
     const markerById = new Map<SignalLocationId, THREE.Mesh>();
     const haloById = new Map<SignalLocationId, THREE.Mesh>();
+    const sparkById = new Map<SignalLocationId, THREE.Mesh>();
 
     for (const signal of publicSignals) {
       const id = signal.id as SignalLocationId;
@@ -339,6 +491,19 @@ export default function ThreeGlobeCanvas({
       halo.lookAt(new THREE.Vector3(0, 0, 0));
       haloById.set(id, halo);
       globe.add(halo);
+
+      const spark = new THREE.Mesh(
+        new THREE.SphereGeometry(0.018, 10, 8),
+        new THREE.MeshBasicMaterial({
+          color: id === "usa" ? 0xffd895 : 0xc8fbff,
+          depthWrite: false,
+          opacity: 0,
+          transparent: true,
+        }),
+      );
+      spark.position.copy(marker.position).multiplyScalar(1.018);
+      sparkById.set(id, spark);
+      globe.add(spark);
     }
 
     type ArcRecord = {
@@ -469,7 +634,12 @@ export default function ThreeGlobeCanvas({
         };
       });
       setMarkerPositions(
-        placeCollisionAwareLabels(raw, host.clientWidth, host.clientHeight),
+        placeCollisionAwareLabels(
+          raw,
+          host.clientWidth,
+          host.clientHeight,
+          activeRef.current,
+        ),
       );
     };
 
@@ -491,9 +661,10 @@ export default function ThreeGlobeCanvas({
       markerById.forEach((marker, id) => {
         const selected = id === active || id === hoveredId;
         const unrelated = Boolean((active || hoveredId) && !selected);
+        const phase = markerPhase[id];
         const breath = reduce
           ? 0
-          : Math.max(0, Math.sin(time * 0.0011 + marker.id * 1.9)) * 0.09;
+          : Math.max(0, Math.sin(time * 0.00072 + phase)) * 0.13;
         marker.scale.setScalar((selected ? 1.5 : 1) + breath);
         const material = marker.material as THREE.MeshBasicMaterial;
         material.color.setHex(
@@ -511,7 +682,7 @@ export default function ThreeGlobeCanvas({
               : 0;
           const occasional = reduce
             ? 0
-            : Math.max(0, Math.sin(time * 0.00075 + marker.id * 2.2)) ** 18;
+            : Math.max(0, Math.sin(time * 0.00046 + phase)) ** 24;
           halo.scale.setScalar(
             (selected ? 1.35 : 1) + activationRipple * 1.3 + occasional * 0.7,
           );
@@ -521,30 +692,57 @@ export default function ThreeGlobeCanvas({
               ? 0.72 * (1 - activationRipple * 0.55)
               : 0.22 + occasional * 0.38;
         }
+
+        const spark = sparkById.get(id);
+        if (spark) {
+          const sparkStrength = reduce
+            ? 0
+            : Math.max(0, Math.sin(time * 0.00039 + phase + 0.7)) ** 42;
+          spark.scale.setScalar(1 + sparkStrength * 1.8);
+          (spark.material as THREE.MeshBasicMaterial).opacity = unrelated
+            ? 0
+            : sparkStrength * 0.92;
+        }
       });
 
       const selectedArcIndex = arcs.findIndex(
         (arc) => active === arc.targetId || hoveredId === arc.targetId,
       );
-      const cycleIndex = Math.floor(time / 5200) % Math.max(arcs.length, 1);
+      const hasFocusedNode = Boolean(active || hoveredId);
+      const idleSegment = 6200;
+      const cycleIndex =
+        Math.floor(time / idleSegment) % Math.max(arcs.length, 1);
+      const idleProgress = (time % idleSegment) / idleSegment;
       arcs.forEach((arc, index) => {
         const dominant =
           selectedArcIndex >= 0
             ? index === selectedArcIndex
-            : index === cycleIndex;
+            : !hasFocusedNode && index === cycleIndex;
         const lineMaterial = arc.line.material as THREE.LineBasicMaterial;
-        lineMaterial.opacity = dominant
-          ? 0.68
-          : selectedArcIndex >= 0
-            ? 0.055
-            : 0.13;
+        lineMaterial.opacity = dominant ? 0.68 : hasFocusedNode ? 0.055 : 0.13;
 
         if (!reduce && dominant) {
-          const progress = (time * 0.00018) % 1;
+          const selectedProgress = THREE.MathUtils.clamp(
+            (time - activeChangedAtRef.current) / 1450,
+            0,
+            1,
+          );
+          const routeLengthFactor = THREE.MathUtils.clamp(
+            arc.curve.getLength() / 4.3,
+            0.78,
+            1.25,
+          );
+          const progress =
+            selectedArcIndex >= 0
+              ? selectedProgress
+              : Math.min(1, idleProgress / (0.56 * routeLengthFactor));
+          const traveling =
+            selectedArcIndex >= 0 ? progress < 1 : idleProgress < 0.68;
           arc.photon.visible = true;
           arc.photon.position.copy(arc.curve.getPoint(progress));
-          (arc.photon.material as THREE.MeshBasicMaterial).opacity =
-            Math.sin(progress * Math.PI) * 0.95;
+          (arc.photon.material as THREE.MeshBasicMaterial).opacity = traveling
+            ? Math.sin(progress * Math.PI) * 0.95
+            : 0;
           const arrivalStrength = Math.max(0, (progress - 0.88) / 0.12);
           arc.arrival.scale.setScalar(1 + arrivalStrength * 1.8);
           (arc.arrival.material as THREE.MeshBasicMaterial).opacity =
@@ -698,6 +896,7 @@ export default function ThreeGlobeCanvas({
       renderer.domElement.removeEventListener("pointerup", onPointerUp);
       renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
       earthTexture?.dispose();
+      nightTexture?.dispose();
       scene.traverse((object) => {
         if (
           object instanceof THREE.Mesh ||
@@ -740,7 +939,7 @@ export default function ThreeGlobeCanvas({
         viewBox="0 0 100 100"
       >
         {markerPositions.map((position) =>
-          position.front ? (
+          position.front && position.labelVisible ? (
             <line
               key={position.id}
               stroke="rgb(94 231 247 / 0.35)"
@@ -760,11 +959,12 @@ export default function ThreeGlobeCanvas({
             markerPositions.find((marker) => marker.id === id) ??
             initialMarkerPositions[0];
           const selected = activeLocation === id;
+          const labelVisible = position.front && position.labelVisible;
 
           return (
             <button
               className={`absolute z-20 -translate-x-1/2 -translate-y-1/2 transition-[opacity,filter] duration-[var(--duration-base)] ${
-                position.front
+                labelVisible
                   ? "pointer-events-auto opacity-100"
                   : "pointer-events-none opacity-0"
               }`}
@@ -782,24 +982,19 @@ export default function ThreeGlobeCanvas({
                 left: `${position.labelX}%`,
                 top: `${position.labelY}%`,
               }}
-              tabIndex={position.front ? 0 : -1}
+              tabIndex={labelVisible ? 0 : -1}
               type="button"
               aria-label={`${signal.label}, ${signal.country}. ${signal.detail}`}
               aria-pressed={selected}
             >
-              <span
-                className={`block whitespace-nowrap border-l px-2 py-1 text-left backdrop-blur-sm ${
-                  selected
-                    ? "border-signal-cyan bg-[rgb(3_9_16_/_0.9)] shadow-[0_0_22px_rgb(47_127_255_/_0.2)]"
-                    : "border-border-strong bg-[rgb(3_9_16_/_0.68)]"
-                }`}
-              >
+              <span className="block whitespace-nowrap px-1.5 py-1 text-left [text-shadow:0_1px_8px_rgb(0_0_0_/_0.95)]">
                 <span className="block font-mono text-[0.56rem] font-semibold tracking-[0.09em] text-foreground uppercase sm:text-[0.64rem]">
                   {signal.label}
                 </span>
-                <span className="block font-mono text-[0.5rem] tracking-[0.08em] text-signal-cyan uppercase sm:text-[0.55rem]">
-                  {signal.country}
-                </span>
+                <span
+                  className={`mt-0.5 block h-px origin-left bg-signal-cyan transition-transform ${selected ? "scale-x-100" : "scale-x-45"}`}
+                  aria-hidden="true"
+                />
               </span>
             </button>
           );

@@ -1,8 +1,14 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  useReducedMotion,
+} from "motion/react";
+import { useRef, useState } from "react";
 
+import { useAmbientPulse } from "@/components/motion/useAmbientPulse";
 import { ActionLink } from "@/components/ui/ActionLink";
 import { getProject } from "@/data/projects";
 
@@ -42,7 +48,11 @@ const earlierSystems = [
   },
 ] as const;
 
-function MicroVisual({ id }: Readonly<{ id: string }>) {
+function MicroVisual({
+  ambientTick,
+  id,
+  reduced,
+}: Readonly<{ ambientTick: number; id: string; reduced: boolean }>) {
   if (id === "stateful-agentic-ai-assistant") {
     return (
       <svg aria-hidden="true" className="h-20 w-full" viewBox="0 0 310 78">
@@ -51,6 +61,21 @@ function MicroVisual({ id }: Readonly<{ id: string }>) {
           fill="none"
           stroke="var(--ritwik-color-accent)"
         />
+        {!reduced && ambientTick > 0 ? (
+          <circle
+            className="earlier-system-packet"
+            fill="var(--ritwik-color-signal-cyan)"
+            key={`agentic-micro-${ambientTick}`}
+            r="3"
+          >
+            <animateMotion
+              dur="2.2s"
+              fill="freeze"
+              path="M38 39 H93 H190 H278"
+              repeatCount="1"
+            />
+          </circle>
+        ) : null}
         {[
           [6, 26, 32, "USER"],
           [93, 24, 56, "LANGGRAPH"],
@@ -92,6 +117,21 @@ function MicroVisual({ id }: Readonly<{ id: string }>) {
           stroke="var(--ritwik-color-signal-amber)"
           strokeDasharray="3 7"
         />
+        {!reduced && ambientTick > 0 ? (
+          <circle
+            className="earlier-system-packet"
+            fill="var(--ritwik-color-signal-amber)"
+            key={`mock-micro-${ambientTick}`}
+            r="3"
+          >
+            <animateMotion
+              dur="2.55s"
+              fill="freeze"
+              path="M36 39 H274"
+              repeatCount="1"
+            />
+          </circle>
+        ) : null}
         {["RESUME", "QUESTIONS", "ANSWER", "EVALUATE", "REPORT"].map(
           (label, index) => (
             <g key={label} transform={`translate(${5 + index * 61} 23)`}>
@@ -130,6 +170,28 @@ function MicroVisual({ id }: Readonly<{ id: string }>) {
         stroke="var(--ritwik-color-signal-cyan)"
         strokeDasharray="4 5"
       />
+      {!reduced && ambientTick > 0 ? (
+        <g key={`whiteboard-micro-${ambientTick}`}>
+          <circle
+            className="earlier-system-packet"
+            cx="62"
+            cy="39"
+            fill="var(--ritwik-color-signal-cyan)"
+            r="3"
+          >
+            <animate attributeName="cx" dur="1.8s" from="62" to="248" />
+          </circle>
+          <circle
+            className="earlier-system-packet"
+            cx="248"
+            cy="44"
+            fill="var(--ritwik-color-signal-amber)"
+            r="3"
+          >
+            <animate attributeName="cx" dur="1.8s" from="248" to="62" />
+          </circle>
+        </g>
+      ) : null}
       {["CLIENT A", "SHARED CANVAS", "CLIENT B"].map((label, index) => {
         const widths = [62, 86, 62];
         const x = [0, 112, 248][index];
@@ -164,14 +226,17 @@ function MicroVisual({ id }: Readonly<{ id: string }>) {
 }
 
 export function SelectedEarlierSystems() {
+  const hostRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState(earlierSystems[0].project.id);
   const reduced = useReducedMotion() === true;
+  const inView = useInView(hostRef, { margin: "120px" });
+  const ambientTick = useAmbientPulse(inView && !reduced, 8800, 6100);
   const active =
     earlierSystems.find((item) => item.project.id === activeId) ??
     earlierSystems[0];
 
   return (
-    <div className="relative mt-10">
+    <div className="relative mt-10" ref={hostRef}>
       <div className="flex flex-wrap items-center justify-between gap-3 border-y border-border py-3 font-mono text-[0.62rem] font-semibold tracking-[0.13em] uppercase">
         <span className="text-signal-cyan">Engineering progression</span>
         <span className="text-signal-amber">Not code lineage</span>
@@ -229,7 +294,11 @@ export function SelectedEarlierSystems() {
                     {item.signal}
                   </span>
                   <span className="mt-3 block overflow-hidden border-t border-border pt-2">
-                    <MicroVisual id={item.project.id} />
+                    <MicroVisual
+                      ambientTick={ambientTick}
+                      id={item.project.id}
+                      reduced={reduced}
+                    />
                   </span>
                   {selected ? (
                     <span

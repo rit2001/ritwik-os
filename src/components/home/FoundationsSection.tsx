@@ -8,6 +8,11 @@ import {
 } from "@/data/competitive-programming";
 import { profile } from "@/data/profile";
 
+const academicMilestones = [
+  { year: "2021", label: "Academic foundation" },
+  { year: "2026", label: "Dual-degree period" },
+] as const;
+
 export function FoundationsSection() {
   const leetcode = algorithmProfiles[0];
   const codeforces = algorithmProfiles[1];
@@ -15,8 +20,16 @@ export function FoundationsSection() {
 
   return (
     <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(23rem,0.94fr)]">
-      <section className="relative isolate min-h-[34rem] overflow-hidden border-y border-border bg-[radial-gradient(circle_at_75%_32%,rgb(47_127_255_/_0.15),transparent_25rem),linear-gradient(145deg,rgb(11_25_42_/_0.94),rgb(4_7_13_/_0.97))] px-6 py-8 sm:px-10 sm:py-10">
+      <section
+        aria-label="IIT Kharagpur academic foundation"
+        className="foundation-panel group relative isolate min-h-[34rem] overflow-hidden border-y border-border bg-[radial-gradient(circle_at_75%_32%,rgb(47_127_255_/_0.15),transparent_25rem),linear-gradient(145deg,rgb(11_25_42_/_0.94),rgb(4_7_13_/_0.97))] px-6 py-8 outline-none transition-[border-color,box-shadow] hover:border-signal-cyan/45 hover:shadow-[0_24px_80px_rgb(47_127_255_/.08)] focus-visible:border-signal-cyan/55 focus-visible:shadow-[0_24px_80px_rgb(47_127_255_/.1)] sm:px-10 sm:py-10"
+        tabIndex={0}
+      >
         <div className="signal-grid pointer-events-none absolute inset-0 -z-10 opacity-35" />
+        <span
+          className="foundation-shimmer pointer-events-none absolute inset-y-0 -left-1/3 -z-[5] w-1/3 bg-gradient-to-r from-transparent via-signal-cyan/8 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+          aria-hidden="true"
+        />
         <svg
           aria-hidden="true"
           className="pointer-events-none absolute right-[-2%] bottom-0 h-[82%] w-[68%] opacity-38"
@@ -73,7 +86,7 @@ export function FoundationsSection() {
           </span>
           <div>
             <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.15em] text-signal-cyan uppercase">
-              Institutional foundation
+              IIT KGP · Institutional marker
             </p>
             <p className="mt-1 text-sm text-foreground-muted">
               Indian Institute of Technology Kharagpur
@@ -81,45 +94,101 @@ export function FoundationsSection() {
           </div>
         </div>
 
-        <h3 className="mt-8 max-w-xl text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-foreground uppercase">
-          Engineering depth,
-          <br />
-          built over time.
+        <h3 className="mt-8 max-w-2xl text-[clamp(2.9rem,6vw,5.7rem)] leading-[0.85] font-semibold tracking-[-0.045em] text-foreground uppercase drop-shadow-[0_0_30px_rgb(47_127_255_/.12)]">
+          IIT Kharagpur
         </h3>
+        <p className="mt-4 max-w-xl text-base leading-7 text-foreground-secondary sm:text-lg">
+          Indian Institute of Technology Kharagpur
+        </p>
 
-        <div className="relative mt-9 max-w-2xl pl-6">
+        <dl className="relative mt-8 grid max-w-2xl grid-cols-2 gap-x-5 gap-y-5 border-y border-border bg-background/45 px-4 py-5 sm:grid-cols-4">
+          <div>
+            <dt className="font-mono text-[0.61rem] tracking-[0.11em] text-foreground-muted uppercase">
+              Degree
+            </dt>
+            <dd className="mt-2 text-sm font-semibold text-foreground">
+              Dual Degree
+            </dd>
+            <dd className="mt-1 text-xs text-foreground-secondary">
+              B.Tech + M.Tech
+            </dd>
+          </div>
+          <div>
+            <dt className="font-mono text-[0.61rem] tracking-[0.11em] text-foreground-muted uppercase">
+              Discipline
+            </dt>
+            <dd className="mt-2 text-sm font-semibold text-foreground">
+              Mechanical Engineering
+            </dd>
+          </div>
+          <div>
+            <dt className="font-mono text-[0.61rem] tracking-[0.11em] text-foreground-muted uppercase">
+              Period
+            </dt>
+            <dd className="mt-2 font-mono text-sm font-semibold text-signal-cyan">
+              {profile.education.dates}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-mono text-[0.61rem] tracking-[0.11em] text-foreground-muted uppercase">
+              CGPA
+            </dt>
+            <dd className="mt-2 font-mono text-sm font-semibold text-foreground">
+              {profile.education.cgpa.replace("/", " / ")}
+            </dd>
+          </div>
+        </dl>
+
+        <div className="relative mt-8 grid max-w-2xl grid-cols-2 gap-5 pl-6">
           <motion.span
-            animate={undefined}
-            className="absolute top-0 bottom-0 left-0 w-px bg-gradient-to-b from-signal-cyan to-signal-amber"
-            initial={reduced ? false : { scaleY: 0 }}
-            style={{ transformOrigin: "top" }}
+            className="absolute top-3 right-0 left-0 h-px bg-gradient-to-r from-signal-cyan via-signal-cyan to-signal-amber"
+            initial={reduced ? false : { scaleX: 0 }}
+            style={{ transformOrigin: "left" }}
             transition={{ duration: reduced ? 0 : 1.1 }}
             viewport={{ once: true, amount: 0.45 }}
-            whileInView={{ scaleY: 1 }}
+            whileInView={{ scaleX: 1 }}
           />
-          <div className="relative pb-6">
-            <span className="absolute top-1 -left-[1.72rem] h-3 w-3 rounded-full border border-signal-cyan bg-background" />
-            <p className="font-mono text-[0.65rem] tracking-[0.11em] text-signal-cyan uppercase">
-              2021 · Foundation begins
-            </p>
-            <p className="mt-2 text-sm leading-6 text-foreground-secondary">
-              Dual Degree in Mechanical Engineering, alongside algorithms and
-              software systems work.
-            </p>
-          </div>
-          <div className="relative">
-            <span className="absolute top-1 -left-[1.72rem] h-3 w-3 rounded-full border border-signal-amber bg-signal-amber shadow-[0_0_16px_rgb(242_185_95_/_0.45)]" />
-            <p className="font-mono text-[0.65rem] tracking-[0.11em] text-signal-amber uppercase">
-              2026 · Academic period
-            </p>
-            <p className="mt-2 text-sm leading-6 text-foreground-secondary">
-              B.Tech + M.Tech · {profile.education.dates} · CGPA{" "}
-              {profile.education.cgpa}
-            </p>
-          </div>
+          {academicMilestones.map((milestone, index) => (
+            <div className="relative pt-7" key={milestone.year}>
+              <motion.span
+                className={`absolute top-[0.45rem] -left-[0.33rem] h-3 w-3 rounded-full border bg-background ${
+                  index === academicMilestones.length - 1
+                    ? "border-signal-amber shadow-[0_0_16px_rgb(242_185_95_/_0.45)]"
+                    : "border-signal-cyan"
+                }`}
+                initial={reduced ? false : { opacity: 0.35, scale: 0.65 }}
+                transition={{
+                  delay: reduced ? 0 : 0.55 + index * 0.35,
+                  duration: reduced ? 0 : 0.45,
+                }}
+                viewport={{ once: true, amount: 0.45 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+              />
+              <p
+                className={`font-mono text-[0.65rem] tracking-[0.11em] uppercase ${
+                  index === academicMilestones.length - 1
+                    ? "text-signal-amber"
+                    : "text-signal-cyan"
+                }`}
+              >
+                {milestone.year}
+              </p>
+              <p className="mt-1 text-xs text-foreground-secondary">
+                {milestone.label}
+              </p>
+            </div>
+          ))}
         </div>
 
-        <div className="relative mt-9 max-w-2xl border-y border-border bg-background/65 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
+        <div className="relative mt-7 max-w-2xl overflow-hidden border-y border-border bg-background/65 px-4 py-4 transition-[border-color,box-shadow] group-hover:border-signal-amber/60 group-hover:shadow-[0_0_28px_rgb(242_185_95_/.08)] group-focus-visible:border-signal-amber/60 group-focus-visible:shadow-[0_0_28px_rgb(242_185_95_/.08)] sm:flex sm:items-center sm:justify-between sm:gap-6">
+          <motion.span
+            aria-hidden="true"
+            className="absolute top-0 bottom-0 left-0 w-px bg-signal-amber shadow-[0_0_18px_rgb(242_185_95_/.7)]"
+            initial={reduced ? false : { opacity: 0, scaleY: 0 }}
+            transition={{ delay: reduced ? 0 : 1.05, duration: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
+            whileInView={{ opacity: 1, scaleY: 1 }}
+          />
           <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-foreground-muted uppercase">
             Academic honour
           </p>
@@ -127,6 +196,10 @@ export function FoundationsSection() {
             {achievementSignals[3]}
           </p>
         </div>
+
+        <p className="relative mt-6 max-w-xl text-sm leading-6 text-foreground-muted">
+          Engineering depth, built over time.
+        </p>
       </section>
 
       <section
@@ -281,12 +354,12 @@ export function FoundationsSection() {
             ["Top 5", "Overnite", "Kshitij, IIT Kharagpur"],
           ].map(([rank, title, context]) => (
             <li
-              className="achievement-proof group relative border-l border-signal-amber/55 bg-[linear-gradient(90deg,rgb(242_185_95_/.07),transparent)] px-4 py-3 outline-none transition-[border-color,background-color,transform] hover:translate-x-1 hover:border-signal-amber focus-visible:translate-x-1 focus-visible:border-signal-amber"
+              className="achievement-proof group relative min-h-24 border border-border border-l-2 border-l-signal-amber/70 bg-[radial-gradient(circle_at_92%_18%,rgb(242_185_95_/.12),transparent_5rem),linear-gradient(90deg,rgb(242_185_95_/.07),transparent)] px-4 py-4 outline-none transition-[border-color,background-color,transform,box-shadow] hover:-translate-y-0.5 hover:border-signal-amber/65 hover:shadow-[0_16px_40px_rgb(242_185_95_/.08)] focus-visible:-translate-y-0.5 focus-visible:border-signal-amber/65 focus-visible:shadow-[0_16px_40px_rgb(242_185_95_/.08)]"
               key={title}
               tabIndex={0}
             >
               <span
-                className="absolute top-4 -left-[0.3rem] h-2.5 w-2.5 rotate-45 bg-signal-amber transition-shadow group-hover:shadow-[0_0_18px_rgb(242_185_95_/.75)] group-focus-visible:shadow-[0_0_18px_rgb(242_185_95_/.75)]"
+                className="absolute top-4 -left-[0.42rem] h-3 w-3 rotate-45 border border-background bg-signal-amber transition-shadow group-hover:shadow-[0_0_18px_rgb(242_185_95_/.75)] group-focus-visible:shadow-[0_0_18px_rgb(242_185_95_/.75)]"
                 aria-hidden="true"
               />
               <span className="font-mono text-[0.6rem] font-semibold tracking-[0.12em] text-signal-amber uppercase">
@@ -298,6 +371,10 @@ export function FoundationsSection() {
               <span className="mt-1 block text-xs text-foreground-muted">
                 {context}
               </span>
+              <span
+                className="mt-3 block h-px w-10 origin-left scale-x-50 bg-signal-amber transition-transform group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                aria-hidden="true"
+              />
             </li>
           ))}
         </ul>

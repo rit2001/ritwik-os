@@ -3,20 +3,31 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 
+import { useAmbientPulse } from "@/components/motion/useAmbientPulse";
+
 import type { SignalProjectId } from "./SignalProvider";
 
 type VisualProps = {
   activeStep: number;
+  ambientTick: number;
   reduced: boolean;
 };
 
-function ThesisLensVisual({ activeStep, reduced }: Readonly<VisualProps>) {
+function ThesisLensVisual({
+  activeStep,
+  ambientTick,
+  reduced,
+}: Readonly<VisualProps>) {
   const rerankingActive = activeStep === 1 || activeStep === 3;
   const evidenceActive = activeStep === 2;
   const order = rerankingActive ? [2, 0, 3, 1, 4] : [0, 1, 2, 3, 4];
 
   return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 820 500">
+    <svg
+      aria-hidden="true"
+      className="system-diagram h-full w-full"
+      viewBox="0 0 820 500"
+    >
       <defs>
         <linearGradient id="tl-filing" x1="0" x2="1" y1="0" y2="1">
           <stop stopColor="#15375f" />
@@ -308,6 +319,38 @@ function ThesisLensVisual({ activeStep, reduced }: Readonly<VisualProps>) {
         </text>
       </g>
 
+      {!reduced && ambientTick > 0 ? (
+        <g key={`thesis-ambient-${ambientTick}`}>
+          <circle
+            className="thesis-ambient-candidate"
+            fill="var(--ritwik-color-signal-cyan)"
+            r="4"
+          >
+            <animateMotion
+              dur="2.6s"
+              fill="freeze"
+              path="M292 238 H358 C444 238 490 234 538 234 H613 C650 234 672 234 718 234"
+              repeatCount="1"
+            />
+          </circle>
+          <path
+            className="thesis-ambient-rerank"
+            d="M518 151 H590 L612 234 L590 317 H518 L540 234 Z"
+            fill="none"
+            stroke="var(--ritwik-color-signal-cyan)"
+            strokeWidth="3"
+          />
+          <circle
+            className="thesis-ambient-answer"
+            cx="718"
+            cy="234"
+            fill="none"
+            r="79"
+            stroke="var(--ritwik-color-signal-cyan)"
+          />
+        </g>
+      ) : null}
+
       <text
         fill="var(--ritwik-color-foreground-muted)"
         fontFamily="monospace"
@@ -322,7 +365,11 @@ function ThesisLensVisual({ activeStep, reduced }: Readonly<VisualProps>) {
   );
 }
 
-function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
+function TraceForgeVisual({
+  activeStep,
+  ambientTick,
+  reduced,
+}: Readonly<VisualProps>) {
   const captureActive = activeStep === 0;
   const sealActive = activeStep === 1;
   const replayActive = activeStep === 2;
@@ -330,7 +377,11 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
   const sealed = activeStep >= 1;
 
   return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 820 500">
+    <svg
+      aria-hidden="true"
+      className="system-diagram h-full w-full"
+      viewBox="0 0 820 500"
+    >
       <defs>
         <radialGradient id="tf-core">
           <stop stopColor="rgb(94 231 247 / 0.34)" />
@@ -429,6 +480,21 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
             </g>
           );
         })}
+        {!reduced && ambientTick > 0 ? (
+          <circle
+            className="trace-ambient-event"
+            fill="var(--ritwik-color-signal-cyan)"
+            key={`trace-event-${ambientTick}`}
+            r="4"
+          >
+            <animateMotion
+              dur="1.35s"
+              fill="freeze"
+              path={`M52 ${158 + (ambientTick % 4) * 78} C136 ${158 + (ambientTick % 4) * 78} 182 ${216 + (ambientTick % 4) * 14} 251 ${236 + (ambientTick % 4) * 7}`}
+              repeatCount="1"
+            />
+          </circle>
+        ) : null}
       </g>
 
       <g opacity={sealActive || captureActive ? 1 : 0.88}>
@@ -490,7 +556,11 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           SEQUENCE + REQUEST FINGERPRINT
         </text>
         <path
+          className={
+            !reduced && ambientTick > 0 ? "trace-ambient-scan" : undefined
+          }
           d="M329 298 H433 M337 311 H425 M347 324 H415"
+          key={`trace-scan-${ambientTick}`}
           opacity="0.65"
           stroke="var(--ritwik-color-signal-cyan)"
           strokeDasharray="2 5"
@@ -499,6 +569,9 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
 
       <g opacity={replayActive || diffActive ? 1 : 0.5}>
         <path
+          className={
+            !reduced && ambientTick > 0 ? "trace-ambient-compare" : undefined
+          }
           d="M506 205 C548 205 544 121 586 121 M506 294 C548 294 544 379 586 379"
           fill="none"
           stroke="var(--ritwik-color-accent)"
@@ -618,15 +691,38 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
   );
 }
 
-function TraceForgeMobileVisual({ activeStep }: Readonly<VisualProps>) {
+function TraceForgeMobileVisual({
+  activeStep,
+  ambientTick,
+  reduced,
+}: Readonly<VisualProps>) {
   return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 320 610">
+    <svg
+      aria-hidden="true"
+      className="system-diagram h-full w-full"
+      viewBox="0 0 320 610"
+    >
       <path
         d="M160 103 V170 M160 330 V365 M95 411 V458 M225 411 V458 M95 458 C95 475 160 472 160 492 M225 458 C225 475 160 472 160 492"
         fill="none"
         stroke="var(--ritwik-color-border-strong)"
         strokeWidth="2"
       />
+      {!reduced && ambientTick > 0 ? (
+        <circle
+          className="trace-ambient-event"
+          fill="var(--ritwik-color-signal-cyan)"
+          key={`trace-mobile-${ambientTick}`}
+          r="4"
+        >
+          <animateMotion
+            dur="2.8s"
+            fill="freeze"
+            path="M160 103 V170 V330 V365 C160 410 160 456 160 492"
+            repeatCount="1"
+          />
+        </circle>
+      ) : null}
       <text
         fill="var(--ritwik-color-foreground-muted)"
         fontFamily="monospace"
@@ -782,16 +878,28 @@ function TraceForgeMobileVisual({ activeStep }: Readonly<VisualProps>) {
   );
 }
 
-function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
+function ConvergeVisual({
+  activeStep,
+  ambientTick,
+  reduced,
+}: Readonly<VisualProps>) {
   const offlineActive = activeStep === 0 || activeStep === 2;
   const recovered = activeStep === 2;
   const authorityActive = activeStep === 1;
   const deliveryActive = activeStep === 3;
+  const ambientSequence = String(44 + ((ambientTick - 1 + 56) % 56)).padStart(
+    3,
+    "0",
+  );
   const operationPath =
     "M184 105 C226 105 230 222 270 222 H446 C470 222 476 210 508 210 H612 V134 H672 V215 H750 C770 215 770 143 793 143";
 
   return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 860 500">
+    <svg
+      aria-hidden="true"
+      className="system-diagram h-full w-full"
+      viewBox="0 0 860 500"
+    >
       <g opacity={activeStep === 0 ? 1 : 0.72}>
         {[
           [42, 72, "CLIENT A"],
@@ -852,7 +960,14 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
             ) : null}
           </g>
         ))}
-        <g opacity={recovered ? 0.18 : offlineActive ? 1 : 0.55}>
+        <g
+          className={
+            !reduced && ambientTick > 0 && ambientTick % 3 === 0
+              ? "converge-queue-ambient"
+              : undefined
+          }
+          opacity={recovered ? 0.18 : offlineActive ? 1 : 0.55}
+        >
           <rect
             fill="rgb(242 185 95 / 0.08)"
             height="34"
@@ -987,9 +1102,11 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
         >
           BOARD SEQUENCE
         </text>
-        {authorityActive && !reduced ? (
+        {(authorityActive || ambientTick > 0) && !reduced ? (
           <ellipse
-            className="signal-ripple"
+            className={
+              authorityActive ? "signal-ripple" : "converge-ambient-ack"
+            }
             cx="508"
             cy="277"
             fill="none"
@@ -1124,6 +1241,38 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           ) : null}
         </g>
       ))}
+      {!reduced && ambientTick > 0 ? (
+        <g key={`converge-ambient-${ambientTick}`}>
+          <circle
+            className="converge-ambient-operation"
+            fill="rgb(4 7 13 / 0.98)"
+            r="20"
+            stroke="var(--ritwik-color-signal-cyan)"
+          >
+            <animateMotion
+              dur="2.8s"
+              fill="freeze"
+              path={operationPath}
+              repeatCount="1"
+            />
+          </circle>
+          <text
+            className="converge-ambient-operation-label"
+            fill="var(--ritwik-color-foreground)"
+            fontFamily="monospace"
+            fontSize="7"
+            textAnchor="middle"
+          >
+            DEMO {ambientSequence}
+            <animateMotion
+              dur="2.8s"
+              fill="freeze"
+              path={operationPath}
+              repeatCount="1"
+            />
+          </text>
+        </g>
+      ) : null}
       <text
         fill="var(--ritwik-color-signal-amber)"
         fontFamily="monospace"
@@ -1139,16 +1288,39 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
   );
 }
 
-function ConvergeMobileVisual({ activeStep }: Readonly<VisualProps>) {
+function ConvergeMobileVisual({
+  activeStep,
+  ambientTick,
+  reduced,
+}: Readonly<VisualProps>) {
   const recovered = activeStep === 2;
   return (
-    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 320 650">
+    <svg
+      aria-hidden="true"
+      className="system-diagram h-full w-full"
+      viewBox="0 0 320 650"
+    >
       <path
         d="M82 88 C82 132 160 130 160 168 M238 88 C238 132 160 130 160 168 M160 230 V270 M160 330 V365 M160 413 V448 M160 496 V526 M160 576 C160 603 92 600 92 620 M160 576 C160 603 228 600 228 620"
         fill="none"
         stroke="var(--ritwik-color-border-strong)"
         strokeWidth="2"
       />
+      {!reduced && ambientTick > 0 ? (
+        <circle
+          className="converge-ambient-operation"
+          fill="var(--ritwik-color-signal-cyan)"
+          key={`converge-mobile-${ambientTick}`}
+          r="4"
+        >
+          <animateMotion
+            dur="3s"
+            fill="freeze"
+            path="M82 88 C82 132 160 130 160 168 V230 V270 V330 V365 V413 V448 V496 V526 V576"
+            repeatCount="1"
+          />
+        </circle>
+      ) : null}
       <path
         d="M61 141 C20 190 30 290 78 314"
         fill="none"
@@ -1432,7 +1604,24 @@ export function SystemVisualStage({
   const hostRef = useRef<HTMLDivElement>(null);
   const [nearViewport, setNearViewport] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [ambientPaused, setAmbientPaused] = useState(false);
   const reduced = useReducedMotion() === true;
+  const ambientInterval =
+    project === "thesislens" ? 7200 : project === "traceforge" ? 8600 : 6200;
+  const ambientTick = useAmbientPulse(
+    isVisible && !reduced && !ambientPaused,
+    ambientInterval,
+    ambientInterval + (project === "traceforge" ? 900 : 0),
+  );
+
+  useEffect(() => {
+    const pauseTimer = window.setTimeout(() => setAmbientPaused(true), 0);
+    const resumeTimer = window.setTimeout(() => setAmbientPaused(false), 4800);
+    return () => {
+      window.clearTimeout(pauseTimer);
+      window.clearTimeout(resumeTimer);
+    };
+  }, [activeStep]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -1481,6 +1670,7 @@ export function SystemVisualStage({
           {project === "thesislens" ? (
             <ThesisLensVisual
               activeStep={activeStep}
+              ambientTick={ambientTick}
               reduced={reduced || !isVisible}
             />
           ) : project === "traceforge" ? (
@@ -1488,12 +1678,14 @@ export function SystemVisualStage({
               <div className="hidden h-full sm:block">
                 <TraceForgeVisual
                   activeStep={activeStep}
+                  ambientTick={ambientTick}
                   reduced={reduced || !isVisible}
                 />
               </div>
               <div className="h-full sm:hidden">
                 <TraceForgeMobileVisual
                   activeStep={activeStep}
+                  ambientTick={ambientTick}
                   reduced={reduced || !isVisible}
                 />
               </div>
@@ -1503,12 +1695,14 @@ export function SystemVisualStage({
               <div className="hidden h-full sm:block">
                 <ConvergeVisual
                   activeStep={activeStep}
+                  ambientTick={ambientTick}
                   reduced={reduced || !isVisible}
                 />
               </div>
               <div className="h-full sm:hidden">
                 <ConvergeMobileVisual
                   activeStep={activeStep}
+                  ambientTick={ambientTick}
                   reduced={reduced || !isVisible}
                 />
               </div>

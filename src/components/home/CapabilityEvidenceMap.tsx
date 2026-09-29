@@ -1,8 +1,14 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useMemo, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  useReducedMotion,
+} from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+import { useAmbientPulse } from "@/components/motion/useAmbientPulse";
 import {
   type SignalProjectId,
   useSignalState,
@@ -138,6 +144,7 @@ function slugify(value: string) {
 }
 
 export function CapabilityEvidenceMap() {
+  const hostRef = useRef<HTMLDivElement>(null);
   const capabilityRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const { setActiveCapability, setActiveProject } = useSignalState();
   const [activeCapabilityTitle, setActiveCapabilityTitle] = useState<string>(
@@ -148,11 +155,44 @@ export function CapabilityEvidenceMap() {
     [activeCapabilityTitle],
   );
   const [selectedProject, setSelectedProject] = useState(records[0]?.project);
+  const [manualSelection, setManualSelection] = useState(false);
   const selectedRecord =
     records.find((record) => record.project === selectedProject) ?? records[0];
   const reduced = useReducedMotion() === true;
+  const inView = useInView(hostRef, { margin: "120px" });
+  const ambientTick = useAmbientPulse(
+    inView && !reduced && !manualSelection,
+    9600,
+    7600,
+  );
+
+  useEffect(() => {
+    if (!ambientTick || manualSelection) return;
+    const timer = window.setTimeout(() => {
+      const currentIndex = capabilityGroups.findIndex(
+        (group) => group.title === activeCapabilityTitle,
+      );
+      const nextGroup =
+        capabilityGroups[(currentIndex + 1) % capabilityGroups.length];
+      const nextRecords = capabilityEvidence[nextGroup.title] ?? [];
+      setActiveCapabilityTitle(nextGroup.title);
+      setSelectedProject(nextRecords[0]?.project);
+      setActiveCapability(slugify(nextGroup.title));
+      setActiveProject(
+        signalProjectByLabel[nextRecords[0]?.project ?? ""] ?? null,
+      );
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [
+    activeCapabilityTitle,
+    ambientTick,
+    manualSelection,
+    setActiveCapability,
+    setActiveProject,
+  ]);
 
   const activateCapability = (title: string) => {
+    setManualSelection(true);
     const nextRecords = capabilityEvidence[title] ?? [];
     setActiveCapabilityTitle(title);
     setSelectedProject(nextRecords[0]?.project);
@@ -162,6 +202,7 @@ export function CapabilityEvidenceMap() {
   };
 
   const activateProject = (project: string) => {
+    setManualSelection(true);
     setSelectedProject(project);
     setActiveProject(signalProjectByLabel[project] ?? null);
   };
@@ -173,7 +214,10 @@ export function CapabilityEvidenceMap() {
   };
 
   return (
-    <div className="relative mt-12 overflow-hidden border-y border-border bg-background-elevated/20 px-4 py-7 sm:px-7 lg:px-9 lg:py-9">
+    <div
+      className="relative mt-12 overflow-hidden border-y border-border bg-background-elevated/20 px-4 py-7 sm:px-7 lg:px-9 lg:py-9"
+      ref={hostRef}
+    >
       <div className="signal-grid pointer-events-none absolute inset-0 opacity-25" />
       <div className="relative mb-6 grid gap-3 border-b border-border pb-4 font-mono text-[0.62rem] font-semibold tracking-[0.12em] text-foreground-muted uppercase lg:grid-cols-[minmax(14rem,0.8fr)_2rem_minmax(13rem,0.72fr)_2rem_minmax(18rem,1.48fr)]">
         <span>01 · Capability</span>
