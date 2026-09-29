@@ -319,7 +319,7 @@ export default function ThreeGlobeCanvas({
     );
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.92;
+    renderer.toneMappingExposure = 1.02;
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.className = "h-full w-full touch-none";
     host.append(renderer.domElement);
@@ -371,21 +371,31 @@ export default function ThreeGlobeCanvas({
             0.16,
             daySample.b - max(daySample.r, daySample.g * 0.86)
           );
-          vec3 restrainedDay = pow(daySample, vec3(1.1)) * vec3(0.42, 0.44, 0.49);
-          vec3 nightOcean = daySample * vec3(0.12, 0.17, 0.26) + vec3(0.012, 0.028, 0.058);
-          vec3 nightLand = daySample * vec3(0.22, 0.2, 0.18) + vec3(0.035, 0.044, 0.044);
+          float landMask = 1.0 - oceanMask;
+          float surfaceDetail = smoothstep(0.035, 0.42, dayLuma);
+          vec3 restrainedDay = pow(daySample, vec3(1.08)) * vec3(0.45, 0.47, 0.51);
+          vec3 nightOcean = daySample * vec3(0.09, 0.13, 0.18) + vec3(0.018, 0.046, 0.085);
+          vec3 nightLand = daySample * vec3(0.12, 0.13, 0.11) + vec3(0.04, 0.061, 0.056);
+          nightLand += vec3(0.012, 0.016, 0.01) * surfaceDetail;
           vec3 darkEarth = mix(nightLand, nightOcean, oceanMask);
-          float cityMask = smoothstep(0.12, 0.72, nightLuma);
-          vec3 cityLights = vec3(1.0, 0.66, 0.27) * cityMask * (0.55 + nightLuma * 1.05);
-          vec3 color = mix(darkEarth + cityLights, restrainedDay, dayFactor);
+          float cityMask = smoothstep(0.075, 0.56, nightLuma);
+          vec3 cityLights = vec3(1.0, 0.65, 0.25) * cityMask * (0.48 + nightLuma * 0.82);
+          vec3 color = mix(darkEarth, restrainedDay, dayFactor);
+          color += cityLights * (1.0 - dayFactor);
           float oppositeFill = smoothstep(-0.9, 0.28, dot(normal, normalize(vec3(0.55, -0.12, -0.82))));
-          color += vec3(0.026, 0.068, 0.115) * (0.34 + oppositeFill * 0.66) * (1.0 - dayFactor);
+          vec3 minimumNightFill = mix(
+            vec3(0.028, 0.046, 0.044),
+            vec3(0.014, 0.038, 0.075),
+            oceanMask
+          );
+          color += minimumNightFill * (0.38 + oppositeFill * 0.62) * (1.0 - dayFactor);
+          color += vec3(0.01, 0.018, 0.012) * landMask * surfaceDetail * (1.0 - dayFactor);
           color += vec3(0.025, 0.14, 0.22) * twilight * 0.34;
           float oceanSpecular = pow(
             max(dot(reflect(-normalize(sunDirection), normal), vViewDirection), 0.0),
-            34.0
-          ) * oceanMask * dayFactor;
-          color += vec3(0.18, 0.34, 0.48) * oceanSpecular * 0.22;
+            38.0
+          ) * oceanMask * (0.2 + dayFactor * 0.8);
+          color += vec3(0.2, 0.4, 0.58) * oceanSpecular * 0.28;
           color += vec3(dayLuma * 0.018) * (1.0 - dayFactor);
           float surfaceFresnel = pow(1.0 - max(dot(normal, vViewDirection), 0.0), 4.0);
           float litLimb = surfaceFresnel * smoothstep(-0.3, 0.62, lightDot);
@@ -430,7 +440,7 @@ export default function ThreeGlobeCanvas({
     });
 
     const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(1.665, 64, 42),
+      new THREE.SphereGeometry(1.65, 64, 42),
       new THREE.ShaderMaterial({
         vertexShader: `
           varying vec3 vNormal;
@@ -448,7 +458,7 @@ export default function ThreeGlobeCanvas({
           void main() {
             float rim = pow(1.0 - max(dot(vNormal, vView), 0.0), 4.8);
             float edge = smoothstep(0.18, 0.92, rim);
-            gl_FragColor = vec4(0.16, 0.7, 0.96, edge * 0.5);
+            gl_FragColor = vec4(0.16, 0.7, 0.96, edge * 0.46);
           }
         `,
         blending: THREE.AdditiveBlending,

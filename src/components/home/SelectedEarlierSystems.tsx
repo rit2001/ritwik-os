@@ -1,13 +1,9 @@
 "use client";
 
-import {
-  AnimatePresence,
-  motion,
-  useInView,
-  useReducedMotion,
-} from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef, useState } from "react";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { useAmbientPulse } from "@/components/motion/useAmbientPulse";
 import { ActionLink } from "@/components/ui/ActionLink";
 import { getProject } from "@/data/projects";
@@ -45,6 +41,8 @@ const earlierSystems = [
   },
 ] as const;
 
+type EarlierSystem = (typeof earlierSystems)[number];
+
 function MicroVisual({
   ambientTick,
   id,
@@ -52,11 +50,13 @@ function MicroVisual({
 }: Readonly<{ ambientTick: number; id: string; reduced: boolean }>) {
   if (id === "stateful-agentic-ai-assistant") {
     return (
-      <svg aria-hidden="true" className="h-20 w-full" viewBox="0 0 310 78">
+      <svg aria-hidden="true" className="h-32 w-full" viewBox="0 0 560 150">
         <path
-          d="M38 39 H93 M149 39 H190 M149 39 C166 39 170 64 190 64 M242 39 H278"
+          d="M90 75 H126 M226 75 H260 M360 75 H395 M455 75 H485"
           fill="none"
           stroke="var(--ritwik-color-accent)"
+          strokeDasharray="4 7"
+          strokeWidth="1.5"
         />
         {!reduced && ambientTick > 0 ? (
           <circle
@@ -66,25 +66,25 @@ function MicroVisual({
             r="3"
           >
             <animateMotion
-              dur="2.2s"
+              dur="2.65s"
               fill="freeze"
-              path="M38 39 H93 H190 H278"
+              path="M55 75 H176 H310 H425 H522"
               repeatCount="1"
             />
           </circle>
         ) : null}
         {[
-          [6, 26, 32, "USER"],
-          [93, 24, 56, "LANGGRAPH"],
-          [190, 14, 52, "RAG / TOOLS"],
-          [190, 52, 52, "HITL"],
-          [278, 26, 28, "OUT"],
+          [20, 55, 70, "USER"],
+          [126, 53, 100, "LANGGRAPH"],
+          [260, 53, 100, "RAG / TOOLS"],
+          [395, 55, 60, "HITL"],
+          [485, 53, 75, "RESPONSE"],
         ].map(([x, y, width, label]) => (
           <g key={String(label)}>
             <rect
               fill="rgb(7 20 34 / .94)"
-              height="26"
-              rx="4"
+              height="40"
+              rx="6"
               stroke="var(--ritwik-color-signal-cyan)"
               width={Number(width)}
               x={Number(x)}
@@ -93,10 +93,10 @@ function MicroVisual({
             <text
               fill="var(--ritwik-color-foreground-secondary)"
               fontFamily="monospace"
-              fontSize="6.5"
+              fontSize="9"
               textAnchor="middle"
               x={Number(x) + Number(width) / 2}
-              y={Number(y) + 16}
+              y={Number(y) + 24}
             >
               {String(label)}
             </text>
@@ -108,48 +108,74 @@ function MicroVisual({
 
   if (id === "ai-mock-interview-platform") {
     return (
-      <svg aria-hidden="true" className="h-20 w-full" viewBox="0 0 310 78">
+      <svg aria-hidden="true" className="h-32 w-full" viewBox="0 0 560 150">
         <path
-          d="M36 39 H274"
+          d="M52 75 H508"
           stroke="var(--ritwik-color-signal-amber)"
-          strokeDasharray="3 7"
+          strokeDasharray="4 8"
+          strokeWidth="1.5"
         />
         {!reduced && ambientTick > 0 ? (
-          <circle
-            className="earlier-system-packet"
-            fill="var(--ritwik-color-signal-amber)"
-            key={`mock-micro-${ambientTick}`}
-            r="3"
-          >
-            <animateMotion
-              dur="2.55s"
-              fill="freeze"
-              path="M36 39 H274"
-              repeatCount="1"
-            />
-          </circle>
+          <g key={`mock-micro-${ambientTick}`}>
+            <circle
+              className="earlier-system-packet"
+              fill="var(--ritwik-color-signal-amber)"
+              r="4"
+            >
+              <animateMotion
+                dur="2.75s"
+                fill="freeze"
+                path="M52 75 H508"
+                repeatCount="1"
+              />
+            </circle>
+            <rect
+              fill="none"
+              height="42"
+              rx="6"
+              stroke="var(--ritwik-color-signal-amber)"
+              width="88"
+              x="464"
+              y="54"
+            >
+              <animate
+                attributeName="opacity"
+                dur="2.75s"
+                keyTimes="0;0.72;0.88;1"
+                repeatCount="1"
+                values="0;0;0.9;0"
+              />
+              <animate
+                attributeName="stroke-width"
+                dur="2.75s"
+                keyTimes="0;0.72;0.88;1"
+                repeatCount="1"
+                values="1;1;3;1"
+              />
+            </rect>
+          </g>
         ) : null}
-        {["RESUME", "QUESTIONS", "ANSWER", "EVALUATE", "REPORT"].map(
+        {["RESUME / ROLE", "QUESTIONS", "ANSWER", "EVALUATION", "REPORT"].map(
           (label, index) => (
-            <g key={label} transform={`translate(${5 + index * 61} 23)`}>
+            <g key={label} transform={`translate(${8 + index * 114} 54)`}>
               <rect
                 fill="rgb(7 20 34 / .96)"
-                height="32"
-                rx="4"
+                height="42"
+                rx="6"
                 stroke={
                   index === 4
                     ? "var(--ritwik-color-signal-amber)"
                     : "var(--ritwik-color-border-strong)"
                 }
-                width="51"
+                width="88"
               />
               <text
                 fill="var(--ritwik-color-foreground-secondary)"
                 fontFamily="monospace"
-                fontSize="6"
+                fontSize="7.5"
                 textAnchor="middle"
-                x="25.5"
-                y="19"
+                x="44"
+                y="25"
               >
                 {label}
               </text>
@@ -161,43 +187,44 @@ function MicroVisual({
   }
 
   return (
-    <svg aria-hidden="true" className="h-20 w-full" viewBox="0 0 310 78">
+    <svg aria-hidden="true" className="h-32 w-full" viewBox="0 0 560 150">
       <path
-        d="M62 39 H116 M194 39 H248"
+        d="M108 75 H218 M342 75 H452"
         stroke="var(--ritwik-color-signal-cyan)"
-        strokeDasharray="4 5"
+        strokeDasharray="5 7"
+        strokeWidth="1.5"
       />
       {!reduced && ambientTick > 0 ? (
         <g key={`whiteboard-micro-${ambientTick}`}>
           <circle
             className="earlier-system-packet"
-            cx="62"
-            cy="39"
+            cx="108"
+            cy="70"
             fill="var(--ritwik-color-signal-cyan)"
-            r="3"
+            r="4"
           >
-            <animate attributeName="cx" dur="1.8s" from="62" to="248" />
+            <animate attributeName="cx" dur="2.2s" from="108" to="452" />
           </circle>
           <circle
             className="earlier-system-packet"
-            cx="248"
-            cy="44"
+            cx="452"
+            cy="80"
             fill="var(--ritwik-color-signal-amber)"
-            r="3"
+            r="4"
           >
-            <animate attributeName="cx" dur="1.8s" from="248" to="62" />
+            <animate attributeName="cx" dur="2.2s" from="452" to="108" />
           </circle>
         </g>
       ) : null}
       {["CLIENT A", "SHARED CANVAS", "CLIENT B"].map((label, index) => {
-        const widths = [62, 86, 62];
-        const x = [0, 112, 248][index];
+        const widths = [108, 124, 108];
+        const x = [0, 218, 452][index];
         return (
-          <g key={label} transform={`translate(${x} 21)`}>
+          <g key={label} transform={`translate(${x} 51)`}>
             <rect
               fill="rgb(7 20 34 / .96)"
-              height="36"
-              rx="4"
+              height="48"
+              rx="6"
               stroke={
                 index === 1
                   ? "var(--ritwik-color-signal-cyan)"
@@ -208,10 +235,10 @@ function MicroVisual({
             <text
               fill="var(--ritwik-color-foreground-secondary)"
               fontFamily="monospace"
-              fontSize="6.5"
+              fontSize="9"
               textAnchor="middle"
               x={widths[index] / 2}
-              y="21"
+              y="28"
             >
               {label}
             </text>
@@ -222,192 +249,120 @@ function MicroVisual({
   );
 }
 
-export function SelectedEarlierSystems() {
-  const hostRef = useRef<HTMLDivElement>(null);
-  const [activeId, setActiveId] = useState(earlierSystems[0].project.id);
-  const reduced = useReducedMotion() === true;
-  const inView = useInView(hostRef, { margin: "120px" });
-  const ambientTick = useAmbientPulse(inView && !reduced, 8800, 6100);
-  const active =
-    earlierSystems.find((item) => item.project.id === activeId) ??
-    earlierSystems[0];
+function EarlierSystemRow({
+  ambientTick,
+  index,
+  item,
+  reduced,
+}: Readonly<{
+  ambientTick: number;
+  index: number;
+  item: EarlierSystem;
+  reduced: boolean;
+}>) {
+  const rowRef = useRef<HTMLElement>(null);
+  const [interactionTick, setInteractionTick] = useState(0);
+  const rowInView = useInView(rowRef, { margin: "100px" });
+  const visualFirst = index !== 1;
+  const visualTick = rowInView
+    ? ambientTick + interactionTick * 1000 + index * 100 + 1
+    : 0;
+  const activateVisual = () => setInteractionTick((current) => current + 1);
+
+  const visualPlacement = visualFirst
+    ? "min-[901px]:col-start-1"
+    : "min-[901px]:col-start-2";
+  const contentPlacement = visualFirst
+    ? "min-[901px]:col-start-2"
+    : "min-[901px]:col-start-1";
 
   return (
-    <div className="relative mt-10" ref={hostRef}>
-      <motion.div
-        className="flex flex-wrap items-center justify-between gap-3 border-y border-border py-3 font-mono text-[0.62rem] font-semibold tracking-[0.13em] uppercase"
-        initial={reduced ? false : { opacity: 0, y: 22 }}
-        transition={{ duration: reduced ? 0 : 0.56, ease: [0.22, 1, 0.36, 1] }}
-        viewport={{ once: true, amount: 0.35 }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <span className="text-signal-cyan">Engineering progression</span>
-        <span className="text-signal-amber">Not code lineage</span>
-      </motion.div>
-
-      <div className="relative mt-8">
-        <svg
-          aria-hidden="true"
-          className="pointer-events-none absolute top-0 right-[12%] left-[12%] hidden h-7 min-[901px]:block"
-          preserveAspectRatio="none"
-          viewBox="0 0 1000 28"
+    <li>
+      <Reveal delay={index * 0.06} y={28}>
+        <article
+          className="group relative grid min-w-0 gap-x-10 gap-y-7 overflow-hidden py-12 outline-none min-[901px]:grid-cols-2 min-[901px]:grid-rows-[auto_1fr] min-[901px]:items-center min-[901px]:py-16 lg:gap-x-16"
+          onFocusCapture={activateVisual}
+          onMouseEnter={activateVisual}
+          ref={rowRef}
+          tabIndex={0}
         >
-          <motion.path
-            d="M20 14 H980"
-            fill="none"
-            initial={reduced ? false : { pathLength: 0, opacity: 0.25 }}
-            stroke="var(--ritwik-color-border-strong)"
-            strokeWidth="1.5"
-            transition={{
-              delay: reduced ? 0 : 0.08,
-              duration: reduced ? 0 : 0.58,
-            }}
-            viewport={{ once: true, amount: 0.4 }}
-            whileInView={{ pathLength: 1, opacity: 1 }}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgb(47_127_255_/.1),transparent_48%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100"
           />
-          <motion.path
-            d="M20 14 H980"
-            fill="none"
-            initial={reduced ? false : { pathLength: 0, opacity: 0 }}
-            opacity="0.48"
-            stroke="var(--ritwik-color-signal-cyan)"
-            strokeDasharray="3 11"
-            strokeWidth="1.5"
-            transition={{
-              delay: reduced ? 0 : 0.14,
-              duration: reduced ? 0 : 0.62,
-            }}
-            viewport={{ once: true, amount: 0.4 }}
-            whileInView={{ pathLength: 1, opacity: 0.48 }}
-          />
-        </svg>
 
-        <span
-          aria-hidden="true"
-          className="absolute top-3 bottom-3 left-3 w-px bg-gradient-to-b from-signal-cyan via-border-strong to-signal-amber min-[901px]:hidden"
-        />
-
-        <ol className="relative grid gap-6 min-[901px]:grid-cols-3 min-[901px]:gap-6">
-          {earlierSystems.map((item, index) => {
-            const selected = active.project.id === item.project.id;
-            return (
-              <motion.li
-                className="relative min-w-0 pl-9 min-[901px]:pt-8 min-[901px]:pl-0"
-                initial={reduced ? false : { opacity: 0, y: 22 }}
-                key={item.project.id}
-                transition={{
-                  delay: reduced ? 0 : 0.12 + index * 0.06,
-                  duration: reduced ? 0 : 0.56,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                viewport={{ once: true, amount: 0.22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-              >
-                <span
-                  aria-hidden="true"
-                  className={`absolute top-3 left-[0.42rem] z-10 h-3.5 w-3.5 rotate-45 border bg-background transition-[border-color,box-shadow] min-[901px]:top-[0.48rem] min-[901px]:left-1/2 min-[901px]:-translate-x-1/2 ${
-                    selected
-                      ? "border-signal-cyan shadow-[0_0_18px_rgb(94_231_247_/.62)]"
-                      : "border-border-strong"
-                  }`}
-                />
-                <button
-                  aria-pressed={selected}
-                  className={`group relative w-full overflow-hidden border-l-2 px-4 py-4 text-left transition-[border-color,background-color,transform,box-shadow] hover:translate-x-1 focus-visible:translate-x-1 min-[901px]:min-h-full ${selected ? "border-signal-cyan bg-accent-muted/30 shadow-[0_18px_45px_rgb(0_0_0_/.2)]" : "border-border-strong bg-background/62"}`}
-                  onClick={() => setActiveId(item.project.id)}
-                  onFocus={() => setActiveId(item.project.id)}
-                  onMouseEnter={() => setActiveId(item.project.id)}
-                  type="button"
-                >
-                  <span className="flex items-center justify-between gap-3 font-mono text-[0.6rem] tracking-[0.1em] uppercase">
-                    <span className="text-signal-cyan">
-                      Build / {item.sequence}
-                    </span>
-                    <span className="text-foreground-muted">{item.year}</span>
-                  </span>
-                  <span className="mt-2 block text-lg font-semibold text-foreground">
-                    {item.project.title}
-                  </span>
-                  <span className="mt-1 block font-mono text-[0.58rem] tracking-[0.08em] text-signal-amber uppercase">
-                    {item.signal}
-                  </span>
-                  <span className="mt-3 block overflow-hidden border-t border-border pt-2">
-                    <MicroVisual
-                      ambientTick={ambientTick}
-                      id={item.project.id}
-                      reduced={reduced}
-                    />
-                  </span>
-                  <span className="mt-3 flex min-h-8 flex-wrap items-center gap-2 border-t border-border pt-3 font-mono text-[0.56rem] tracking-[0.08em] text-foreground-muted uppercase">
-                    <span>Progresses toward</span>
-                    {item.related.map((label) => (
-                      <span
-                        className="border border-signal-amber/35 px-1.5 py-1 text-signal-amber"
-                        key={label}
-                      >
-                        {label}
-                      </span>
-                    ))}
-                  </span>
-                  {selected ? (
-                    <span
-                      className="signal-ripple absolute top-1/2 -right-2 h-4 w-4 -translate-y-1/2 rounded-full border border-signal-cyan"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                </button>
-              </motion.li>
-            );
-          })}
-        </ol>
-      </div>
-
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.article
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-8 grid gap-6 border-y border-border bg-[linear-gradient(105deg,rgb(13_42_80_/.3),transparent)] px-5 py-6 sm:px-7 lg:grid-cols-[minmax(0,.72fr)_minmax(18rem,.28fr)]"
-          exit={reduced ? undefined : { opacity: 0, y: 5 }}
-          initial={reduced ? false : { opacity: 0, y: 7 }}
-          key={active.project.id}
-          transition={{ duration: reduced ? 0 : 0.22 }}
-        >
-          <div>
-            <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
-              Active earlier system
-            </p>
-            <h3 className="mt-2 text-2xl font-semibold text-foreground">
-              {active.project.title}
+          <div
+            className={`relative row-start-1 min-w-0 ${contentPlacement} min-[901px]:row-start-1`}
+          >
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[0.62rem] font-semibold tracking-[0.11em] uppercase">
+              <span className="text-signal-cyan">
+                Earlier build / {item.sequence}
+              </span>
+              <span className="text-foreground-muted">{item.year}</span>
+            </div>
+            <h3 className="mt-5 max-w-2xl text-[clamp(2rem,4vw,3.6rem)] leading-[0.94] font-semibold tracking-[-0.035em] text-foreground">
+              {item.project.title}
             </h3>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-foreground-secondary">
-              {active.project.summary}
+            <p className="mt-3 font-mono text-[0.62rem] tracking-[0.1em] text-signal-amber uppercase">
+              {item.signal}
             </p>
-            <p className="mt-4 border-l border-signal-amber pl-4 text-xs leading-5 text-foreground-muted">
-              {active.progression}
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-foreground-secondary sm:text-base">
+              {item.project.summary}
             </p>
-          </div>
-          <div>
-            <ul className="flex flex-wrap gap-2">
-              {active.technologies.map((technology) => (
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {item.technologies.map((technology) => (
                 <li
-                  className="border border-border-strong px-2 py-1 font-mono text-[0.62rem] text-foreground-secondary"
+                  className="border border-border-strong px-2.5 py-1.5 font-mono text-[0.62rem] text-foreground-secondary"
                   key={technology}
                 >
                   {technology}
                 </li>
               ))}
             </ul>
-            <div className="mt-5 flex flex-wrap gap-3">
-              {active.project.caseStudyPath ? (
-                <ActionLink
-                  href={active.project.caseStudyPath}
-                  variant="primary"
+          </div>
+
+          <div
+            className={`relative row-start-2 flex min-h-44 min-w-0 items-center overflow-hidden border-y border-border px-1 py-4 transition-[border-color,filter] duration-300 group-hover:border-signal-cyan/45 group-hover:drop-shadow-[0_0_26px_rgb(47_127_255_/.08)] group-focus-within:border-signal-cyan/45 group-focus-within:drop-shadow-[0_0_26px_rgb(47_127_255_/.08)] sm:px-5 ${visualPlacement} min-[901px]:row-span-2 min-[901px]:row-start-1`}
+          >
+            <span
+              aria-hidden="true"
+              className="signal-grid pointer-events-none absolute inset-0 opacity-20"
+            />
+            <MicroVisual
+              ambientTick={visualTick}
+              id={item.project.id}
+              reduced={reduced || !rowInView}
+            />
+          </div>
+
+          <div
+            className={`relative row-start-3 self-end border-t border-border pt-6 ${contentPlacement} min-[901px]:row-start-2`}
+          >
+            <p className="max-w-2xl text-xs leading-5 text-foreground-muted">
+              {item.progression}
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-2 font-mono text-[0.6rem] tracking-[0.09em] uppercase">
+              <span className="text-foreground-muted">
+                Engineering progression →
+              </span>
+              {item.related.map((label) => (
+                <span
+                  className="border-b border-signal-amber/40 px-1 py-1 text-signal-amber transition-[border-color,color] group-hover:border-signal-amber group-hover:text-foreground group-focus-within:border-signal-amber group-focus-within:text-foreground"
+                  key={label}
                 >
+                  {label}
+                </span>
+              ))}
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {item.project.caseStudyPath ? (
+                <ActionLink href={item.project.caseStudyPath} variant="primary">
                   View Case Study
                 </ActionLink>
               ) : null}
-              {active.project.repositoryUrl ? (
+              {item.project.repositoryUrl ? (
                 <ActionLink
-                  href={active.project.repositoryUrl}
+                  href={item.project.repositoryUrl}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -416,8 +371,44 @@ export function SelectedEarlierSystems() {
               ) : null}
             </div>
           </div>
-        </motion.article>
-      </AnimatePresence>
+        </article>
+      </Reveal>
+    </li>
+  );
+}
+
+export function SelectedEarlierSystems() {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion() === true;
+  const inView = useInView(hostRef, { margin: "120px" });
+  const ambientTick = useAmbientPulse(inView && !reduced, 8800, 6100);
+
+  return (
+    <div className="relative mt-10" ref={hostRef}>
+      <motion.div
+        className="flex flex-wrap items-center justify-between gap-3 border-y border-border py-3 font-mono text-[0.62rem] tracking-[0.13em] uppercase"
+        initial={reduced ? false : { opacity: 0, y: 22 }}
+        transition={{ duration: reduced ? 0 : 0.56, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, amount: 0.35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+      >
+        <span className="font-semibold text-signal-cyan">
+          Engineering progression
+        </span>
+        <span className="text-foreground-muted">Not code lineage</span>
+      </motion.div>
+
+      <ol className="mt-5 divide-y divide-border border-y border-border">
+        {earlierSystems.map((item, index) => (
+          <EarlierSystemRow
+            ambientTick={ambientTick}
+            index={index}
+            item={item}
+            key={item.project.id}
+            reduced={reduced}
+          />
+        ))}
+      </ol>
     </div>
   );
 }
