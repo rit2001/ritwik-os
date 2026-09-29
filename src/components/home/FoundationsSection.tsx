@@ -1,3 +1,7 @@
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
+
 import {
   algorithmProfiles,
   achievementSignals,
@@ -7,6 +11,7 @@ import { profile } from "@/data/profile";
 export function FoundationsSection() {
   const leetcode = algorithmProfiles[0];
   const codeforces = algorithmProfiles[1];
+  const reduced = useReducedMotion() === true;
 
   return (
     <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(23rem,0.94fr)]">
@@ -17,17 +22,28 @@ export function FoundationsSection() {
           className="pointer-events-none absolute right-[-2%] bottom-0 h-[82%] w-[68%] opacity-38"
           viewBox="0 0 520 420"
         >
-          <path
+          <motion.path
             d="M28 380 H500 M92 380 V148 L180 90 L268 148 V380 M268 380 V112 L350 54 L432 112 V380"
             fill="none"
+            initial={reduced ? false : { pathLength: 0, opacity: 0.25 }}
             stroke="var(--ritwik-color-accent)"
             strokeWidth="2"
+            transition={{ duration: reduced ? 0 : 1.35 }}
+            viewport={{ once: true, amount: 0.35 }}
+            whileInView={{ pathLength: 1, opacity: 1 }}
           />
-          <path
+          <motion.path
             d="M62 380 V214 H122 M122 380 V186 H180 M180 380 V214 H238 M296 380 V160 H350 M350 380 V132 H406 M406 380 V160 H468"
             fill="none"
+            initial={reduced ? false : { pathLength: 0 }}
             stroke="var(--ritwik-color-signal-cyan)"
             strokeWidth="1"
+            transition={{
+              delay: reduced ? 0 : 0.24,
+              duration: reduced ? 0 : 1.25,
+            }}
+            viewport={{ once: true, amount: 0.35 }}
+            whileInView={{ pathLength: 1 }}
           />
           <path
             d="M74 250 H244 M74 294 H244 M292 222 H458 M292 272 H458 M292 322 H458"
@@ -71,7 +87,16 @@ export function FoundationsSection() {
           built over time.
         </h3>
 
-        <div className="relative mt-9 max-w-2xl border-l border-border-strong pl-6">
+        <div className="relative mt-9 max-w-2xl pl-6">
+          <motion.span
+            animate={undefined}
+            className="absolute top-0 bottom-0 left-0 w-px bg-gradient-to-b from-signal-cyan to-signal-amber"
+            initial={reduced ? false : { scaleY: 0 }}
+            style={{ transformOrigin: "top" }}
+            transition={{ duration: reduced ? 0 : 1.1 }}
+            viewport={{ once: true, amount: 0.45 }}
+            whileInView={{ scaleY: 1 }}
+          />
           <div className="relative pb-6">
             <span className="absolute top-1 -left-[1.72rem] h-3 w-3 rounded-full border border-signal-cyan bg-background" />
             <p className="font-mono text-[0.65rem] tracking-[0.11em] text-signal-cyan uppercase">
@@ -121,11 +146,17 @@ export function FoundationsSection() {
         </div>
 
         <a
-          className="group relative min-h-[16rem] overflow-hidden border border-border bg-[radial-gradient(circle_at_82%_30%,rgb(47_127_255_/_0.16),transparent_13rem),rgb(7_16_27_/_0.6)] px-5 py-5 transition-[border-color,transform,box-shadow] duration-[var(--duration-base)] hover:-translate-y-1 hover:border-signal-cyan hover:shadow-[0_18px_55px_rgb(47_127_255_/_0.12)] focus-visible:-translate-y-1 focus-visible:border-signal-cyan"
+          className="algorithm-module group relative min-h-[16rem] overflow-hidden border border-border bg-[radial-gradient(circle_at_82%_30%,rgb(47_127_255_/_0.16),transparent_13rem),rgb(7_16_27_/_0.6)] px-5 py-5 transition-[border-color,transform,box-shadow] duration-[var(--duration-base)] hover:-translate-y-1 hover:border-signal-cyan hover:shadow-[0_18px_55px_rgb(47_127_255_/_0.12)] focus-visible:-translate-y-1 focus-visible:border-signal-cyan"
           href={leetcode.profileUrl}
           rel="noopener noreferrer"
           target="_blank"
         >
+          <span
+            className="leetcode-knight-travel pointer-events-none absolute top-10 right-32 z-10 font-serif text-2xl text-signal-cyan opacity-0"
+            aria-hidden="true"
+          >
+            ♞
+          </span>
           <svg
             aria-hidden="true"
             className="absolute top-5 right-5 h-28 w-28 opacity-24 transition-opacity group-hover:opacity-55 group-focus-visible:opacity-55"
@@ -184,11 +215,15 @@ export function FoundationsSection() {
         </a>
 
         <a
-          className="group relative min-h-[13rem] overflow-hidden border border-border bg-[linear-gradient(135deg,rgb(242_185_95_/_0.06),rgb(7_16_27_/_0.58))] px-5 py-5 transition-[border-color,transform,box-shadow] duration-[var(--duration-base)] hover:-translate-y-1 hover:border-signal-amber hover:shadow-[0_18px_55px_rgb(242_185_95_/_0.08)] focus-visible:-translate-y-1 focus-visible:border-signal-amber"
+          className="algorithm-module codeforces-module group relative min-h-[13rem] overflow-hidden border border-border bg-[linear-gradient(135deg,rgb(242_185_95_/_0.06),rgb(7_16_27_/_0.58))] px-5 py-5 transition-[border-color,transform,box-shadow] duration-[var(--duration-base)] hover:-translate-y-1 hover:border-signal-amber hover:shadow-[0_18px_55px_rgb(242_185_95_/_0.08)] focus-visible:-translate-y-1 focus-visible:border-signal-amber"
           href={codeforces.profileUrl}
           rel="noopener noreferrer"
           target="_blank"
         >
+          <span
+            className="codeforces-rank-signal pointer-events-none absolute right-[6.8rem] bottom-7 h-3 w-3 rounded-full bg-signal-amber opacity-0 shadow-[0_0_16px_rgb(242_185_95_/.7)]"
+            aria-hidden="true"
+          />
           <div
             className="absolute top-6 right-5 flex h-32 w-24 flex-col-reverse gap-2 opacity-35 transition-opacity group-hover:opacity-75 group-focus-visible:opacity-75"
             aria-hidden="true"
@@ -235,14 +270,34 @@ export function FoundationsSection() {
           </span>
         </a>
 
-        <ul className="grid gap-2 border-t border-border pt-4 sm:grid-cols-3 lg:grid-cols-1">
-          {achievementSignals.slice(0, 3).map((achievement) => (
+        <ul className="grid gap-3 border-t border-border pt-5 sm:grid-cols-3 lg:grid-cols-1">
+          {[
+            [
+              "Selected",
+              "Amazon ML Summer School 2024",
+              "Machine learning programme",
+            ],
+            ["Top 3", "GCOS 2024", "IIT Kharagpur"],
+            ["Top 5", "Overnite", "Kshitij, IIT Kharagpur"],
+          ].map(([rank, title, context]) => (
             <li
-              className="flex items-center gap-3 text-xs leading-5 text-foreground-secondary"
-              key={achievement}
+              className="achievement-proof group relative border-l border-signal-amber/55 bg-[linear-gradient(90deg,rgb(242_185_95_/.07),transparent)] px-4 py-3 outline-none transition-[border-color,background-color,transform] hover:translate-x-1 hover:border-signal-amber focus-visible:translate-x-1 focus-visible:border-signal-amber"
+              key={title}
+              tabIndex={0}
             >
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal-amber" />
-              {achievement}
+              <span
+                className="absolute top-4 -left-[0.3rem] h-2.5 w-2.5 rotate-45 bg-signal-amber transition-shadow group-hover:shadow-[0_0_18px_rgb(242_185_95_/.75)] group-focus-visible:shadow-[0_0_18px_rgb(242_185_95_/.75)]"
+                aria-hidden="true"
+              />
+              <span className="font-mono text-[0.6rem] font-semibold tracking-[0.12em] text-signal-amber uppercase">
+                {rank}
+              </span>
+              <span className="mt-1 block text-sm font-semibold text-foreground">
+                {title}
+              </span>
+              <span className="mt-1 block text-xs text-foreground-muted">
+                {context}
+              </span>
             </li>
           ))}
         </ul>

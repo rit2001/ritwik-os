@@ -8,6 +8,7 @@ import { professionalSignals } from "@/data/professional-signals";
 
 type GlobeCanvasProps = {
   activeLocation: SignalLocationId | null;
+  onExplore: () => void;
   onHover: (id: SignalLocationId | null) => void;
   onSelect: (id: SignalLocationId) => void;
   rotationPaused?: boolean;
@@ -17,6 +18,8 @@ type MarkerScreenPosition = {
   id: SignalLocationId;
   x: number;
   y: number;
+  labelX: number;
+  labelY: number;
   front: boolean;
 };
 
@@ -25,21 +28,12 @@ const publicSignals = professionalSignals.filter(
 );
 
 const initialMarkerPositions: MarkerScreenPosition[] = [
-  { id: "kolkata", x: 58, y: 40, front: true },
-  { id: "bengaluru", x: 51, y: 57, front: true },
-  { id: "pune", x: 46, y: 49, front: true },
-  { id: "toronto", x: 31, y: 34, front: true },
-  { id: "usa", x: 25, y: 49, front: true },
+  { id: "kolkata", x: 58, y: 42, labelX: 70, labelY: 33, front: true },
+  { id: "bengaluru", x: 52, y: 56, labelX: 66, labelY: 64, front: true },
+  { id: "pune", x: 47, y: 51, labelX: 33, labelY: 48, front: true },
+  { id: "toronto", x: 32, y: 37, labelX: 20, labelY: 29, front: true },
+  { id: "usa", x: 27, y: 50, labelX: 18, labelY: 58, front: true },
 ];
-
-const labelOffsets: Record<SignalLocationId, string> = {
-  kolkata: "translate-x-8 -translate-y-14 sm:translate-x-16 sm:-translate-y-14",
-  bengaluru:
-    "-translate-x-12 translate-y-12 sm:-translate-x-24 sm:translate-y-14",
-  pune: "-translate-x-12 -translate-y-8 sm:-translate-x-24 sm:-translate-y-8",
-  toronto: "translate-x-8 -translate-y-12 sm:translate-x-14 sm:-translate-y-14",
-  usa: "translate-x-8 translate-y-10 sm:translate-x-14 sm:translate-y-14",
-};
 
 function pointFromCoordinates(
   latitude: number,
@@ -56,30 +50,154 @@ function pointFromCoordinates(
   );
 }
 
+function createGreatCircle(
+  start: THREE.Vector3,
+  end: THREE.Vector3,
+  radius: number,
+) {
+  const startDirection = start.clone().normalize();
+  const endDirection = end.clone().normalize();
+  const points = Array.from({ length: 65 }, (_, index) => {
+    const progress = index / 64;
+    const direction = startDirection
+      .clone()
+      .lerp(endDirection, progress)
+      .normalize();
+    const altitude = Math.sin(Math.PI * progress) * 0.34;
+    return direction.multiplyScalar(radius + altitude);
+  });
+  return new THREE.CatmullRomCurve3(points, false, "centripetal");
+}
+
+function placeCollisionAwareLabels(
+  raw: readonly Omit<MarkerScreenPosition, "labelX" | "labelY">[],
+  width: number,
+  height: number,
+) {
+  const occupied: Array<{
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  }> = [];
+  const labelWidth = width < 480 ? 70 : 92;
+  const labelHeight = width < 480 ? 28 : 34;
+  const preferred: Record<SignalLocationId, readonly [number, number][]> = {
+    kolkata: [
+      [58, -28],
+      [54, 28],
+      [-72, -30],
+    ],
+    bengaluru: [
+      [54, 30],
+      [-78, 30],
+      [60, -28],
+    ],
+    pune: [
+      [-78, -18],
+      [-76, 28],
+      [54, -34],
+    ],
+    toronto: [
+      [-78, -28],
+      [52, -32],
+      [-76, 28],
+    ],
+    usa: [
+      [-72, 30],
+      [54, 30],
+      [-76, -28],
+    ],
+  };
+
+  return raw.map((marker) => {
+    if (!marker.front) {
+      return { ...marker, labelX: marker.x, labelY: marker.y };
+    }
+
+    const markerX = (marker.x / 100) * width;
+    const markerY = (marker.y / 100) * height;
+    const choices = [
+      ...preferred[marker.id],
+      [54, 0] as const,
+      [-76, 0] as const,
+      [0, -42] as const,
+      [0, 42] as const,
+    ];
+    let placed = choices[0];
+
+    for (const choice of choices) {
+      const centerX = THREE.MathUtils.clamp(
+        markerX + choice[0],
+        labelWidth / 2 + 6,
+        width - labelWidth / 2 - 6,
+      );
+      const centerY = THREE.MathUtils.clamp(
+        markerY + choice[1],
+        labelHeight / 2 + 10,
+        height - labelHeight / 2 - 10,
+      );
+      const box = {
+        left: centerX - labelWidth / 2,
+        right: centerX + labelWidth / 2,
+        top: centerY - labelHeight / 2,
+        bottom: centerY + labelHeight / 2,
+      };
+      const collides = occupied.some(
+        (other) =>
+          box.left < other.right + 5 &&
+          box.right > other.left - 5 &&
+          box.top < other.bottom + 4 &&
+          box.bottom > other.top - 4,
+      );
+      if (!collides) {
+        placed = choice;
+        occupied.push(box);
+        break;
+      }
+    }
+
+    const labelX = THREE.MathUtils.clamp(
+      ((markerX + placed[0]) / width) * 100,
+      7,
+      93,
+    );
+    const labelY = THREE.MathUtils.clamp(
+      ((markerY + placed[1]) / height) * 100,
+      7,
+      93,
+    );
+    return { ...marker, labelX, labelY };
+  });
+}
+
 export default function ThreeGlobeCanvas({
   activeLocation,
+  onExplore,
   onHover,
   onSelect,
   rotationPaused = false,
 }: Readonly<GlobeCanvasProps>) {
   const hostRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(activeLocation);
-  const callbacksRef = useRef({ onHover, onSelect });
+  const callbacksRef = useRef({ onExplore, onHover, onSelect });
   const interactionPausedRef = useRef(false);
   const rotationPausedRef = useRef(rotationPaused);
   const pauseUntilRef = useRef(0);
+  const activeChangedAtRef = useRef(0);
   const [markerPositions, setMarkerPositions] = useState(
     initialMarkerPositions,
   );
 
   useEffect(() => {
     activeRef.current = activeLocation;
+    activeChangedAtRef.current = performance.now();
     hostRef.current?.dispatchEvent(new Event("signalchange"));
   }, [activeLocation]);
 
   useEffect(() => {
-    callbacksRef.current = { onHover, onSelect };
-  }, [onHover, onSelect]);
+    callbacksRef.current = { onExplore, onHover, onSelect };
+  }, [onExplore, onHover, onSelect]);
 
   useEffect(() => {
     rotationPausedRef.current = rotationPaused;
@@ -96,7 +214,7 @@ export default function ThreeGlobeCanvas({
     );
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
-    camera.position.set(0, 0.05, 5.8);
+    camera.position.set(0, 0.04, 5.8);
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -111,64 +229,84 @@ export default function ThreeGlobeCanvas({
     }
 
     renderer.setClearAlpha(0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.className = "h-full w-full touch-none";
     host.append(renderer.domElement);
 
-    scene.add(new THREE.HemisphereLight(0x6ca9ff, 0x02040a, 1.2));
-    const keyLight = new THREE.PointLight(0x77c8ff, 18, 12);
-    keyLight.position.set(-3, 3, 4);
-    scene.add(keyLight);
-    const rimLight = new THREE.PointLight(0x2f7fff, 14, 10);
-    rimLight.position.set(3, -1, -2);
-    scene.add(rimLight);
+    scene.add(new THREE.AmbientLight(0x071426, 0.42));
+    scene.add(new THREE.HemisphereLight(0x5ca8df, 0x01030a, 0.48));
+    const dayLight = new THREE.DirectionalLight(0xd8efff, 2.65);
+    dayLight.position.set(-3.7, 2.4, 4.6);
+    scene.add(dayLight);
+    const sideLight = new THREE.DirectionalLight(0x2f9dff, 0.72);
+    sideLight.position.set(3.5, -0.6, 1.2);
+    scene.add(sideLight);
 
     const globe = new THREE.Group();
     globe.rotation.y = -0.36;
     globe.rotation.x = -0.08;
     scene.add(globe);
 
-    const sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(1.58, 72, 48),
-      new THREE.MeshPhongMaterial({
-        color: 0x071a2d,
-        emissive: 0x061528,
-        emissiveIntensity: 0.8,
-        shininess: 42,
-        specular: 0x3c92e8,
-        transparent: true,
-        opacity: 0.98,
-      }),
-    );
-    globe.add(sphere);
+    const earthGeometry = new THREE.SphereGeometry(1.58, 72, 48);
+    const earthMaterial = new THREE.MeshPhongMaterial({
+      color: 0x60778e,
+      emissive: 0x020813,
+      emissiveIntensity: 0.28,
+      shininess: 14,
+      specular: 0x315574,
+    });
+    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    globe.add(earth);
 
-    const grid = new THREE.Mesh(
-      new THREE.SphereGeometry(1.592, 32, 20),
-      new THREE.MeshBasicMaterial({
-        color: 0x66a8ff,
-        transparent: true,
-        opacity: 0.075,
-        wireframe: true,
-        depthWrite: false,
-      }),
+    let earthTexture: THREE.Texture | null = null;
+    new THREE.TextureLoader().load(
+      "/images/earth/blue-marble-land-ocean-ice-2048.jpg",
+      (texture) => {
+        earthTexture = texture;
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = Math.min(
+          8,
+          renderer.capabilities.getMaxAnisotropy(),
+        );
+        texture.wrapS = THREE.RepeatWrapping;
+        earthMaterial.map = texture;
+        earthMaterial.needsUpdate = true;
+        schedule();
+      },
     );
-    globe.add(grid);
 
     const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(1.74, 64, 42),
-      new THREE.MeshBasicMaterial({
-        color: 0x2f7fff,
-        transparent: true,
-        opacity: 0.11,
-        side: THREE.BackSide,
+      new THREE.SphereGeometry(1.71, 64, 42),
+      new THREE.ShaderMaterial({
+        vertexShader: `
+          varying vec3 vNormal;
+          varying vec3 vView;
+          void main() {
+            vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+            vNormal = normalize(normalMatrix * normal);
+            vView = normalize(-modelViewPosition.xyz);
+            gl_Position = projectionMatrix * modelViewPosition;
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vNormal;
+          varying vec3 vView;
+          void main() {
+            float rim = pow(1.0 - max(dot(vNormal, vView), 0.0), 3.2);
+            gl_FragColor = vec4(0.20, 0.72, 1.0, rim * 0.55);
+          }
+        `,
+        blending: THREE.AdditiveBlending,
         depthWrite: false,
+        side: THREE.BackSide,
+        transparent: true,
       }),
     );
     globe.add(atmosphere);
 
-    const markerGeometry = new THREE.SphereGeometry(0.05, 18, 14);
+    const markerGeometry = new THREE.SphereGeometry(0.052, 18, 14);
     const markerMeshes: THREE.Mesh[] = [];
     const markerById = new Map<SignalLocationId, THREE.Mesh>();
     const haloById = new Map<SignalLocationId, THREE.Mesh>();
@@ -177,10 +315,10 @@ export default function ThreeGlobeCanvas({
       const id = signal.id as SignalLocationId;
       const marker = new THREE.Mesh(
         markerGeometry,
-        new THREE.MeshBasicMaterial({ color: 0x66a8ff }),
+        new THREE.MeshBasicMaterial({ color: 0x80dfff }),
       );
       marker.position.copy(
-        pointFromCoordinates(signal.latitude, signal.longitude, 1.635),
+        pointFromCoordinates(signal.latitude, signal.longitude, 1.625),
       );
       marker.userData.signalId = id;
       markerMeshes.push(marker);
@@ -188,28 +326,27 @@ export default function ThreeGlobeCanvas({
       globe.add(marker);
 
       const halo = new THREE.Mesh(
-        new THREE.RingGeometry(0.072, 0.1, 32),
+        new THREE.RingGeometry(0.07, 0.098, 32),
         new THREE.MeshBasicMaterial({
           color: id === "usa" ? 0xf2b95f : 0x5ee7f7,
-          transparent: true,
-          opacity: 0.5,
-          side: THREE.DoubleSide,
           depthWrite: false,
+          opacity: 0.34,
+          side: THREE.DoubleSide,
+          transparent: true,
         }),
       );
-      halo.position.copy(marker.position).multiplyScalar(1.006);
+      halo.position.copy(marker.position).multiplyScalar(1.007);
       halo.lookAt(new THREE.Vector3(0, 0, 0));
-      halo.userData.signalId = id;
       haloById.set(id, halo);
       globe.add(halo);
     }
 
     type ArcRecord = {
       targetId: SignalLocationId;
-      curve: THREE.QuadraticBezierCurve3;
+      curve: THREE.CatmullRomCurve3;
       line: THREE.Line;
-      traveler: THREE.Mesh;
-      phase: number;
+      photon: THREE.Mesh;
+      arrival: THREE.Mesh;
     };
     const arcs: ArcRecord[] = [];
     const anchor = publicSignals.find((signal) => signal.id === "kolkata");
@@ -217,55 +354,56 @@ export default function ThreeGlobeCanvas({
       const start = pointFromCoordinates(
         anchor.latitude,
         anchor.longitude,
-        1.65,
+        1.63,
       );
       publicSignals
         .filter((signal) => signal.id !== "kolkata")
-        .forEach((signal, index) => {
+        .forEach((signal) => {
           const targetId = signal.id as SignalLocationId;
           const end = pointFromCoordinates(
             signal.latitude,
             signal.longitude,
-            1.65,
+            1.63,
           );
-          const midpointDirection = start.clone().add(end);
-          if (midpointDirection.lengthSq() < 0.08) {
-            midpointDirection.set(0, 1, 0.25);
-          }
-          const midpoint = midpointDirection.normalize().multiplyScalar(2.05);
-          midpoint.y += 0.12 + index * 0.035;
-          const curve = new THREE.QuadraticBezierCurve3(start, midpoint, end);
+          const curve = createGreatCircle(start, end, 1.65);
+          const color = targetId === "usa" ? 0xf2b95f : 0x5ee7f7;
           const line = new THREE.Line(
-            new THREE.BufferGeometry().setFromPoints(curve.getPoints(72)),
+            new THREE.BufferGeometry().setFromPoints(curve.getPoints(88)),
             new THREE.LineBasicMaterial({
-              color: targetId === "usa" ? 0xf2b95f : 0x5ee7f7,
-              transparent: true,
-              opacity: 0.28,
+              color,
               depthWrite: false,
+              opacity: 0.17,
+              transparent: true,
             }),
           );
-          const traveler = new THREE.Mesh(
-            new THREE.SphereGeometry(0.026, 10, 8),
+          const photon = new THREE.Mesh(
+            new THREE.SphereGeometry(0.032, 12, 8),
             new THREE.MeshBasicMaterial({
-              color: targetId === "usa" ? 0xf2b95f : 0xa8f5ff,
-              transparent: true,
-              opacity: 0.95,
+              color,
               depthWrite: false,
+              opacity: 0,
+              transparent: true,
             }),
           );
-          globe.add(line, traveler);
-          arcs.push({
-            targetId,
-            curve,
-            line,
-            traveler,
-            phase: index / Math.max(publicSignals.length - 1, 1),
-          });
+          const arrival = new THREE.Mesh(
+            new THREE.RingGeometry(0.065, 0.085, 24),
+            new THREE.MeshBasicMaterial({
+              color,
+              depthWrite: false,
+              opacity: 0,
+              side: THREE.DoubleSide,
+              transparent: true,
+            }),
+          );
+          arrival.position.copy(end).multiplyScalar(1.006);
+          arrival.lookAt(new THREE.Vector3(0, 0, 0));
+          globe.add(line, photon, arrival);
+          arcs.push({ targetId, curve, line, photon, arrival });
         });
     }
 
     const starPositions: number[] = [];
-    for (let index = 0; index < 92; index += 1) {
+    for (let index = 0; index < 78; index += 1) {
       const angle = index * 2.399963;
       const radius = 3.1 + (index % 11) * 0.14;
       starPositions.push(
@@ -283,10 +421,10 @@ export default function ThreeGlobeCanvas({
       new THREE.Points(
         starsGeometry,
         new THREE.PointsMaterial({
-          color: 0x7395b8,
-          size: 0.014,
+          color: 0x7798b9,
+          opacity: 0.5,
+          size: 0.013,
           transparent: true,
-          opacity: 0.58,
         }),
       ),
     );
@@ -300,6 +438,7 @@ export default function ThreeGlobeCanvas({
     let isDocumentVisible = document.visibilityState === "visible";
     let dragging = false;
     let moved = false;
+    let exploredByDrag = false;
     let lastX = 0;
     let lastY = 0;
     let hoveredId: SignalLocationId | null = null;
@@ -315,21 +454,22 @@ export default function ThreeGlobeCanvas({
     };
 
     const projectLabels = (time: number) => {
-      if (time - lastProjection < 80) return;
+      if (time - lastProjection < 90) return;
       lastProjection = time;
       globe.updateMatrixWorld(true);
+      const raw = publicSignals.map((signal) => {
+        const id = signal.id as SignalLocationId;
+        markerById.get(id)?.getWorldPosition(worldPosition);
+        projected.copy(worldPosition).project(camera);
+        return {
+          id,
+          x: THREE.MathUtils.clamp((projected.x * 0.5 + 0.5) * 100, 4, 96),
+          y: THREE.MathUtils.clamp((-projected.y * 0.5 + 0.5) * 100, 5, 95),
+          front: worldPosition.z > 0.02,
+        };
+      });
       setMarkerPositions(
-        publicSignals.map((signal) => {
-          const id = signal.id as SignalLocationId;
-          markerById.get(id)?.getWorldPosition(worldPosition);
-          projected.copy(worldPosition).project(camera);
-          return {
-            id,
-            x: THREE.MathUtils.clamp((projected.x * 0.5 + 0.5) * 100, 7, 93),
-            y: THREE.MathUtils.clamp((-projected.y * 0.5 + 0.5) * 100, 8, 92),
-            front: worldPosition.z > -0.72,
-          };
-        }),
+        placeCollisionAwareLabels(raw, host.clientWidth, host.clientHeight),
       );
     };
 
@@ -345,54 +485,73 @@ export default function ThreeGlobeCanvas({
         !interactionPausedRef.current &&
         time > pauseUntilRef.current
       ) {
-        globe.rotation.y += 0.00038;
+        globe.rotation.y += 0.00034;
       }
 
       markerById.forEach((marker, id) => {
         const selected = id === active || id === hoveredId;
         const unrelated = Boolean((active || hoveredId) && !selected);
-        const pulse = reduce
+        const breath = reduce
           ? 0
-          : Math.max(0, Math.sin(time * 0.00145 + marker.id * 1.7)) ** 10;
-        marker.scale.setScalar((selected ? 1.55 : 1) + pulse * 0.35);
+          : Math.max(0, Math.sin(time * 0.0011 + marker.id * 1.9)) * 0.09;
+        marker.scale.setScalar((selected ? 1.5 : 1) + breath);
         const material = marker.material as THREE.MeshBasicMaterial;
         material.color.setHex(
-          selected ? 0xd6fbff : id === "usa" ? 0xf2b95f : 0x66a8ff,
+          selected ? 0xe6fdff : id === "usa" ? 0xf2b95f : 0x80dfff,
         );
-        material.opacity = unrelated ? 0.38 : 1;
+        material.opacity = unrelated ? 0.34 : 1;
         material.transparent = unrelated;
 
         const halo = haloById.get(id);
         if (halo) {
-          halo.scale.setScalar((selected ? 1.55 : 1) + pulse * 1.7);
+          const activationAge = time - activeChangedAtRef.current;
+          const activationRipple =
+            selected && activationAge < 900 && !reduce
+              ? Math.sin((activationAge / 900) * Math.PI)
+              : 0;
+          const occasional = reduce
+            ? 0
+            : Math.max(0, Math.sin(time * 0.00075 + marker.id * 2.2)) ** 18;
+          halo.scale.setScalar(
+            (selected ? 1.35 : 1) + activationRipple * 1.3 + occasional * 0.7,
+          );
           (halo.material as THREE.MeshBasicMaterial).opacity = unrelated
-            ? 0.12
+            ? 0.06
             : selected
-              ? 0.9
-              : 0.32 + pulse * 0.42;
+              ? 0.72 * (1 - activationRipple * 0.55)
+              : 0.22 + occasional * 0.38;
         }
       });
 
-      arcs.forEach((arc) => {
-        const selected = active === arc.targetId || hoveredId === arc.targetId;
-        const unrelated = Boolean((active || hoveredId) && !selected);
-        (arc.line.material as THREE.LineBasicMaterial).opacity = unrelated
-          ? 0.07
-          : selected
-            ? 0.75
-            : 0.25;
-        if (!reduce) {
-          arc.traveler.visible = true;
-          arc.traveler.position.copy(
-            arc.curve.getPoint((time * 0.000095 + arc.phase) % 1),
-          );
-          (arc.traveler.material as THREE.MeshBasicMaterial).opacity = unrelated
-            ? 0.08
-            : selected
-              ? 1
-              : 0.72;
+      const selectedArcIndex = arcs.findIndex(
+        (arc) => active === arc.targetId || hoveredId === arc.targetId,
+      );
+      const cycleIndex = Math.floor(time / 5200) % Math.max(arcs.length, 1);
+      arcs.forEach((arc, index) => {
+        const dominant =
+          selectedArcIndex >= 0
+            ? index === selectedArcIndex
+            : index === cycleIndex;
+        const lineMaterial = arc.line.material as THREE.LineBasicMaterial;
+        lineMaterial.opacity = dominant
+          ? 0.68
+          : selectedArcIndex >= 0
+            ? 0.055
+            : 0.13;
+
+        if (!reduce && dominant) {
+          const progress = (time * 0.00018) % 1;
+          arc.photon.visible = true;
+          arc.photon.position.copy(arc.curve.getPoint(progress));
+          (arc.photon.material as THREE.MeshBasicMaterial).opacity =
+            Math.sin(progress * Math.PI) * 0.95;
+          const arrivalStrength = Math.max(0, (progress - 0.88) / 0.12);
+          arc.arrival.scale.setScalar(1 + arrivalStrength * 1.8);
+          (arc.arrival.material as THREE.MeshBasicMaterial).opacity =
+            Math.sin(arrivalStrength * Math.PI) * 0.78;
         } else {
-          arc.traveler.visible = false;
+          arc.photon.visible = false;
+          (arc.arrival.material as THREE.MeshBasicMaterial).opacity = 0;
         }
       });
 
@@ -418,6 +577,7 @@ export default function ThreeGlobeCanvas({
       if (next !== hoveredId) {
         hoveredId = next;
         callbacksRef.current.onHover(next);
+        if (next) callbacksRef.current.onExplore();
         interactionPausedRef.current =
           Boolean(next) || rotationPausedRef.current;
         renderer.domElement.style.cursor = next
@@ -437,7 +597,7 @@ export default function ThreeGlobeCanvas({
       lastY = event.clientY;
       renderer.domElement.setPointerCapture(event.pointerId);
       renderer.domElement.style.cursor = "grabbing";
-      pauseUntilRef.current = performance.now() + 1100;
+      pauseUntilRef.current = performance.now() + 1000;
       schedule();
     };
 
@@ -445,7 +605,13 @@ export default function ThreeGlobeCanvas({
       if (dragging) {
         const dx = event.clientX - lastX;
         const dy = event.clientY - lastY;
-        if (Math.abs(dx) + Math.abs(dy) > 2) moved = true;
+        if (Math.abs(dx) + Math.abs(dy) > 2) {
+          moved = true;
+          if (!exploredByDrag) {
+            exploredByDrag = true;
+            callbacksRef.current.onExplore();
+          }
+        }
         globe.rotation.y += dx * 0.005;
         globe.rotation.x = THREE.MathUtils.clamp(
           globe.rotation.x + dy * 0.0025,
@@ -464,7 +630,7 @@ export default function ThreeGlobeCanvas({
       const picked = pick(event);
       if (!moved && picked) callbacksRef.current.onSelect(picked);
       dragging = false;
-      pauseUntilRef.current = performance.now() + 1100;
+      pauseUntilRef.current = performance.now() + 1000;
       renderer.domElement.releasePointerCapture(event.pointerId);
       renderer.domElement.style.cursor = picked ? "pointer" : "grab";
       schedule();
@@ -531,6 +697,7 @@ export default function ThreeGlobeCanvas({
       renderer.domElement.removeEventListener("pointermove", onPointerMove);
       renderer.domElement.removeEventListener("pointerup", onPointerUp);
       renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
+      earthTexture?.dispose();
       scene.traverse((object) => {
         if (
           object instanceof THREE.Mesh ||
@@ -551,6 +718,7 @@ export default function ThreeGlobeCanvas({
 
   const pauseForLabel = (id: SignalLocationId) => {
     interactionPausedRef.current = true;
+    onExplore();
     onHover(id);
     hostRef.current?.dispatchEvent(new Event("signalchange"));
   };
@@ -565,7 +733,27 @@ export default function ThreeGlobeCanvas({
   return (
     <>
       <div className="absolute inset-0" ref={hostRef} />
-      <div className="pointer-events-none absolute inset-0 z-10">
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-10 h-full w-full"
+        preserveAspectRatio="none"
+        viewBox="0 0 100 100"
+      >
+        {markerPositions.map((position) =>
+          position.front ? (
+            <line
+              key={position.id}
+              stroke="rgb(94 231 247 / 0.35)"
+              strokeWidth="0.18"
+              x1={position.x}
+              x2={position.labelX}
+              y1={position.y}
+              y2={position.labelY}
+            />
+          ) : null,
+        )}
+      </svg>
+      <div className="pointer-events-none absolute inset-0 z-20">
         {publicSignals.map((signal) => {
           const id = signal.id as SignalLocationId;
           const position =
@@ -575,49 +763,43 @@ export default function ThreeGlobeCanvas({
 
           return (
             <button
-              className={`pointer-events-auto absolute z-20 max-w-[8.5rem] -translate-x-1/2 -translate-y-1/2 text-left transition-[opacity,filter] duration-[var(--duration-base)] sm:max-w-[12rem] ${labelOffsets[id]} ${
-                selected
-                  ? "opacity-100"
-                  : position.front
-                    ? "opacity-85 hover:opacity-100 focus-visible:opacity-100"
-                    : "opacity-35 hover:opacity-100 focus-visible:opacity-100"
+              className={`absolute z-20 -translate-x-1/2 -translate-y-1/2 transition-[opacity,filter] duration-[var(--duration-base)] ${
+                position.front
+                  ? "pointer-events-auto opacity-100"
+                  : "pointer-events-none opacity-0"
               }`}
               key={signal.id}
               onBlur={releaseLabel}
               onClick={(event) => {
                 event.stopPropagation();
+                onExplore();
                 onSelect(id);
               }}
               onFocus={() => pauseForLabel(id)}
               onMouseEnter={() => pauseForLabel(id)}
               onMouseLeave={releaseLabel}
-              style={{ left: `${position.x}%`, top: `${position.y}%` }}
+              style={{
+                left: `${position.labelX}%`,
+                top: `${position.labelY}%`,
+              }}
+              tabIndex={position.front ? 0 : -1}
               type="button"
               aria-label={`${signal.label}, ${signal.country}. ${signal.detail}`}
               aria-pressed={selected}
             >
               <span
-                className={`relative block border-l px-2 py-1.5 backdrop-blur-sm sm:px-3 sm:py-2 ${
+                className={`block whitespace-nowrap border-l px-2 py-1 text-left backdrop-blur-sm ${
                   selected
-                    ? "border-signal-cyan bg-[rgb(4_10_18_/_0.9)] shadow-[0_0_30px_rgb(47_127_255_/_0.24)]"
-                    : "border-border-strong bg-[rgb(4_10_18_/_0.72)]"
+                    ? "border-signal-cyan bg-[rgb(3_9_16_/_0.9)] shadow-[0_0_22px_rgb(47_127_255_/_0.2)]"
+                    : "border-border-strong bg-[rgb(3_9_16_/_0.68)]"
                 }`}
               >
-                <span className="block font-mono text-[0.58rem] font-semibold tracking-[0.1em] text-foreground uppercase sm:text-[0.67rem]">
+                <span className="block font-mono text-[0.56rem] font-semibold tracking-[0.09em] text-foreground uppercase sm:text-[0.64rem]">
                   {signal.label}
                 </span>
-                <span className="mt-0.5 hidden font-mono text-[0.56rem] tracking-[0.08em] text-signal-cyan uppercase sm:block">
+                <span className="block font-mono text-[0.5rem] tracking-[0.08em] text-signal-cyan uppercase sm:text-[0.55rem]">
                   {signal.country}
                 </span>
-                <span className="mt-1 hidden text-[0.62rem] leading-4 text-foreground-muted sm:block">
-                  {signal.detail}
-                </span>
-                {selected ? (
-                  <span
-                    className="signal-ripple absolute top-1/2 -left-[0.28rem] h-2 w-2 -translate-y-1/2 rounded-full border border-signal-cyan"
-                    aria-hidden="true"
-                  />
-                ) : null}
               </span>
             </button>
           );

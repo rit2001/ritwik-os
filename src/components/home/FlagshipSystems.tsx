@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useInView, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
 import { SystemVisualStage } from "@/components/signal/SystemVisualStage";
 import {
@@ -112,9 +113,9 @@ const flagships: readonly FlagshipPresentation[] = [
           "Exact replay consumes dependency fixtures in order and terminates on missing, extra, reordered, mismatched, or unused outcomes.",
       },
       {
-        label: "Regression path",
-        summary: "Structural compare · approved assertions",
-        stage: 3,
+        label: "Replay contract",
+        summary: "Original / replay · structural compare",
+        stage: 2,
         detail:
           "Normalized structural comparison is separate from developer-authored regression specifications and optional offline pytest export.",
       },
@@ -257,10 +258,35 @@ function EvidenceInteraction({
 }
 
 function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
+  const hostRef = useRef<HTMLElement>(null);
+  const playedRef = useRef(false);
+  const timersRef = useRef<number[]>([]);
   const [activeStep, setActiveStep] = useState(0);
   const { activeProject, setActiveProject } = useSignalState();
   const active = activeProject === item.id;
   const centered = item.id === "traceforge";
+  const reduced = useReducedMotion() === true;
+  const inView = useInView(hostRef, { margin: "-20% 0px -20% 0px" });
+
+  useEffect(() => {
+    if (!inView || reduced || playedRef.current) return;
+    playedRef.current = true;
+    const sequence =
+      item.id === "thesislens"
+        ? [0, 1, 2]
+        : item.id === "traceforge"
+          ? [0, 1, 2, 3]
+          : [0, 1, 3, 2];
+    timersRef.current = sequence.map((step, index) =>
+      window.setTimeout(() => setActiveStep(step), 360 + index * 720),
+    );
+    return () => timersRef.current.forEach(window.clearTimeout);
+  }, [inView, item.id, reduced]);
+
+  const selectStep = (step: number) => {
+    timersRef.current.forEach(window.clearTimeout);
+    setActiveStep(step);
+  };
 
   const intro = (
     <div className={centered ? "text-center" : undefined}>
@@ -306,7 +332,7 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
   const evidence = (
     <EvidenceInteraction
       items={item.evidence}
-      onActiveStep={setActiveStep}
+      onActiveStep={selectStep}
       projectId={item.id}
     />
   );
@@ -366,6 +392,7 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
       id={item.project.id}
       onFocusCapture={() => setActiveProject(item.id)}
       onMouseEnter={() => setActiveProject(item.id)}
+      ref={hostRef}
     >
       {item.id === "thesislens" ? (
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.38fr)_minmax(36rem,0.62fr)] lg:items-start lg:gap-14">

@@ -327,34 +327,39 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
   const sealActive = activeStep === 1;
   const replayActive = activeStep === 2;
   const diffActive = activeStep === 3;
+  const sealed = activeStep >= 1;
 
   return (
     <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 820 500">
       <defs>
         <radialGradient id="tf-core">
-          <stop stopColor="rgb(94 231 247 / 0.3)" />
-          <stop offset="0.6" stopColor="rgb(47 127 255 / 0.12)" />
+          <stop stopColor="rgb(94 231 247 / 0.34)" />
+          <stop offset="0.58" stopColor="rgb(47 127 255 / 0.13)" />
           <stop offset="1" stopColor="rgb(4 7 13 / 0.92)" />
         </radialGradient>
+        <linearGradient id="tf-stream" x1="0" x2="1">
+          <stop stopColor="rgb(94 231 247 / 0.08)" />
+          <stop offset="1" stopColor="rgb(94 231 247 / 0.72)" />
+        </linearGradient>
       </defs>
 
-      <g opacity={captureActive ? 1 : 0.68}>
+      <g opacity={captureActive ? 1 : 0.58}>
         <rect
           fill="rgb(7 20 34 / 0.96)"
-          height="70"
+          height="62"
           rx="8"
           stroke="var(--ritwik-color-accent)"
-          width="138"
-          x="34"
-          y="74"
+          width="154"
+          x="24"
+          y="50"
         />
         <text
           fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
-          fontSize="10"
+          fontSize="11"
           textAnchor="middle"
-          x="103"
-          y="104"
+          x="101"
+          y="77"
         >
           LIVE EXECUTION
         </text>
@@ -363,63 +368,88 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="103"
-          y="123"
+          x="101"
+          y="96"
         >
-          MODEL · HTTP · EVENTS
+          CONTROLLED BOUNDARIES
         </text>
-        {["MODEL", "HTTP", "TOOL", "STATE"].map((label, index) => (
-          <g
-            className={
-              !reduced && captureActive ? "trace-capture-event" : undefined
-            }
-            key={label}
-            style={{ animationDelay: `${index * 180}ms` }}
-            transform={`translate(${54 + index * 26} ${176 + index * 48})`}
-          >
-            <circle
-              fill={
-                index % 2
-                  ? "var(--ritwik-color-signal-amber)"
-                  : "var(--ritwik-color-signal-cyan)"
-              }
-              r="5"
-            />
-            <text
-              fill="var(--ritwik-color-foreground-muted)"
-              fontFamily="monospace"
-              fontSize="7"
-              x="12"
-              y="3"
-            >
-              {label}
-            </text>
-          </g>
-        ))}
-        <path
-          d="M168 112 C236 112 228 218 286 232"
-          fill="none"
-          stroke="var(--ritwik-color-signal-cyan)"
-          strokeDasharray="3 7"
-          strokeWidth="2"
-        />
+        {["MODEL", "HTTP", "TOOL", "STATE"].map((label, index) => {
+          const y = 158 + index * 78;
+          const path = `M52 ${y} C136 ${y} 182 ${216 + index * 14} 251 ${236 + index * 7}`;
+          return (
+            <g key={label}>
+              <path
+                d={path}
+                fill="none"
+                stroke="url(#tf-stream)"
+                strokeDasharray="3 7"
+                strokeWidth="1.8"
+              />
+              <rect
+                fill="rgb(5 17 29 / 0.96)"
+                height="34"
+                rx="17"
+                stroke={
+                  index % 2
+                    ? "var(--ritwik-color-signal-amber)"
+                    : "var(--ritwik-color-signal-cyan)"
+                }
+                width="92"
+                x="28"
+                y={y - 17}
+              />
+              <text
+                fill="var(--ritwik-color-foreground-secondary)"
+                fontFamily="monospace"
+                fontSize="8"
+                textAnchor="middle"
+                x="74"
+                y={y + 3}
+              >
+                {label}
+              </text>
+              {!reduced && captureActive ? (
+                <circle
+                  fill={
+                    index % 2
+                      ? "var(--ritwik-color-signal-amber)"
+                      : "var(--ritwik-color-signal-cyan)"
+                  }
+                  r="4.5"
+                >
+                  <animateMotion
+                    begin={`${index * 0.18}s`}
+                    dur="0.9s"
+                    fill="freeze"
+                    path={path}
+                    repeatCount="1"
+                  />
+                </circle>
+              ) : null}
+            </g>
+          );
+        })}
       </g>
 
-      <g opacity={sealActive || captureActive ? 1 : 0.82}>
+      <g opacity={sealActive || captureActive ? 1 : 0.88}>
         <circle
           className={!reduced && sealActive ? "trace-seal-pulse" : undefined}
-          cx="376"
-          cy="248"
+          cx="381"
+          cy="252"
           fill="none"
-          r="132"
+          r="151"
           stroke="var(--ritwik-color-signal-cyan)"
         />
         {[0, 1, 2, 3].map((layer) => (
           <path
-            d={`M376 ${113 + layer * 13} L${485 - layer * 10} ${190 + layer * 8} L${448 - layer * 8} ${331 - layer * 9} L${304 + layer * 7} ${347 - layer * 11} L${259 + layer * 11} ${209 + layer * 7} Z`}
+            className={
+              !reduced && captureActive ? "trace-layer-build" : undefined
+            }
+            d={`M381 ${99 + layer * 14} L${509 - layer * 12} ${180 + layer * 9} L${465 - layer * 9} ${347 - layer * 10} L${297 + layer * 8} ${365 - layer * 12} L${245 + layer * 12} ${202 + layer * 8} Z`}
             fill={layer === 3 ? "url(#tf-core)" : "none"}
             key={layer}
             opacity={0.34 + layer * 0.17}
+            style={{ animationDelay: `${layer * 150}ms` }}
             stroke={
               layer === 3
                 ? "var(--ritwik-color-signal-cyan)"
@@ -434,8 +464,8 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontSize="13"
           fontWeight="700"
           textAnchor="middle"
-          x="376"
-          y="236"
+          x="381"
+          y="234"
         >
           REPLAY CAPSULE
         </text>
@@ -444,26 +474,32 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="9"
           textAnchor="middle"
-          x="376"
+          x="381"
           y="257"
         >
-          {sealActive ? "SEALED · SHA-256" : "CAPTURING BOUNDARIES"}
+          {sealed ? "SEALED · IMMUTABLE" : "CAPTURING BOUNDARIES"}
         </text>
         <text
           fill="var(--ritwik-color-foreground-muted)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="376"
-          y="276"
+          x="381"
+          y="278"
         >
           SEQUENCE + REQUEST FINGERPRINT
         </text>
+        <path
+          d="M329 298 H433 M337 311 H425 M347 324 H415"
+          opacity="0.65"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeDasharray="2 5"
+        />
       </g>
 
-      <g opacity={replayActive ? 1 : 0.68}>
+      <g opacity={replayActive || diffActive ? 1 : 0.5}>
         <path
-          d="M490 214 C536 214 536 128 582 128 M490 282 C536 282 536 370 582 370"
+          d="M506 205 C548 205 544 121 586 121 M506 294 C548 294 544 379 586 379"
           fill="none"
           stroke="var(--ritwik-color-accent)"
           strokeWidth="2"
@@ -474,9 +510,9 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           rx="38"
           stroke="var(--ritwik-color-signal-cyan)"
           strokeWidth={replayActive ? 2.5 : 1.4}
-          width="144"
-          x="574"
-          y="90"
+          width="142"
+          x="578"
+          y="83"
         />
         <rect
           fill="rgb(8 25 43 / 0.96)"
@@ -485,16 +521,16 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           stroke="var(--ritwik-color-signal-amber)"
           strokeWidth={replayActive ? 2.5 : 1.4}
           width="144"
-          x="574"
-          y="332"
+          x="578"
+          y="341"
         />
         <text
           fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
           fontSize="11"
           textAnchor="middle"
-          x="646"
-          y="121"
+          x="649"
+          y="114"
         >
           ORIGINAL
         </text>
@@ -503,8 +539,8 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="646"
-          y="141"
+          x="649"
+          y="134"
         >
           FINGERPRINT ✓
         </text>
@@ -513,8 +549,8 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="11"
           textAnchor="middle"
-          x="646"
-          y="363"
+          x="649"
+          y="372"
         >
           REPLAY
         </text>
@@ -523,8 +559,8 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="646"
-          y="383"
+          x="649"
+          y="392"
         >
           NO LIVE FALLBACK
         </text>
@@ -532,7 +568,7 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
 
       <g opacity={diffActive ? 1 : 0.72}>
         <path
-          d="M646 166 V206 M646 332 V292"
+          d="M649 159 V207 M649 341 V293"
           stroke="var(--ritwik-color-border-strong)"
           strokeWidth="2"
         />
@@ -542,9 +578,9 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           rx="8"
           stroke="var(--ritwik-color-signal-amber)"
           strokeWidth={diffActive ? 3 : 1.5}
-          width="164"
-          x="564"
-          y="206"
+          width="174"
+          x="562"
+          y="207"
         />
         <text
           fill="var(--ritwik-color-foreground)"
@@ -552,7 +588,7 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontSize="11"
           fontWeight="700"
           textAnchor="middle"
-          x="646"
+          x="649"
           y="239"
         >
           STRUCTURAL DIFF
@@ -562,7 +598,7 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="9"
           textAnchor="middle"
-          x="646"
+          x="649"
           y="261"
         >
           REGRESSION RESULT
@@ -572,7 +608,7 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
-          x="646"
+          x="649"
           y="278"
         >
           EXACT MATCH / REVIEW
@@ -582,10 +618,177 @@ function TraceForgeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
   );
 }
 
+function TraceForgeMobileVisual({ activeStep }: Readonly<VisualProps>) {
+  return (
+    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 320 610">
+      <path
+        d="M160 103 V170 M160 330 V365 M95 411 V458 M225 411 V458 M95 458 C95 475 160 472 160 492 M225 458 C225 475 160 472 160 492"
+        fill="none"
+        stroke="var(--ritwik-color-border-strong)"
+        strokeWidth="2"
+      />
+      <text
+        fill="var(--ritwik-color-foreground-muted)"
+        fontFamily="monospace"
+        fontSize="8"
+        textAnchor="middle"
+        x="160"
+        y="40"
+      >
+        LIVE EXECUTION
+      </text>
+      {["MODEL", "HTTP", "TOOL", "STATE"].map((label, index) => (
+        <g key={label} transform={`translate(${18 + index * 74} 57)`}>
+          <rect
+            fill="rgb(7 20 34 / .96)"
+            height="34"
+            rx="17"
+            stroke={
+              index % 2
+                ? "var(--ritwik-color-signal-amber)"
+                : "var(--ritwik-color-signal-cyan)"
+            }
+            width="64"
+          />
+          <text
+            fill="var(--ritwik-color-foreground-secondary)"
+            fontFamily="monospace"
+            fontSize="7"
+            textAnchor="middle"
+            x="32"
+            y="21"
+          >
+            {label}
+          </text>
+        </g>
+      ))}
+      <g opacity={activeStep <= 1 ? 1 : 0.78}>
+        <circle
+          cx="160"
+          cy="250"
+          fill="rgb(47 127 255 / .08)"
+          r="82"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeWidth={activeStep === 1 ? 3 : 1.5}
+        />
+        <circle
+          cx="160"
+          cy="250"
+          fill="none"
+          r="65"
+          stroke="var(--ritwik-color-accent)"
+        />
+        <path
+          d="M116 223 H204 M124 238 H196 M132 253 H188"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeDasharray="2 5"
+        />
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="11"
+          fontWeight="700"
+          textAnchor="middle"
+          x="160"
+          y="279"
+        >
+          REPLAY CAPSULE
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-cyan)"
+          fontFamily="monospace"
+          fontSize="7"
+          textAnchor="middle"
+          x="160"
+          y="296"
+        >
+          {activeStep > 0 ? "SEALED · IMMUTABLE" : "CAPTURING"}
+        </text>
+      </g>
+      {[
+        [42, "ORIGINAL", "FINGERPRINT ✓"],
+        [172, "REPLAY", "NO LIVE FALLBACK"],
+      ].map(([x, label, sub]) => (
+        <g key={String(label)} opacity={activeStep >= 2 ? 1 : 0.55}>
+          <rect
+            fill="rgb(7 20 34 / .96)"
+            height="46"
+            rx="23"
+            stroke={
+              label === "ORIGINAL"
+                ? "var(--ritwik-color-signal-cyan)"
+                : "var(--ritwik-color-signal-amber)"
+            }
+            width="106"
+            x={Number(x)}
+            y="365"
+          />
+          <text
+            fill="var(--ritwik-color-foreground)"
+            fontFamily="monospace"
+            fontSize="8"
+            textAnchor="middle"
+            x={Number(x) + 53}
+            y="385"
+          >
+            {String(label)}
+          </text>
+          <text
+            fill="var(--ritwik-color-foreground-muted)"
+            fontFamily="monospace"
+            fontSize="6"
+            textAnchor="middle"
+            x={Number(x) + 53}
+            y="400"
+          >
+            {String(sub)}
+          </text>
+        </g>
+      ))}
+      <g opacity={activeStep === 3 ? 1 : 0.58}>
+        <rect
+          fill="rgb(242 185 95 / .08)"
+          height="72"
+          rx="8"
+          stroke="var(--ritwik-color-signal-amber)"
+          strokeWidth={activeStep === 3 ? 3 : 1.5}
+          width="190"
+          x="65"
+          y="492"
+        />
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="10"
+          fontWeight="700"
+          textAnchor="middle"
+          x="160"
+          y="521"
+        >
+          STRUCTURAL DIFF
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-amber)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="160"
+          y="543"
+        >
+          REGRESSION RESULT
+        </text>
+      </g>
+    </svg>
+  );
+}
+
 function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
   const offlineActive = activeStep === 0 || activeStep === 2;
+  const recovered = activeStep === 2;
   const authorityActive = activeStep === 1;
   const deliveryActive = activeStep === 3;
+  const operationPath =
+    "M184 105 C226 105 230 222 270 222 H446 C470 222 476 210 508 210 H612 V134 H672 V215 H750 C770 215 770 143 793 143";
 
   return (
     <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 860 500">
@@ -602,7 +805,9 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
               rx="8"
               stroke={
                 index === 2
-                  ? "var(--ritwik-color-signal-amber)"
+                  ? recovered
+                    ? "var(--ritwik-color-signal-cyan)"
+                    : "var(--ritwik-color-signal-amber)"
                   : "var(--ritwik-color-accent)"
               }
               width="142"
@@ -614,7 +819,9 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
               cy={Number(y) + 20}
               fill={
                 index === 2
-                  ? "var(--ritwik-color-signal-amber)"
+                  ? recovered
+                    ? "var(--ritwik-color-signal-cyan)"
+                    : "var(--ritwik-color-signal-amber)"
                   : "var(--ritwik-color-success)"
               }
               r="4"
@@ -628,9 +835,24 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
             >
               {String(label)}
             </text>
+            {index === 2 ? (
+              <text
+                fill={
+                  recovered
+                    ? "var(--ritwik-color-signal-cyan)"
+                    : "var(--ritwik-color-signal-amber)"
+                }
+                fontFamily="monospace"
+                fontSize="7"
+                x={Number(x) + 20}
+                y={Number(y) + 57}
+              >
+                {recovered ? "CURRENT" : "DISCONNECTED"}
+              </text>
+            ) : null}
           </g>
         ))}
-        <g opacity={offlineActive ? 1 : 0.55}>
+        <g opacity={recovered ? 0.18 : offlineActive ? 1 : 0.55}>
           <rect
             fill="rgb(242 185 95 / 0.08)"
             height="34"
@@ -648,7 +870,7 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
             x="113"
             y="454"
           >
-            QUEUED OP · IDB
+            QUEUED OP · INDEXEDDB
           </text>
         </g>
       </g>
@@ -663,7 +885,11 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
         className={!reduced && offlineActive ? "converge-reconnect" : undefined}
         d="M184 387 C238 387 218 276 270 258"
         fill="none"
-        stroke="var(--ritwik-color-signal-amber)"
+        stroke={
+          recovered
+            ? "var(--ritwik-color-signal-cyan)"
+            : "var(--ritwik-color-signal-amber)"
+        }
         strokeDasharray="6 7"
         strokeWidth="2"
       />
@@ -761,6 +987,17 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
         >
           BOARD SEQUENCE
         </text>
+        {authorityActive && !reduced ? (
+          <ellipse
+            className="signal-ripple"
+            cx="508"
+            cy="277"
+            fill="none"
+            rx="70"
+            ry="27"
+            stroke="var(--ritwik-color-signal-cyan)"
+          />
+        ) : null}
       </g>
 
       <g opacity={deliveryActive ? 1 : 0.7}>
@@ -855,10 +1092,12 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
       />
       {["041", "042", "043"].map((sequence, index) => (
         <g
-          className={!reduced ? "converge-sequence-token" : undefined}
           key={sequence}
-          style={{ animationDelay: `${index * 700}ms` }}
-          transform={`translate(${420 + index * 92} ${348 - index * 22})`}
+          transform={
+            !reduced && activeStep > 0
+              ? undefined
+              : `translate(${420 + index * 72} 344)`
+          }
         >
           <circle
             fill="rgb(4 7 13 / 0.96)"
@@ -874,6 +1113,15 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
           >
             {sequence}
           </text>
+          {!reduced && activeStep > 0 ? (
+            <animateMotion
+              begin={`${index * 0.82}s`}
+              dur="0.78s"
+              fill="freeze"
+              path={operationPath}
+              repeatCount="1"
+            />
+          ) : null}
         </g>
       ))}
       <text
@@ -883,8 +1131,267 @@ function ConvergeVisual({ activeStep, reduced }: Readonly<VisualProps>) {
         x="208"
         y="408"
       >
-        RECONNECT → FIXED-WATERMARK CATCH-UP → CURRENT STATE
+        {recovered
+          ? "FIXED-WATERMARK CATCH-UP ✓ · QUEUE DRAINED · CURRENT"
+          : "DISCONNECTED · LOCAL INTENT PERSISTED · RECONNECT READY"}
       </text>
+    </svg>
+  );
+}
+
+function ConvergeMobileVisual({ activeStep }: Readonly<VisualProps>) {
+  const recovered = activeStep === 2;
+  return (
+    <svg aria-hidden="true" className="h-full w-full" viewBox="0 0 320 650">
+      <path
+        d="M82 88 C82 132 160 130 160 168 M238 88 C238 132 160 130 160 168 M160 230 V270 M160 330 V365 M160 413 V448 M160 496 V526 M160 576 C160 603 92 600 92 620 M160 576 C160 603 228 600 228 620"
+        fill="none"
+        stroke="var(--ritwik-color-border-strong)"
+        strokeWidth="2"
+      />
+      <path
+        d="M61 141 C20 190 30 290 78 314"
+        fill="none"
+        stroke={
+          recovered
+            ? "var(--ritwik-color-signal-cyan)"
+            : "var(--ritwik-color-signal-amber)"
+        }
+        strokeDasharray="5 7"
+        strokeWidth="2"
+      />
+      {[
+        [28, "CLIENT A"],
+        [188, "CLIENT B"],
+      ].map(([x, label]) => (
+        <g key={String(label)}>
+          <rect
+            fill="rgb(7 20 34 / .98)"
+            height="44"
+            rx="7"
+            stroke="var(--ritwik-color-accent)"
+            width="104"
+            x={Number(x)}
+            y="44"
+          />
+          <circle
+            cx={Number(x) + 17}
+            cy="60"
+            fill="var(--ritwik-color-success)"
+            r="3.5"
+          />
+          <text
+            fill="var(--ritwik-color-foreground)"
+            fontFamily="monospace"
+            fontSize="8"
+            textAnchor="middle"
+            x={Number(x) + 52}
+            y="73"
+          >
+            {String(label)}
+          </text>
+        </g>
+      ))}
+      <g>
+        <rect
+          fill="rgb(242 185 95 / .07)"
+          height="42"
+          rx="6"
+          stroke={
+            recovered
+              ? "var(--ritwik-color-signal-cyan)"
+              : "var(--ritwik-color-signal-amber)"
+          }
+          width="122"
+          x="0"
+          y="115"
+        />
+        <text
+          fill={
+            recovered
+              ? "var(--ritwik-color-signal-cyan)"
+              : "var(--ritwik-color-signal-amber)"
+          }
+          fontFamily="monospace"
+          fontSize="7"
+          textAnchor="middle"
+          x="61"
+          y="133"
+        >
+          OFFLINE CLIENT
+        </text>
+        <text
+          fill="var(--ritwik-color-foreground-muted)"
+          fontFamily="monospace"
+          fontSize="6"
+          textAnchor="middle"
+          x="61"
+          y="148"
+        >
+          {recovered ? "CURRENT" : "QUEUED · INDEXEDDB"}
+        </text>
+      </g>
+      <g opacity={activeStep === 1 ? 1 : 0.82}>
+        <path
+          d="M105 168 H215 L232 199 L215 230 H105 L88 199 Z"
+          fill="rgb(47 127 255 / .14)"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeWidth={activeStep === 1 ? 3 : 1.5}
+        />
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="9"
+          fontWeight="700"
+          textAnchor="middle"
+          x="160"
+          y="195"
+        >
+          BOARD AUTHORITY
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-cyan)"
+          fontFamily="monospace"
+          fontSize="7"
+          textAnchor="middle"
+          x="160"
+          y="212"
+        >
+          041 → 042 → 043
+        </text>
+      </g>
+      <g>
+        <rect
+          fill="rgb(7 20 34 / .98)"
+          height="60"
+          rx="8"
+          stroke="var(--ritwik-color-accent)"
+          width="160"
+          x="80"
+          y="270"
+        />
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="9"
+          textAnchor="middle"
+          x="160"
+          y="294"
+        >
+          POSTGRESQL COMMIT
+        </text>
+        <text
+          fill="var(--ritwik-color-signal-cyan)"
+          fontFamily="monospace"
+          fontSize="7"
+          textAnchor="middle"
+          x="160"
+          y="313"
+        >
+          SEQUENCE + OUTBOX ✓
+        </text>
+      </g>
+      {[
+        [104, 365, "OUTBOX WORKER", "PUBLISH"],
+        [104, 448, "REDIS STREAM", "AT LEAST ONCE"],
+      ].map(([x, y, label, sub]) => (
+        <g key={String(label)} opacity={activeStep === 3 ? 1 : 0.72}>
+          <rect
+            fill="rgb(7 20 34 / .98)"
+            height="48"
+            rx="7"
+            stroke={
+              label === "OUTBOX WORKER"
+                ? "var(--ritwik-color-signal-amber)"
+                : "var(--ritwik-color-signal-cyan)"
+            }
+            width="112"
+            x={Number(x)}
+            y={Number(y)}
+          />
+          <text
+            fill="var(--ritwik-color-foreground-secondary)"
+            fontFamily="monospace"
+            fontSize="8"
+            textAnchor="middle"
+            x="160"
+            y={Number(y) + 20}
+          >
+            {String(label)}
+          </text>
+          <text
+            fill="var(--ritwik-color-foreground-muted)"
+            fontFamily="monospace"
+            fontSize="6"
+            textAnchor="middle"
+            x="160"
+            y={Number(y) + 35}
+          >
+            {String(sub)}
+          </text>
+        </g>
+      ))}
+      <g>
+        <rect
+          fill="rgb(7 20 34 / .98)"
+          height="50"
+          rx="7"
+          stroke="var(--ritwik-color-accent)"
+          width="160"
+          x="80"
+          y="526"
+        />
+        <text
+          fill="var(--ritwik-color-foreground)"
+          fontFamily="monospace"
+          fontSize="8"
+          textAnchor="middle"
+          x="160"
+          y="548"
+        >
+          FIXED-WATERMARK CATCH-UP
+        </text>
+        <text
+          fill={
+            recovered
+              ? "var(--ritwik-color-signal-cyan)"
+              : "var(--ritwik-color-foreground-muted)"
+          }
+          fontFamily="monospace"
+          fontSize="7"
+          textAnchor="middle"
+          x="160"
+          y="564"
+        >
+          {recovered ? "QUEUE DRAINED · CURRENT" : "RECOVERY READY"}
+        </text>
+      </g>
+      {[
+        [44, "REPLICA A"],
+        [180, "REPLICA B"],
+      ].map(([x, label]) => (
+        <g key={String(label)}>
+          <rect
+            fill="rgb(7 20 34 / .98)"
+            height="38"
+            rx="6"
+            stroke="var(--ritwik-color-accent)"
+            width="96"
+            x={Number(x)}
+            y="606"
+          />
+          <text
+            fill="var(--ritwik-color-foreground-secondary)"
+            fontFamily="monospace"
+            fontSize="7"
+            textAnchor="middle"
+            x={Number(x) + 48}
+            y="630"
+          >
+            {String(label)}
+          </text>
+        </g>
+      ))}
     </svg>
   );
 }
@@ -952,7 +1459,7 @@ export function SystemVisualStage({
 
   return (
     <div
-      className={`relative min-h-[23rem] overflow-hidden border border-border ${atmosphere} sm:min-h-[30rem] ${className}`}
+      className={`relative overflow-hidden border border-border ${atmosphere} ${project === "thesislens" ? "min-h-[23rem] sm:min-h-[30rem]" : "min-h-[38rem] sm:min-h-[30rem]"} ${className}`}
       data-project-stage={project}
       ref={hostRef}
     >
@@ -970,22 +1477,42 @@ export function SystemVisualStage({
         ))}
       </ol>
       {nearViewport ? (
-        <div className="absolute inset-0 pt-7">
+        <div className="absolute inset-0 pt-7" key={`${project}-${activeStep}`}>
           {project === "thesislens" ? (
             <ThesisLensVisual
               activeStep={activeStep}
               reduced={reduced || !isVisible}
             />
           ) : project === "traceforge" ? (
-            <TraceForgeVisual
-              activeStep={activeStep}
-              reduced={reduced || !isVisible}
-            />
+            <>
+              <div className="hidden h-full sm:block">
+                <TraceForgeVisual
+                  activeStep={activeStep}
+                  reduced={reduced || !isVisible}
+                />
+              </div>
+              <div className="h-full sm:hidden">
+                <TraceForgeMobileVisual
+                  activeStep={activeStep}
+                  reduced={reduced || !isVisible}
+                />
+              </div>
+            </>
           ) : (
-            <ConvergeVisual
-              activeStep={activeStep}
-              reduced={reduced || !isVisible}
-            />
+            <>
+              <div className="hidden h-full sm:block">
+                <ConvergeVisual
+                  activeStep={activeStep}
+                  reduced={reduced || !isVisible}
+                />
+              </div>
+              <div className="h-full sm:hidden">
+                <ConvergeMobileVisual
+                  activeStep={activeStep}
+                  reduced={reduced || !isVisible}
+                />
+              </div>
+            </>
           )}
         </div>
       ) : (

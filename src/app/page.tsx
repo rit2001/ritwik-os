@@ -66,7 +66,7 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container
-          className="grid min-h-[calc(100dvh-var(--layout-header-height))] items-center gap-8 py-14 sm:py-18 lg:grid-cols-[minmax(0,0.58fr)_minmax(25rem,0.42fr)] lg:gap-10 lg:py-16"
+          className="grid min-h-[calc(100dvh-var(--layout-header-height))] items-center gap-8 py-14 sm:py-18 lg:grid-cols-[minmax(0,0.58fr)_minmax(25rem,0.42fr)] lg:grid-rows-[auto_auto] lg:gap-x-10 lg:gap-y-0 lg:py-16"
           width="wide"
         >
           <div className="relative z-10">
@@ -75,10 +75,7 @@ export default function Home() {
             </p>
             <h1 className="mt-6 max-w-[15ch] text-[clamp(3rem,3.5vw,3.8rem)] leading-[0.9] font-semibold tracking-[-0.055em] text-foreground uppercase min-[1200px]:max-w-none">
               <span className="block min-[1200px]:whitespace-nowrap">
-                Engineering{" "}
-                <span className="text-transparent [-webkit-text-stroke:1px_var(--ritwik-color-foreground-secondary)]">
-                  Intelligence
-                </span>
+                Engineering Intelligence
               </span>
               <span className="block">Into Production.</span>
             </h1>
@@ -89,7 +86,13 @@ export default function Home() {
               Building AI products, distributed systems, and full-stack
               platforms that solve real engineering problems.
             </p>
+          </div>
 
+          <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            <ProfessionalTopology />
+          </div>
+
+          <div className="relative z-10 lg:col-start-1 lg:row-start-2 lg:self-start">
             <div className="mt-7 grid max-w-2xl gap-4 border-y border-border py-4 sm:grid-cols-2">
               <div>
                 <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
@@ -120,8 +123,6 @@ export default function Home() {
               </ActionLink>
             </div>
           </div>
-
-          <ProfessionalTopology />
         </Container>
       </section>
 
@@ -150,7 +151,7 @@ export default function Home() {
 
       <section
         aria-labelledby="journey-title"
-        className="relative overflow-hidden border-b border-border py-20 lg:py-28"
+        className="relative overflow-hidden border-b border-border py-16 lg:py-20"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgb(47_127_255_/_0.1),transparent_54%)]"
@@ -248,7 +249,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="relative isolate scroll-mt-32 overflow-hidden py-24 lg:py-36"
+        className="relative isolate scroll-mt-32 overflow-hidden py-18 lg:py-24"
       >
         <div
           className="signal-grid pointer-events-none absolute inset-0 -z-20 opacity-45"
@@ -259,37 +260,74 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container width="wide">
-          <div className="relative grid gap-12 border-y border-border py-12 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-center lg:gap-20 lg:py-16">
+          <div className="contact-finale relative grid gap-10 border-y border-border py-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-center lg:gap-16 lg:py-12">
             <svg
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 hidden h-full w-full opacity-70 lg:block"
               preserveAspectRatio="none"
-              viewBox="0 0 1200 420"
+              viewBox="0 0 1200 320"
             >
               <path
-                d="M30 74 C300 74 390 210 660 210 S880 250 1010 250"
+                className="contact-route"
+                d="M30 54 C280 54 410 142 660 142 S850 160 1010 160"
                 fill="none"
                 stroke="var(--ritwik-color-signal-cyan)"
                 strokeDasharray="3 9"
                 strokeWidth="1.5"
               />
               <path
-                d="M80 350 C310 350 420 240 660 240 S850 250 1010 250"
+                className="contact-route"
+                d="M30 160 H1010"
                 fill="none"
                 stroke="var(--ritwik-color-accent)"
                 strokeDasharray="3 9"
                 strokeWidth="1.5"
               />
+              <path
+                className="contact-route"
+                d="M30 274 C280 274 410 178 660 178 S850 160 1010 160"
+                fill="none"
+                stroke="var(--ritwik-color-signal-amber)"
+                strokeDasharray="3 9"
+                strokeWidth="1.5"
+              />
+              <text
+                fill="var(--ritwik-color-foreground-muted)"
+                fontFamily="monospace"
+                fontSize="10"
+                x="36"
+                y="45"
+              >
+                SYSTEMS
+              </text>
+              <text
+                fill="var(--ritwik-color-foreground-muted)"
+                fontFamily="monospace"
+                fontSize="10"
+                x="36"
+                y="151"
+              >
+                EXPERIENCE
+              </text>
+              <text
+                fill="var(--ritwik-color-foreground-muted)"
+                fontFamily="monospace"
+                fontSize="10"
+                x="36"
+                y="265"
+              >
+                FOUNDATIONS
+              </text>
               <circle
                 cx="948"
-                cy="249"
+                cy="160"
                 fill="var(--ritwik-color-signal-cyan)"
                 opacity="0.38"
                 r="3"
               />
               <circle
                 cx="978"
-                cy="250"
+                cy="160"
                 fill="var(--ritwik-color-signal-cyan)"
                 opacity="0.66"
                 r="3.5"
@@ -297,14 +335,14 @@ export default function Home() {
               <circle
                 className="signal-ripple"
                 cx="1010"
-                cy="250"
+                cy="160"
                 fill="none"
                 r="18"
                 stroke="var(--ritwik-color-signal-amber)"
               />
               <circle
                 cx="1010"
-                cy="250"
+                cy="160"
                 fill="var(--ritwik-color-signal-amber)"
                 r="5"
               />
@@ -313,15 +351,20 @@ export default function Home() {
               <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
                 Contact / Final signal destination
               </p>
-              <h2 className="mt-5 max-w-4xl text-[clamp(2.6rem,5vw,5rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-balance text-foreground">
-                Build systems that survive contact with production.
+              <h2 className="mt-5 max-w-4xl text-[clamp(2.55rem,4.5vw,4.65rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-foreground uppercase">
+                <span className="block lg:whitespace-nowrap">
+                  Build systems that survive
+                </span>
+                <span className="block lg:whitespace-nowrap">
+                  contact with production.
+                </span>
               </h2>
               <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
                 {profile.availability.summary} {profile.availability.immediate}
               </p>
             </Reveal>
 
-            <div className="relative border border-border bg-background/80 px-6 py-7 backdrop-blur-sm lg:px-7">
+            <div className="relative border border-border bg-background/88 px-6 py-7 shadow-[0_22px_70px_rgb(0_0_0_/.25)] backdrop-blur-sm lg:px-7">
               <span
                 className="signal-ripple absolute top-6 right-6 h-4 w-4 rounded-full border border-signal-amber"
                 aria-hidden="true"
@@ -330,13 +373,13 @@ export default function Home() {
                 {profile.location}
               </p>
               <a
-                className="mt-3 block break-all text-[length:var(--text-body-size)] font-semibold text-foreground underline decoration-border-strong underline-offset-4 transition-colors hover:text-accent focus-visible:text-accent"
+                className="mt-3 block break-all text-[length:var(--text-body-size)] font-semibold text-foreground underline decoration-border-strong underline-offset-4 transition-[color,transform] hover:translate-x-1 hover:text-accent focus-visible:translate-x-1 focus-visible:text-accent"
                 href={`mailto:${profile.email}`}
               >
                 {profile.email}
               </a>
               <div className="mt-7 flex flex-wrap gap-3">
-                <span className="group relative inline-flex">
+                <span className="group relative inline-flex transition-transform hover:translate-x-1 hover:-translate-y-px focus-within:translate-x-1 focus-within:-translate-y-px">
                   <span
                     className="pointer-events-none absolute inset-[-0.45rem] rounded-lg border border-signal-cyan opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 motion-safe:group-hover:animate-ping motion-safe:group-focus-within:animate-ping"
                     aria-hidden="true"

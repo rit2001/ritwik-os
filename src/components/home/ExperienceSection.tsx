@@ -6,7 +6,7 @@ import {
   useInView,
   useReducedMotion,
 } from "motion/react";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   type SignalLocationId,
@@ -20,9 +20,12 @@ const locationByCompany: Record<string, SignalLocationId> = {
   "TASKLY TECHNOLOGIES INC.": "toronto",
 };
 
+const routeRoles = [...experience].reverse();
+
 export function ExperienceSection() {
   const hostRef = useRef<HTMLDivElement>(null);
-  const roles = [...experience].reverse();
+  const playedRef = useRef(false);
+  const roles = routeRoles;
   const [activeCompany, setActiveCompany] = useState<string>(
     roles[0]?.company ?? "",
   );
@@ -31,31 +34,75 @@ export function ExperienceSection() {
   const inView = useInView(hostRef, { margin: "120px" });
   const activeRole =
     roles.find((role) => role.company === activeCompany) ?? roles[0];
+  const activeIndex = roles.findIndex(
+    (role) => role.company === activeRole.company,
+  );
 
-  const activate = (company: string) => {
-    setActiveCompany(company);
-    setActiveLocation(locationByCompany[company] ?? null);
-  };
+  const activate = useCallback(
+    (company: string) => {
+      setActiveCompany(company);
+      setActiveLocation(locationByCompany[company] ?? null);
+    },
+    [setActiveLocation],
+  );
+
+  useEffect(() => {
+    if (!inView || reduced || playedRef.current) return;
+    playedRef.current = true;
+    const timers = roles.map((role, index) =>
+      window.setTimeout(() => activate(role.company), 380 + index * 640),
+    );
+    return () => timers.forEach(window.clearTimeout);
+  }, [activate, inView, reduced, roles]);
 
   return (
     <div className="relative mt-14" ref={hostRef}>
-      <div className="relative hidden min-h-40 sm:block">
-        <div
-          className="absolute top-9 right-[8%] left-[8%] h-px bg-border-strong"
+      <div className="relative hidden min-h-52 sm:block">
+        <svg
           aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-32 w-full overflow-visible"
+          preserveAspectRatio="none"
+          viewBox="0 0 1000 130"
         >
-          <span className="block h-px bg-gradient-to-r from-signal-amber via-signal-cyan to-accent" />
-          <span
-            className={`${inView && !reduced ? "signal-sweep-x" : ""} absolute -top-[0.24rem] h-2.5 w-2.5 rounded-full bg-signal-cyan shadow-[0_0_18px_var(--ritwik-color-signal-cyan)]`}
+          <path
+            d="M80 82 C230 82 310 30 500 38 S760 92 920 82"
+            fill="none"
+            stroke="var(--ritwik-color-border-strong)"
+            strokeWidth="2"
           />
-        </div>
+          <motion.path
+            animate={{ pathLength: (activeIndex + 1) / roles.length }}
+            d="M80 82 C230 82 310 30 500 38 S760 92 920 82"
+            fill="none"
+            initial={false}
+            stroke="var(--ritwik-color-signal-cyan)"
+            strokeLinecap="round"
+            strokeWidth="3"
+            transition={{ duration: reduced ? 0 : 0.58 }}
+          />
+          {!reduced && inView ? (
+            <circle
+              fill="var(--ritwik-color-signal-amber)"
+              filter="drop-shadow(0 0 8px var(--ritwik-color-signal-amber))"
+              r="4"
+            >
+              <animateMotion
+                dur="1.92s"
+                fill="freeze"
+                path="M80 82 C230 82 310 30 500 38 S760 92 920 82"
+                repeatCount="1"
+              />
+            </circle>
+          ) : null}
+        </svg>
 
-        <div className="relative grid grid-cols-3 gap-10">
+        <div className="relative grid grid-cols-3 gap-8">
           {roles.map((role, index) => {
             const active = activeCompany === role.company;
+            const markerTop = index === 1 ? 1.45 : 4.2;
             return (
               <button
-                className="group relative pt-[4.3rem] text-left"
+                className={`group relative min-h-48 text-center transition-transform duration-300 ${active ? "-translate-y-2" : ""}`}
                 key={role.company}
                 onClick={() => activate(role.company)}
                 onFocus={() => activate(role.company)}
@@ -64,12 +111,13 @@ export function ExperienceSection() {
                 aria-pressed={active}
               >
                 <span
-                  className={`absolute top-[1.58rem] left-1/2 grid h-7 w-7 -translate-x-1/2 place-items-center rotate-45 border transition-[border-color,background-color,box-shadow,transform] group-hover:scale-110 group-focus-visible:scale-110 ${
+                  className={`absolute left-1/2 grid h-8 w-8 -translate-x-1/2 place-items-center rotate-45 border transition-[border-color,background-color,box-shadow,transform] group-hover:scale-110 group-focus-visible:scale-110 ${
                     active
                       ? "border-signal-cyan bg-accent-muted shadow-[0_0_28px_var(--ritwik-color-signal-glow)]"
                       : "border-border-strong bg-background"
                   }`}
                   aria-hidden="true"
+                  style={{ top: `${markerTop}rem` }}
                 >
                   <span
                     className={`h-2 w-2 rounded-full -rotate-45 ${active ? "bg-signal-cyan" : "bg-foreground-muted"}`}
@@ -78,15 +126,18 @@ export function ExperienceSection() {
                     <span className="signal-ripple absolute inset-[-0.45rem] rounded-full border border-signal-cyan" />
                   ) : null}
                 </span>
-                <span className="block text-center font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase">
+                <span
+                  className="block font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-signal-cyan uppercase"
+                  style={{ paddingTop: `${markerTop + 3.25}rem` }}
+                >
                   0{index + 1} · {role.dates}
                 </span>
                 <span
-                  className={`mt-3 block text-center text-lg font-semibold transition-colors ${active ? "text-foreground" : "text-foreground-secondary"}`}
+                  className={`mt-2 block text-lg font-semibold transition-colors ${active ? "text-foreground" : "text-foreground-secondary"}`}
                 >
                   {role.company.replace(" INC.", "")}
                 </span>
-                <span className="mt-1 block text-center font-mono text-[0.65rem] tracking-[0.06em] text-foreground-muted uppercase">
+                <span className="mt-1 block font-mono text-[0.65rem] tracking-[0.06em] text-foreground-muted uppercase">
                   {role.location}
                 </span>
               </button>

@@ -6,7 +6,7 @@ import {
   useInView,
   useReducedMotion,
 } from "motion/react";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   type SignalLocationId,
@@ -95,6 +95,7 @@ const journeyEvents: readonly JourneyEvent[] = [
 
 export function JourneyTimeline() {
   const hostRef = useRef<HTMLDivElement>(null);
+  const hasPlayedRef = useRef(false);
   const {
     activeTimelineEvent,
     setActiveTimelineEvent,
@@ -112,16 +113,28 @@ export function JourneyTimeline() {
     (event) => event.id === activeEvent.id,
   );
 
-  const activate = (event: JourneyEvent) => {
-    setActiveId(event.id);
-    setActiveTimelineEvent(event.id);
-    setActiveLocation(event.locationId ?? null);
-    setActiveProject(event.projectIds?.[0] ?? null);
-  };
+  const activate = useCallback(
+    (event: JourneyEvent) => {
+      setActiveId(event.id);
+      setActiveTimelineEvent(event.id);
+      setActiveLocation(event.locationId ?? null);
+      setActiveProject(event.projectIds?.[0] ?? null);
+    },
+    [setActiveLocation, setActiveProject, setActiveTimelineEvent],
+  );
+
+  useEffect(() => {
+    if (!inView || reduceMotion || hasPlayedRef.current) return;
+    hasPlayedRef.current = true;
+    const timers = journeyEvents.map((event, index) =>
+      window.setTimeout(() => activate(event), 430 + index * 570),
+    );
+    return () => timers.forEach(window.clearTimeout);
+  }, [activate, inView, reduceMotion]);
 
   return (
-    <div className="mt-12" ref={hostRef}>
-      <div className="relative hidden h-[20rem] lg:block">
+    <div className="mt-8" ref={hostRef}>
+      <div className="relative hidden h-[18rem] lg:block">
         <svg
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-[15rem] w-full overflow-visible"
@@ -151,12 +164,14 @@ export function JourneyTimeline() {
             <circle
               fill="var(--ritwik-color-signal-amber)"
               filter="drop-shadow(0 0 6px var(--ritwik-color-signal-amber))"
+              key="journey-entry-packet"
               r="4.5"
             >
               <animateMotion
-                dur="5.5s"
+                dur="2.85s"
+                fill="freeze"
                 path={timelinePath}
-                repeatCount="indefinite"
+                repeatCount="1"
               />
             </circle>
           ) : null}

@@ -1,120 +1,146 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   type SignalLocationId,
   useSignalState,
 } from "@/components/signal/SignalProvider";
-import { professionalSignals } from "@/data/professional-signals";
+import {
+  type ProfessionalSignal,
+  professionalSignals,
+} from "@/data/professional-signals";
 
 const ThreeGlobeCanvas = dynamic(() => import("./ThreeGlobeCanvas"), {
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="absolute inset-[12%] animate-pulse rounded-full border border-signal-cyan/20 bg-[radial-gradient(circle_at_35%_28%,rgb(91_165_218_/_0.22),rgb(4_13_26_/_0.92)_58%,transparent_72%)]"
+    />
+  ),
   ssr: false,
 });
 
+const publicSignals: readonly ProfessionalSignal[] = professionalSignals.filter(
+  (signal) => signal.visibility === "public",
+);
+
 export function ProfessionalTopology() {
-  const figureRef = useRef<HTMLElement>(null);
   const { activeLocation, setActiveLocation } = useSignalState();
+  const rootRef = useRef<HTMLElement>(null);
   const [hoveredLocation, setHoveredLocation] =
     useState<SignalLocationId | null>(null);
   const [lockedLocation, setLockedLocation] = useState<SignalLocationId | null>(
     null,
   );
-  const publicSignals = useMemo(
+  const [showHint, setShowHint] = useState(true);
+
+  const displayedLocation = hoveredLocation ?? lockedLocation ?? activeLocation;
+  const activeSignal = useMemo(
     () =>
-      professionalSignals.filter((signal) => signal.visibility === "public"),
-    [],
+      displayedLocation
+        ? publicSignals.find((signal) => signal.id === displayedLocation)
+        : undefined,
+    [displayedLocation],
   );
-  const displayedId = hoveredLocation ?? lockedLocation ?? activeLocation;
-  const displayedSignal = publicSignals.find(
-    (signal) => signal.id === displayedId,
-  );
+
+  const dismissHint = useCallback(() => setShowHint(false), []);
 
   useEffect(() => {
-    if (!lockedLocation) return;
+    const timer = window.setTimeout(dismissHint, 5000);
+    return () => window.clearTimeout(timer);
+  }, [dismissHint]);
 
-    const releaseOutside = (event: PointerEvent) => {
-      if (!figureRef.current?.contains(event.target as Node)) {
-        setLockedLocation(null);
-        setActiveLocation(null);
+  useEffect(() => {
+    const release = () => {
+      setLockedLocation(null);
+      setHoveredLocation(null);
+      setActiveLocation(null);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && lockedLocation) release();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (
+        lockedLocation &&
+        rootRef.current &&
+        !rootRef.current.contains(event.target as Node)
+      ) {
+        release();
       }
     };
-    document.addEventListener("pointerdown", releaseOutside);
-    return () => document.removeEventListener("pointerdown", releaseOutside);
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
   }, [lockedLocation, setActiveLocation]);
 
-  const selectLocation = (id: SignalLocationId) => {
-    const next = lockedLocation === id ? null : id;
-    setLockedLocation(next);
-    setActiveLocation(next);
-  };
+  const handleHover = useCallback(
+    (id: SignalLocationId | null) => {
+      if (id) dismissHint();
+      setHoveredLocation(id);
+      if (!lockedLocation) setActiveLocation(id);
+    },
+    [dismissHint, lockedLocation, setActiveLocation],
+  );
+
+  const handleSelect = useCallback(
+    (id: SignalLocationId) => {
+      dismissHint();
+      setHoveredLocation(null);
+      setLockedLocation((current) => {
+        const next = current === id ? null : id;
+        setActiveLocation(next);
+        return next;
+      });
+    },
+    [dismissHint, setActiveLocation],
+  );
 
   return (
     <figure
-      className="relative isolate min-h-[25rem] sm:min-h-[29rem] lg:min-h-[31rem]"
-      ref={figureRef}
+      aria-label="Interactive professional geography"
+      className="relative mx-auto w-full max-w-[34rem] lg:max-w-[31rem]"
+      ref={rootRef}
     >
-      <div
-        className="pointer-events-none absolute inset-[2%] -z-10 rounded-full opacity-75 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, rgb(47 127 255 / 0.26), rgb(47 127 255 / 0.07) 42%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
-
-      <div className="relative h-[23rem] overflow-visible sm:h-[27rem] lg:h-[29rem]">
-        <svg
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full opacity-70"
-          viewBox="0 0 680 560"
-        >
-          <defs>
-            <radialGradient id="globe-fallback-fill" cx="42%" cy="36%">
-              <stop offset="0" stopColor="rgb(63 142 225 / 0.28)" />
-              <stop offset="0.58" stopColor="rgb(9 31 57 / 0.24)" />
-              <stop offset="1" stopColor="transparent" />
-            </radialGradient>
-          </defs>
-          <circle cx="340" cy="280" r="176" fill="url(#globe-fallback-fill)" />
-          <circle
-            cx="340"
-            cy="280"
-            fill="none"
-            r="176"
-            stroke="rgb(102 168 255 / 0.24)"
-          />
-          <circle
-            cx="340"
-            cy="280"
-            fill="none"
-            r="192"
-            stroke="rgb(47 127 255 / 0.1)"
-          />
-        </svg>
-
+      <div className="pointer-events-none absolute inset-[13%] rounded-full bg-[radial-gradient(circle_at_28%_24%,rgb(84_178_233_/_0.12),transparent_40%),radial-gradient(circle_at_68%_75%,rgb(26_91_159_/_0.15),transparent_42%)] blur-xl" />
+      <div className="relative aspect-square min-h-[21rem] overflow-hidden rounded-[42%] sm:min-h-[27rem] lg:min-h-[29rem]">
         <ThreeGlobeCanvas
-          activeLocation={displayedId ?? null}
-          onHover={setHoveredLocation}
-          onSelect={selectLocation}
+          activeLocation={displayedLocation}
+          onExplore={dismissHint}
+          onHover={handleHover}
+          onSelect={handleSelect}
           rotationPaused={Boolean(hoveredLocation || lockedLocation)}
         />
 
-        <div className="pointer-events-none absolute top-2 left-0 z-20 font-mono text-[0.62rem] font-semibold tracking-[0.14em] text-signal-cyan uppercase sm:text-[length:var(--text-label-size)]">
-          Professional signal map / drag to rotate
-        </div>
+        {showHint ? (
+          <div className="pointer-events-none absolute top-[7%] left-1/2 z-30 -translate-x-1/2 rounded-full border border-signal-cyan/25 bg-background/82 px-3 py-1.5 font-mono text-[0.62rem] font-semibold tracking-[0.14em] whitespace-nowrap text-signal-cyan uppercase shadow-[0_0_20px_rgb(58_189_230_/_0.12)] backdrop-blur-sm">
+            Drag to explore
+          </div>
+        ) : null}
 
-        {displayedSignal ? (
+        {activeSignal ? (
           <div
-            className="pointer-events-none absolute right-0 bottom-0 z-30 max-w-[15rem] border-r-2 border-signal-amber bg-background/82 px-3 py-2 text-right backdrop-blur-sm sm:hidden"
             aria-live="polite"
+            className="absolute right-3 bottom-2 left-3 z-30 border-y border-signal-cyan/28 bg-[linear-gradient(90deg,rgb(3_10_20_/_0.94),rgb(5_19_34_/_0.86))] px-4 py-3 shadow-[0_16px_46px_rgb(0_0_0_/_0.38)] backdrop-blur-md sm:top-[16%] sm:right-0 sm:bottom-auto sm:left-auto sm:w-[15rem] sm:border-y-0 sm:border-l-2"
           >
-            <p className="font-mono text-[0.62rem] font-semibold tracking-[0.1em] text-signal-cyan uppercase">
-              {displayedSignal.label} · {displayedSignal.country}
+            <p className="font-mono text-[0.66rem] font-semibold tracking-[0.15em] text-signal-cyan uppercase">
+              {activeSignal.label}
             </p>
-            <p className="mt-1 text-[0.65rem] leading-4 text-foreground-secondary">
-              {displayedSignal.detail}
+            <p className="mt-1 font-mono text-[0.6rem] tracking-[0.12em] text-foreground-muted uppercase">
+              {activeSignal.country}
+            </p>
+            {activeSignal.organization ? (
+              <p className="mt-3 text-sm font-semibold text-foreground">
+                {activeSignal.organization}
+              </p>
+            ) : null}
+            <p className="mt-1 text-xs leading-5 text-foreground-secondary">
+              {activeSignal.context}
             </p>
           </div>
         ) : null}
@@ -122,18 +148,18 @@ export function ProfessionalTopology() {
 
       <figcaption className="sr-only">
         <p>
-          Interactive globe of public professional signals. Remote engineering
-          experience does not imply physical residence. The United States marker
-          represents Scale AI LLM evaluation work on a freelance or part-time
-          basis, not residence.
+          Remote engineering experience does not imply physical residence. The
+          United States marker represents Scale AI LLM evaluation work on a
+          freelance or part-time basis, not residence.
         </p>
-        <ol>
+        <span>Professional locations and context:</span>
+        <ul>
           {publicSignals.map((signal) => (
             <li key={signal.id}>
-              {signal.label}, {signal.country}: {signal.detail}
+              {signal.label}, {signal.country}: {signal.detail}.
             </li>
           ))}
-        </ol>
+        </ul>
       </figcaption>
     </figure>
   );

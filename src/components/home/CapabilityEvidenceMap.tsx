@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useMemo, useRef, useState } from "react";
 
 import {
   type SignalProjectId,
@@ -137,6 +138,7 @@ function slugify(value: string) {
 }
 
 export function CapabilityEvidenceMap() {
+  const capabilityRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const { setActiveCapability, setActiveProject } = useSignalState();
   const [activeCapabilityTitle, setActiveCapabilityTitle] = useState<string>(
     capabilityGroups[0].title,
@@ -148,6 +150,7 @@ export function CapabilityEvidenceMap() {
   const [selectedProject, setSelectedProject] = useState(records[0]?.project);
   const selectedRecord =
     records.find((record) => record.project === selectedProject) ?? records[0];
+  const reduced = useReducedMotion() === true;
 
   const activateCapability = (title: string) => {
     const nextRecords = capabilityEvidence[title] ?? [];
@@ -161,6 +164,12 @@ export function CapabilityEvidenceMap() {
   const activateProject = (project: string) => {
     setSelectedProject(project);
     setActiveProject(signalProjectByLabel[project] ?? null);
+  };
+
+  const moveCapabilityFocus = (index: number, direction: -1 | 1) => {
+    const next =
+      (index + direction + capabilityGroups.length) % capabilityGroups.length;
+    capabilityRefs.current[next]?.focus();
   };
 
   return (
@@ -189,6 +198,19 @@ export function CapabilityEvidenceMap() {
                 onClick={() => activateCapability(group.title)}
                 onFocus={() => activateCapability(group.title)}
                 onMouseEnter={() => activateCapability(group.title)}
+                onKeyDown={(event) => {
+                  if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+                    event.preventDefault();
+                    moveCapabilityFocus(index, 1);
+                  }
+                  if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+                    event.preventDefault();
+                    moveCapabilityFocus(index, -1);
+                  }
+                }}
+                ref={(node) => {
+                  capabilityRefs.current[index] = node;
+                }}
                 type="button"
                 aria-pressed={active}
               >
@@ -204,9 +226,13 @@ export function CapabilityEvidenceMap() {
         </div>
 
         <div
-          className="hidden h-px bg-gradient-to-r from-signal-cyan to-signal-amber lg:block"
+          className="relative hidden h-px overflow-visible bg-border-strong lg:block"
           aria-hidden="true"
-        />
+          key={activeCapabilityTitle}
+        >
+          <span className="capability-path absolute inset-y-0 left-0 w-full bg-gradient-to-r from-signal-cyan to-signal-amber" />
+          <span className="capability-packet absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-signal-cyan shadow-[0_0_12px_var(--ritwik-color-signal-cyan)]" />
+        </div>
 
         <div className="relative grid gap-3 border-y border-border py-5 lg:border-y-0 lg:py-0">
           {records.map((record, index) => {
@@ -243,31 +269,47 @@ export function CapabilityEvidenceMap() {
         </div>
 
         <div
-          className="hidden h-px bg-gradient-to-r from-signal-amber to-signal-cyan lg:block"
+          className="relative hidden h-px overflow-visible bg-border-strong lg:block"
           aria-hidden="true"
-        />
-
-        <div className="min-h-64 border-l-2 border-signal-cyan bg-[linear-gradient(110deg,rgb(13_42_80_/_0.28),transparent)] px-5 py-5 sm:px-6">
-          <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
-            {activeCapabilityTitle} → {selectedRecord?.project}
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {selectedRecord?.techniques.map((technique) => (
-              <span
-                className="border border-border-strong bg-background/75 px-2.5 py-1.5 font-mono text-[0.65rem] text-foreground-secondary"
-                key={technique}
-              >
-                {technique}
-              </span>
-            ))}
-          </div>
-          <p className="mt-6 text-base leading-7 text-foreground-secondary">
-            {selectedRecord?.evidence}
-          </p>
-          <p className="mt-6 border-t border-border pt-4 font-mono text-[0.6rem] tracking-[0.1em] text-foreground-muted uppercase">
-            Relationship illuminated · capability to implementation proof
-          </p>
+          key={`${activeCapabilityTitle}-${selectedRecord?.project}`}
+        >
+          <span className="capability-path capability-path-delay absolute inset-y-0 left-0 w-full bg-gradient-to-r from-signal-amber to-signal-cyan" />
+          <span className="capability-packet capability-packet-delay absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-signal-amber shadow-[0_0_12px_var(--ritwik-color-signal-amber)]" />
         </div>
+
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            animate={{ opacity: 1, x: 0 }}
+            className="min-h-64 border-l-2 border-signal-cyan bg-[linear-gradient(110deg,rgb(13_42_80_/_0.28),transparent)] px-5 py-5 sm:px-6"
+            exit={reduced ? undefined : { opacity: 0, x: 6 }}
+            initial={reduced ? false : { opacity: 0, x: 10 }}
+            key={`${activeCapabilityTitle}-${selectedRecord?.project}`}
+            transition={{
+              delay: reduced ? 0 : 0.32,
+              duration: reduced ? 0 : 0.22,
+            }}
+          >
+            <p className="font-mono text-[0.62rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
+              {activeCapabilityTitle} → {selectedRecord?.project}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {selectedRecord?.techniques.map((technique) => (
+                <span
+                  className="border border-border-strong bg-background/75 px-2.5 py-1.5 font-mono text-[0.65rem] text-foreground-secondary"
+                  key={technique}
+                >
+                  {technique}
+                </span>
+              ))}
+            </div>
+            <p className="mt-6 text-base leading-7 text-foreground-secondary">
+              {selectedRecord?.evidence}
+            </p>
+            <p className="mt-6 border-t border-border pt-4 font-mono text-[0.6rem] tracking-[0.1em] text-foreground-muted uppercase">
+              Relationship illuminated · capability to implementation proof
+            </p>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

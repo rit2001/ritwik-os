@@ -172,6 +172,56 @@ body {
   }
 }
 
+@keyframes capability-path-reveal {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes capability-packet-travel {
+  from {
+    left: 0;
+    opacity: 0;
+  }
+  18%,
+  82% {
+    opacity: 1;
+  }
+  to {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes knight-traversal {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  15%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes rank-climb {
+  from {
+    transform: translateY(5.4rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .signal-grid {
   background-image:
     linear-gradient(rgb(102 168 255 / 0.055) 1px, transparent 1px),
@@ -205,29 +255,77 @@ body {
 }
 
 .thesis-split {
-  animation: thesis-split-arrive 5.2s var(--ease-standard) infinite;
+  animation: thesis-split-arrive 1.1s var(--ease-standard) 1 both;
 }
 
 .thesis-selected {
-  animation: thesis-selection-flash 3.8s var(--ease-standard) infinite;
+  animation: thesis-selection-flash 1.2s var(--ease-standard) 1 both;
 }
 
 .trace-capture-event {
-  animation: trace-capture-flash 4.4s var(--ease-standard) infinite;
+  animation: trace-capture-flash 1.1s var(--ease-standard) 1 both;
 }
 
 .trace-seal-pulse {
-  animation: trace-seal 4.4s var(--ease-standard) infinite;
+  animation: trace-seal 1.15s var(--ease-standard) 1 both;
   transform-box: fill-box;
   transform-origin: center;
 }
 
+.trace-layer-build {
+  animation: trace-capture-flash 0.9s var(--ease-standard) 1 both;
+}
+
 .converge-reconnect {
-  animation: signal-route 1.6s linear infinite;
+  animation: signal-route 1.1s linear 1 both;
 }
 
 .converge-sequence-token {
-  animation: converge-ack 4.2s var(--ease-standard) infinite;
+  animation: converge-ack 1.1s var(--ease-standard) 1 both;
+}
+
+.capability-path {
+  animation: capability-path-reveal 0.44s var(--ease-standard) 1 both;
+  transform-origin: left center;
+}
+
+.capability-path-delay {
+  animation-delay: 0.28s;
+}
+
+.capability-packet {
+  animation: capability-packet-travel 0.48s var(--ease-standard) 1 both;
+}
+
+.capability-packet-delay {
+  animation-delay: 0.28s;
+}
+
+.leetcode-knight-travel {
+  offset-path: path("M0 66 L28 48 L12 24 L48 0");
+}
+
+.algorithm-module:hover .leetcode-knight-travel,
+.algorithm-module:focus-visible .leetcode-knight-travel {
+  animation: knight-traversal 0.9s var(--ease-standard) 1 both;
+}
+
+.codeforces-module:hover .codeforces-rank-signal,
+.codeforces-module:focus-visible .codeforces-rank-signal {
+  animation: rank-climb 0.8s var(--ease-standard) 1 both;
+}
+
+.contact-route {
+  transition:
+    opacity 240ms var(--ease-standard),
+    stroke-width 240ms var(--ease-standard);
+  opacity: 0.45;
+}
+
+.contact-finale:hover .contact-route,
+.contact-finale:focus-within .contact-route {
+  opacity: 0.92;
+  stroke-width: 2.4;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -238,9 +336,14 @@ body {
   .thesis-split,
   .thesis-selected,
   .trace-capture-event,
+  .trace-layer-build,
   .trace-seal-pulse,
   .converge-reconnect,
-  .converge-sequence-token {
+  .converge-sequence-token,
+  .capability-path,
+  .capability-packet,
+  .leetcode-knight-travel,
+  .codeforces-rank-signal {
     animation: none !important;
   }
 }

@@ -59,7 +59,7 @@ export function CaseStudyVisualStage({
       </div>
       <SystemVisualStage
         activeStep={activeStep}
-        className="min-h-[25rem] sm:min-h-[34rem]"
+        className="sm:min-h-[34rem]"
         project={project}
       />
       <div className="grid border-x border-b border-border bg-background-elevated/45 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)]">

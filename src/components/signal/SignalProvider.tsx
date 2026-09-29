@@ -30,9 +30,7 @@ const SignalContext = createContext<SignalContextValue | null>(null);
 export function SignalProvider({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const [activeLocation, setLocation] = useState<SignalLocationId | null>(
-    "kolkata",
-  );
+  const [activeLocation, setLocation] = useState<SignalLocationId | null>(null);
   const [activeProject, setProject] = useState<SignalProjectId | null>(null);
   const [activeCapability, setCapability] = useState<string | null>(null);
   const [activeTimelineEvent, setTimelineEvent] = useState<string | null>(
