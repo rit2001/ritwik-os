@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "start": "next start",
     "content:check": "tsx scripts/validate-content.ts",
     "mdx:check": "tsx scripts/validate-mdx-semantics.tsx",
     "routes:check": "tsx scripts/validate-routes.ts",

@@ -3,7 +3,7 @@
 ## Audit Metadata
 
 - Repository: `https://github.com/rit2001/converge`
-- Local source: `/Users/ritwikbiswas/Desktop/full_stack_project/converge`
+- Local source: audited local checkout outside this repository
 - Audited branch: `main`
 - Audited commit: `966525daa9f9bea479c7f9d28d2cf3dcd9f735f2`
 - Release tag inspected: annotated `v1.0.0` at the audited commit

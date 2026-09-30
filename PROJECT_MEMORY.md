@@ -350,8 +350,8 @@ Production hardening and launch-readiness has been completed:
 
 ## V2 Content Model — Phase 8.3
 
-Phase 8.3 is complete on branch `feat/ritwik-os-v2` in the canonical workspace
-`/Users/ritwikbiswas/Developer/ritwik-os`.
+Phase 8.3 is complete on branch `feat/ritwik-os-v2` in the canonical repository
+workspace.
 
 - `src/data/profile.ts` is the authoritative public identity record: Ritwik Biswas, Kolkata, India, `thisisritwikbiswas@gmail.com`, approved availability, and education.
 - Portfolio hierarchy is canonical: ThesisLens, TraceForge, and Converge are flagship; Stateful Agentic AI Assistant and AI Mock Interview Platform are selected; Real-Time Collaborative Whiteboard is archive and superseded by Converge.
@@ -565,9 +565,39 @@ Distributed Systems & AI`, based in Kolkata, India, with public email
 
 - `resume/ritwik-biswas-resume.tex` is the maintainable XeLaTeX source for the
   public resume. `resume/README.md` documents the local build command.
-- `public/resume/ritwik-biswas-resume.pdf` is generated from that source and
-  remains the only public resume asset.
+- `public/resume/ritwik-biswas-resume.pdf` remains the only public resume asset.
+  The launch version is manually approved and frozen at SHA-256
+  `8432182c3c0d66397b002c3a9991a7dcff7301bda398d83cb3556e69b4bd38b6`.
+  Do not regenerate or replace it automatically; any future replacement needs
+  explicit human approval.
 - The resume is one A4 page, single-column, text-selectable, searchable, and
   uses standard hyperlinks for email, LinkedIn, GitHub, and the portfolio.
 - Resume claims remain governed by `docs/RESUME_RECONCILIATION.md`; source and
   layout work must not strengthen or independently rewrite those claims.
+
+## Phase 8.12 — Launch Hardening
+
+- The H1.9 homepage visual system, project claims, globe assets, and approved
+  resume remain frozen. Phase 8.12 changes are limited to production readiness,
+  accessibility semantics, SEO correctness, public-file hygiene, and launch
+  documentation.
+- `npm run start` is the canonical local production-server command. Development
+  and production smoke checks cover the homepage, Work registry, four approved
+  case studies, resume, robots, sitemap, manifest, Open Graph image, and clean
+  404 responses for unpublished or invalid routes.
+- Case-study SEO titles that already contain the owner suffix must use an
+  absolute metadata title so the root title template does not duplicate it.
+- Every `aria-controls` reference must resolve in server-rendered HTML, including
+  collapsed Earlier Systems evidence. Collapsed flagship evidence is hidden from
+  assistive technology, and non-interactive Foundations surfaces do not enter the
+  keyboard tab order.
+- Reduced-motion mode suppresses the contact route photon as well as the
+  existing globe, route, ambient, and entry animation loops. Manual interaction
+  remains available.
+- Machine-local checkout paths are not part of public evidence records. Record
+  audited commits and repositories without publishing contributor filesystem
+  layouts.
+- The full quality gate and a fresh `next start` smoke pass at Phase 8.12.
+  In-app visual browser tooling was unavailable during this phase, so final
+  keyboard-only, reduced-motion, and 1440/1280/1024/768/390/320 visual checks
+  remain human production-preview tasks.

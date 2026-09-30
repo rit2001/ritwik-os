@@ -9,10 +9,11 @@ public/resume/ritwik-biswas-resume.pdf
 ```
 
 Phase 8.11R added the maintainable source at
-`resume/ritwik-biswas-resume.tex` and regenerated the one-page public PDF from
-the exact replacement copy below. Future updates must change the source,
-rebuild to a temporary path, inspect the rendered page, and verify extracted
-text and links before replacing the public PDF.
+`resume/ritwik-biswas-resume.tex`. The public PDF was subsequently replaced by
+the exact human-approved launch version. It is frozen and must not be
+regenerated or replaced automatically. Any future replacement requires explicit
+human approval after a temporary build, rendered-page inspection, and extracted
+text and link verification.
 
 ## Phase 8.11 Reconciliation Audit
 

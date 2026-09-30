@@ -3,7 +3,7 @@
 ## Audit Metadata
 
 - Repository: `https://github.com/rit2001/traceforge`
-- Local source: `/Users/ritwikbiswas/Desktop/full_stack_project/traceforge`
+- Local source: audited local checkout outside this repository
 - Audited branch: `main`
 - Audited commit: `660506fe07f0fb99d8829340121b9c537ec5616d`
 - Release tag inspected: `v0.4.1` at `31aa3c7ebf90677812535ea1546fc0521a34ed28`

@@ -242,6 +242,7 @@ function EvidenceInteraction({
               </span>
             </button>
             <div
+              aria-hidden={!open}
               className={`grid transition-[grid-template-rows] duration-[var(--duration-slow)] ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
               id={detailsId}
             >

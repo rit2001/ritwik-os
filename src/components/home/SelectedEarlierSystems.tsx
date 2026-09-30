@@ -733,83 +733,84 @@ function EarlierSystemChapter({
           ))}
         </div>
 
-        <AnimatePresence initial={false}>
-          {expanded ? (
-            <motion.div
-              animate={{ height: "auto", opacity: 1, y: 0 }}
-              className="relative overflow-hidden"
-              exit={
-                reduced
-                  ? { height: 0, opacity: 0 }
-                  : { height: 0, opacity: 0, y: -6 }
-              }
-              id={detailsId}
-              initial={
-                reduced
-                  ? { height: 0, opacity: 1 }
-                  : { height: 0, opacity: 0, y: 8 }
-              }
-              key={detailsId}
-              transition={{
-                duration: reduced ? 0 : 0.34,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              <div className="mt-7 grid gap-6 border-t border-border pt-7 min-[901px]:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)]">
-                <div>
-                  <p className="font-mono text-[0.61rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
-                    Evidence / implemented scope
-                  </p>
-                  <p className="mt-3 text-sm leading-6 text-foreground-secondary">
-                    {item.evidence}
-                  </p>
-                  {item.project.deploymentNote ? (
-                    <p className="mt-3 border-l border-signal-amber/55 pl-4 text-xs leading-5 text-foreground-muted">
-                      {item.project.deploymentNote}
+        <div aria-hidden={!expanded} id={detailsId}>
+          <AnimatePresence initial={false}>
+            {expanded ? (
+              <motion.div
+                animate={{ height: "auto", opacity: 1, y: 0 }}
+                className="relative overflow-hidden"
+                exit={
+                  reduced
+                    ? { height: 0, opacity: 0 }
+                    : { height: 0, opacity: 0, y: -6 }
+                }
+                initial={
+                  reduced
+                    ? { height: 0, opacity: 1 }
+                    : { height: 0, opacity: 0, y: 8 }
+                }
+                key={detailsId}
+                transition={{
+                  duration: reduced ? 0 : 0.34,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <div className="mt-7 grid gap-6 border-t border-border pt-7 min-[901px]:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)]">
+                  <div>
+                    <p className="font-mono text-[0.61rem] font-semibold tracking-[0.11em] text-signal-cyan uppercase">
+                      Evidence / implemented scope
                     </p>
-                  ) : null}
-                </div>
-                <div>
-                  <p className="font-mono text-[0.61rem] font-semibold tracking-[0.11em] text-foreground-muted uppercase">
-                    Techniques
-                  </p>
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {item.techniques.map((technique) => (
-                      <li
-                        className="border border-border-strong bg-background/55 px-2.5 py-1.5 font-mono text-[0.62rem] text-foreground-secondary"
-                        key={technique}
-                      >
-                        {technique}
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="mt-5 text-xs leading-5 text-foreground-muted">
-                    {item.progression}
-                  </p>
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    {item.project.caseStudyPath ? (
-                      <ActionLink
-                        href={item.project.caseStudyPath}
-                        variant="primary"
-                      >
-                        View Case Study
-                      </ActionLink>
-                    ) : null}
-                    {item.project.repositoryUrl ? (
-                      <ActionLink
-                        href={item.project.repositoryUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        Repository ↗
-                      </ActionLink>
+                    <p className="mt-3 text-sm leading-6 text-foreground-secondary">
+                      {item.evidence}
+                    </p>
+                    {item.project.deploymentNote ? (
+                      <p className="mt-3 border-l border-signal-amber/55 pl-4 text-xs leading-5 text-foreground-muted">
+                        {item.project.deploymentNote}
+                      </p>
                     ) : null}
                   </div>
+                  <div>
+                    <p className="font-mono text-[0.61rem] font-semibold tracking-[0.11em] text-foreground-muted uppercase">
+                      Techniques
+                    </p>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {item.techniques.map((technique) => (
+                        <li
+                          className="border border-border-strong bg-background/55 px-2.5 py-1.5 font-mono text-[0.62rem] text-foreground-secondary"
+                          key={technique}
+                        >
+                          {technique}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-5 text-xs leading-5 text-foreground-muted">
+                      {item.progression}
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      {item.project.caseStudyPath ? (
+                        <ActionLink
+                          href={item.project.caseStudyPath}
+                          variant="primary"
+                        >
+                          View Case Study
+                        </ActionLink>
+                      ) : null}
+                      {item.project.repositoryUrl ? (
+                        <ActionLink
+                          href={item.project.repositoryUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Repository ↗
+                        </ActionLink>
+                      ) : null}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
       </article>
     </Reveal>
   );

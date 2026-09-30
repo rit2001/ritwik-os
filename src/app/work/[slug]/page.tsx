@@ -33,7 +33,9 @@ export async function generateMetadata({
   }
 
   return {
-    title: entry.meta.seoTitle,
+    title: {
+      absolute: entry.meta.seoTitle,
+    },
     description: entry.meta.seoDescription,
     alternates: {
       canonical: entry.meta.caseStudyPath,

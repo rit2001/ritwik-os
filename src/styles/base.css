@@ -540,7 +540,7 @@ body {
     animation: none !important;
   }
   .contact-photon {
-    animation: none !important;
+    display: none;
   }
   .contact-endpoint-ring {
     animation: none !important;

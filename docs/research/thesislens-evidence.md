@@ -3,7 +3,7 @@
 ## Audit Metadata
 
 - Repository: `https://github.com/rit2001/thesislens`
-- Local source: `/Users/ritwikbiswas/Desktop/full_stack_project/ThesisLens`
+- Local source: audited local checkout outside this repository
 - Audited branch: `main`
 - Audited commit: `a1a394c13977fc83d8cf2b80bbeec2efc7c5d902`
 - Audit date: 2026-09-27

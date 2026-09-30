@@ -26,7 +26,6 @@ export function FoundationsSection() {
         initial={
           reduced ? false : { opacity: 0, y: "clamp(20px, 2.5vw, 36px)" }
         }
-        tabIndex={0}
         transition={{
           delay: reduced ? 0 : 0.15,
           duration: reduced ? 0 : 0.62,
@@ -389,7 +388,6 @@ export function FoundationsSection() {
             <li
               className="achievement-proof group relative min-h-24 border border-border border-l-2 border-l-signal-amber/70 bg-[radial-gradient(circle_at_92%_18%,rgb(242_185_95_/.12),transparent_5rem),linear-gradient(90deg,rgb(242_185_95_/.07),transparent)] px-4 py-4 outline-none transition-[border-color,background-color,transform,box-shadow] hover:-translate-y-0.5 hover:border-signal-amber/65 hover:shadow-[0_16px_40px_rgb(242_185_95_/.08)] focus-visible:-translate-y-0.5 focus-visible:border-signal-amber/65 focus-visible:shadow-[0_16px_40px_rgb(242_185_95_/.08)]"
               key={title}
-              tabIndex={0}
             >
               <span
                 className="absolute top-4 -left-[0.42rem] h-3 w-3 rotate-45 border border-background bg-signal-amber transition-shadow group-hover:shadow-[0_0_18px_rgb(242_185_95_/.75)] group-focus-visible:shadow-[0_0_18px_rgb(242_185_95_/.75)]"
