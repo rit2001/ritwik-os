@@ -34,7 +34,7 @@ export function ExperienceSection() {
   const [manualInteraction, setManualInteraction] = useState(false);
   const { setActiveLocation } = useSignalState();
   const reduced = useReducedMotion() === true;
-  const inView = useInView(hostRef, { margin: "120px" });
+  const inView = useInView(hostRef, { margin: "0px 0px -14% 0px" });
   const ambientTick = useAmbientPulse(
     inView && !reduced && !manualInteraction,
     10400,

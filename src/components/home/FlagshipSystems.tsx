@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { SystemVisualStage } from "@/components/signal/SystemVisualStage";
 import {
   type SignalProjectId,
@@ -278,7 +279,7 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
           ? [0, 1, 2, 3]
           : [0, 1, 3, 2];
     timersRef.current = sequence.map((step, index) =>
-      window.setTimeout(() => setActiveStep(step), 700 + index * 720),
+      window.setTimeout(() => setActiveStep(step), 960 + index * 720),
     );
     return () => timersRef.current.forEach(window.clearTimeout);
   }, [inView, item.id, reduced]);
@@ -307,26 +308,28 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
       >
         {item.thesis}
       </p>
+    </div>
+  );
 
-      <div
-        className={`relative mt-8 border-signal-cyan ${centered ? "mx-auto max-w-2xl border-y py-5" : "border-l-2 pl-5"}`}
-      >
-        {!centered ? (
-          <span
-            className="signal-ripple absolute top-0 -left-[0.43rem] h-3 w-3 rounded-full border border-signal-cyan"
-            aria-hidden="true"
-          />
-        ) : null}
-        <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
-          Primary proof / {item.proof.label}
-        </p>
-        <p className="mt-3 font-mono text-[clamp(1.8rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.04em] text-foreground">
-          {item.proof.value}
-        </p>
-        <p className="mt-4 text-sm leading-6 text-foreground-muted">
-          {item.proof.context}
-        </p>
-      </div>
+  const proof = (
+    <div
+      className={`relative mt-8 border-signal-cyan ${centered ? "mx-auto max-w-2xl border-y py-5 text-center" : "border-l-2 pl-5"}`}
+    >
+      {!centered ? (
+        <span
+          className="signal-ripple absolute top-0 -left-[0.43rem] h-3 w-3 rounded-full border border-signal-cyan"
+          aria-hidden="true"
+        />
+      ) : null}
+      <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.12em] text-foreground-muted uppercase">
+        Primary proof / {item.proof.label}
+      </p>
+      <p className="mt-3 font-mono text-[clamp(1.8rem,4vw,3.4rem)] leading-none font-semibold tracking-[-0.04em] text-foreground">
+        {item.proof.value}
+      </p>
+      <p className="mt-4 text-sm leading-6 text-foreground-muted">
+        {item.proof.context}
+      </p>
     </div>
   );
 
@@ -390,62 +393,68 @@ function FlagshipSystem({ item }: Readonly<{ item: FlagshipPresentation }>) {
   );
 
   return (
-    <motion.article
-      initial={reduced ? false : { opacity: 0, y: "clamp(22px, 2.2vw, 32px)" }}
+    <article
       className={`relative scroll-mt-28 border-t border-border py-20 lg:py-28 ${item.id === "traceforge" ? "lg:min-h-[125vh]" : "lg:min-h-[110vh]"}`}
       id={item.project.id}
       onFocusCapture={() => setActiveProject(item.id)}
       onMouseEnter={() => setActiveProject(item.id)}
       ref={hostRef}
-      transition={{
-        duration: reduced ? 0 : 0.62,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      viewport={{ once: true, amount: 0.12 }}
-      whileInView={{ opacity: 1, y: 0 }}
     >
       {item.id === "thesislens" ? (
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.38fr)_minmax(36rem,0.62fr)] lg:items-start lg:gap-14">
           <div className="relative z-10">
-            {intro}
-            {evidence}
-            {details}
+            <Reveal>{intro}</Reveal>
+            <Reveal delay={0.07}>{proof}</Reveal>
+            <Reveal delay={0.21}>{evidence}</Reveal>
+            <Reveal delay={0.28}>{details}</Reveal>
           </div>
-          <div className="lg:sticky lg:top-[calc(var(--layout-header-height)+2.5rem)]">
+          <Reveal
+            className="lg:sticky lg:top-[calc(var(--layout-header-height)+2.5rem)]"
+            delay={0.14}
+          >
             {stage}
-          </div>
+          </Reveal>
         </div>
       ) : item.id === "traceforge" ? (
         <div>
-          <div className="mx-auto max-w-5xl">{intro}</div>
-          <div className="mx-auto mt-12 max-w-6xl lg:mt-16">{stage}</div>
+          <Reveal className="mx-auto max-w-5xl">{intro}</Reveal>
+          <Reveal delay={0.07}>{proof}</Reveal>
+          <Reveal className="mx-auto mt-12 max-w-6xl lg:mt-16" delay={0.14}>
+            {stage}
+          </Reveal>
           <div className="mx-auto mt-8 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)] lg:items-start">
-            {evidence}
-            {details}
+            <Reveal delay={0.21}>{evidence}</Reveal>
+            <Reveal delay={0.28}>{details}</Reveal>
           </div>
         </div>
       ) : (
         <div>
           <div className="grid gap-12 lg:grid-cols-[minmax(36rem,0.62fr)_minmax(0,0.38fr)] lg:items-start lg:gap-14">
-            <div className="lg:sticky lg:top-[calc(var(--layout-header-height)+2.5rem)]">
+            <Reveal
+              className="lg:sticky lg:top-[calc(var(--layout-header-height)+2.5rem)]"
+              delay={0.14}
+            >
               {stage}
-            </div>
+            </Reveal>
             <div className="relative z-10">
-              {intro}
-              {details}
+              <Reveal>{intro}</Reveal>
+              <Reveal delay={0.07}>{proof}</Reveal>
+              <Reveal delay={0.28}>{details}</Reveal>
             </div>
           </div>
           <div className="mt-10 grid gap-8 border-t border-border pt-3 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)]">
-            {evidence}
-            <p className="mt-7 self-start border-l border-signal-cyan/50 pl-5 text-sm leading-6 text-foreground-muted">
-              Select Authority, Offline intent, Recovery, or Delivery to move
-              the topology between commit ordering, queued local work, verified
-              catch-up, and replica broadcast.
-            </p>
+            <Reveal delay={0.21}>{evidence}</Reveal>
+            <Reveal delay={0.28}>
+              <p className="mt-7 self-start border-l border-signal-cyan/50 pl-5 text-sm leading-6 text-foreground-muted">
+                Select Authority, Offline intent, Recovery, or Delivery to move
+                the topology between commit ordering, queued local work,
+                verified catch-up, and replica broadcast.
+              </p>
+            </Reveal>
           </div>
         </div>
       )}
-    </motion.article>
+    </article>
   );
 }
 

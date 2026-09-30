@@ -6,7 +6,7 @@ import {
   useInView,
   useReducedMotion,
 } from "motion/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Reveal } from "@/components/motion/Reveal";
 import { useAmbientPulse } from "@/components/motion/useAmbientPulse";
@@ -602,12 +602,16 @@ function EarlierSystemChapter({
   reduced: boolean;
 }>) {
   const chapterRef = useRef<HTMLElement>(null);
+  const [entryReady, setEntryReady] = useState(false);
   const [interactionTick, setInteractionTick] = useState(0);
-  const inView = useInView(chapterRef, { margin: "100px" });
+  const inView = useInView(chapterRef, {
+    margin: "0px 0px -18% 0px",
+  });
   const visualFirst = index === 1;
-  const visualTick = inView
-    ? ambientTick + interactionTick * 1000 + index * 100 + 1
-    : 0;
+  const visualTick =
+    inView && (entryReady || reduced)
+      ? ambientTick + interactionTick * 1000 + index * 100 + 1
+      : 0;
   const contentPlacement = visualFirst
     ? "min-[901px]:col-start-2"
     : "min-[901px]:col-start-1";
@@ -619,8 +623,15 @@ function EarlierSystemChapter({
 
   const activateVisual = () => setInteractionTick((current) => current + 1);
 
+  useEffect(() => {
+    if (reduced) return;
+    if (!inView || entryReady) return;
+    const timer = window.setTimeout(() => setEntryReady(true), 620);
+    return () => window.clearTimeout(timer);
+  }, [entryReady, inView, reduced]);
+
   return (
-    <Reveal delay={index * 0.05} y={28}>
+    <Reveal delay={index * 0.05} y="clamp(20px, 2.2vw, 28px)">
       <article
         className={`group relative w-full min-w-0 overflow-hidden border-y border-border bg-[linear-gradient(115deg,rgb(9_25_43_/.42),rgb(4_8_14_/.2))] px-4 py-7 transition-[border-color,box-shadow] duration-500 hover:border-signal-cyan/40 hover:shadow-[0_26px_80px_rgb(0_0_0_/.18)] focus-within:border-signal-cyan/50 focus-within:shadow-[0_26px_80px_rgb(0_0_0_/.2)] sm:px-7 sm:py-9 min-[901px]:w-[86%] min-[1200px]:w-[76%] ${align}`}
         onFocusCapture={activateVisual}
@@ -808,7 +819,7 @@ export function SelectedEarlierSystems() {
   const hostRef = useRef<HTMLDivElement>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const reduced = useReducedMotion() === true;
-  const inView = useInView(hostRef, { margin: "120px" });
+  const inView = useInView(hostRef, { margin: "0px 0px -12% 0px" });
   const ambientTick = useAmbientPulse(inView && !reduced, 9200, 6400);
 
   return (

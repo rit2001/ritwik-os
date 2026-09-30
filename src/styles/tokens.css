@@ -67,6 +67,7 @@
   --layout-reading-width: 44rem;
   --layout-page-gutter: clamp(1rem, 4vw, 3rem);
   --layout-header-height: 4.5rem;
+  --layout-anchor-offset: 12rem;
 
   --radius-none: 0;
   --radius-xs: 0.125rem;
@@ -94,6 +95,24 @@
   --z-header: 20;
   --z-skip-link: 50;
   --z-overlay: 80;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --layout-anchor-offset: 9.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --layout-anchor-offset: 9rem;
+  }
+}
+
+@media (min-width: 75rem) {
+  :root {
+    --layout-anchor-offset: 6.5rem;
+  }
 }
 
 @theme inline {

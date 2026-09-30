@@ -18,7 +18,7 @@ export function Reveal({
   className,
   id,
   delay = 0,
-  y = "clamp(22px, 2.2vw, 32px)",
+  y = "clamp(20px, 2.5vw, 36px)",
 }: Readonly<RevealProps>) {
   const shouldReduceMotion = useReducedMotion();
   const reduce = shouldReduceMotion === true;

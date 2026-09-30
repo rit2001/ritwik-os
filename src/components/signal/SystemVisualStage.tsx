@@ -39,7 +39,39 @@ function ThesisLensVisual({
         </radialGradient>
       </defs>
 
-      <g opacity={activeStep === 0 ? 1 : 0.68}>
+      {!reduced && ambientTick > 0 ? (
+        <g key={`thesis-ambient-${ambientTick}`}>
+          <circle
+            className="thesis-ambient-candidate"
+            fill="var(--ritwik-color-signal-cyan)"
+            r="4"
+          >
+            <animateMotion
+              dur="2.6s"
+              fill="freeze"
+              path="M292 238 H358 C444 238 490 234 538 234 H613 C650 234 672 234 718 234"
+              repeatCount="1"
+            />
+          </circle>
+          <path
+            className="thesis-ambient-rerank"
+            d="M518 151 H590 L612 234 L590 317 H518 L540 234 Z"
+            fill="none"
+            stroke="var(--ritwik-color-signal-cyan)"
+            strokeWidth="3"
+          />
+          <circle
+            className="thesis-ambient-answer"
+            cx="718"
+            cy="234"
+            fill="none"
+            r="79"
+            stroke="var(--ritwik-color-signal-cyan)"
+          />
+        </g>
+      ) : null}
+
+      <g opacity={activeStep === 0 ? 1 : 0.86}>
         <rect
           fill="url(#tl-filing)"
           height="190"
@@ -83,7 +115,7 @@ function ThesisLensVisual({
         strokeWidth="2"
       />
 
-      <g opacity={activeStep === 0 ? 1 : 0.72}>
+      <g opacity={activeStep === 0 ? 1 : 0.86}>
         {[0, 1, 2, 3, 4].map((index) => (
           <g
             className={!reduced ? "thesis-split" : undefined}
@@ -129,7 +161,7 @@ function ThesisLensVisual({
         stroke="var(--ritwik-color-border-strong)"
         strokeWidth="2"
       />
-      <g opacity={rerankingActive ? 1 : 0.75}>
+      <g opacity={rerankingActive ? 1 : 0.86}>
         <rect
           fill="rgb(13 42 80 / 0.48)"
           height="286"
@@ -161,7 +193,7 @@ function ThesisLensVisual({
               className="transition-[opacity,transform] duration-700"
               key={candidate}
               style={{
-                opacity: rerankingActive && !survives ? 0.28 : 1,
+                opacity: rerankingActive && !survives ? 0.58 : 1,
                 transform: `translate(373px, ${110 + rank * 49}px)`,
               }}
             >
@@ -195,7 +227,7 @@ function ThesisLensVisual({
         })}
       </g>
 
-      <g opacity={rerankingActive ? 1 : 0.68}>
+      <g opacity={rerankingActive ? 1 : 0.86}>
         <path
           d="M518 151 H590 L612 234 L590 317 H518 L540 234 Z"
           fill="rgb(47 127 255 / 0.1)"
@@ -228,7 +260,7 @@ function ThesisLensVisual({
           0.704 → 0.811
         </text>
         <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
@@ -239,7 +271,7 @@ function ThesisLensVisual({
         </text>
       </g>
 
-      <g opacity={evidenceActive || rerankingActive ? 1 : 0.7}>
+      <g opacity={evidenceActive || rerankingActive ? 1 : 0.86}>
         <path
           d="M613 205 C644 205 645 185 674 185 M613 264 C644 264 645 284 674 284"
           fill="none"
@@ -319,38 +351,6 @@ function ThesisLensVisual({
         </text>
       </g>
 
-      {!reduced && ambientTick > 0 ? (
-        <g key={`thesis-ambient-${ambientTick}`}>
-          <circle
-            className="thesis-ambient-candidate"
-            fill="var(--ritwik-color-signal-cyan)"
-            r="4"
-          >
-            <animateMotion
-              dur="2.6s"
-              fill="freeze"
-              path="M292 238 H358 C444 238 490 234 538 234 H613 C650 234 672 234 718 234"
-              repeatCount="1"
-            />
-          </circle>
-          <path
-            className="thesis-ambient-rerank"
-            d="M518 151 H590 L612 234 L590 317 H518 L540 234 Z"
-            fill="none"
-            stroke="var(--ritwik-color-signal-cyan)"
-            strokeWidth="3"
-          />
-          <circle
-            className="thesis-ambient-answer"
-            cx="718"
-            cy="234"
-            fill="none"
-            r="79"
-            stroke="var(--ritwik-color-signal-cyan)"
-          />
-        </g>
-      ) : null}
-
       <text
         fill="var(--ritwik-color-foreground-muted)"
         fontFamily="monospace"
@@ -394,7 +394,22 @@ function TraceForgeVisual({
         </linearGradient>
       </defs>
 
-      <g opacity={captureActive ? 1 : 0.58}>
+      <g opacity={captureActive ? 1 : 0.84}>
+        {!reduced && ambientTick > 0 ? (
+          <circle
+            className="trace-ambient-event"
+            fill="var(--ritwik-color-signal-cyan)"
+            key={`trace-event-${ambientTick}`}
+            r="4"
+          >
+            <animateMotion
+              dur="1.35s"
+              fill="freeze"
+              path={`M52 ${158 + (ambientTick % 4) * 78} C136 ${158 + (ambientTick % 4) * 78} 182 ${216 + (ambientTick % 4) * 14} 251 ${236 + (ambientTick % 4) * 7}`}
+              repeatCount="1"
+            />
+          </circle>
+        ) : null}
         <rect
           fill="rgb(7 20 34 / 0.96)"
           height="62"
@@ -415,7 +430,7 @@ function TraceForgeVisual({
           LIVE EXECUTION
         </text>
         <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
@@ -480,21 +495,6 @@ function TraceForgeVisual({
             </g>
           );
         })}
-        {!reduced && ambientTick > 0 ? (
-          <circle
-            className="trace-ambient-event"
-            fill="var(--ritwik-color-signal-cyan)"
-            key={`trace-event-${ambientTick}`}
-            r="4"
-          >
-            <animateMotion
-              dur="1.35s"
-              fill="freeze"
-              path={`M52 ${158 + (ambientTick % 4) * 78} C136 ${158 + (ambientTick % 4) * 78} 182 ${216 + (ambientTick % 4) * 14} 251 ${236 + (ambientTick % 4) * 7}`}
-              repeatCount="1"
-            />
-          </circle>
-        ) : null}
       </g>
 
       <g opacity={sealActive || captureActive ? 1 : 0.88}>
@@ -524,6 +524,16 @@ function TraceForgeVisual({
             strokeWidth={layer === 3 && sealActive ? 3 : 1.4}
           />
         ))}
+        <path
+          className={
+            !reduced && ambientTick > 0 ? "trace-ambient-scan" : undefined
+          }
+          d="M329 298 H433 M337 311 H425 M347 324 H415"
+          key={`trace-scan-${ambientTick}`}
+          opacity="0.65"
+          stroke="var(--ritwik-color-signal-cyan)"
+          strokeDasharray="2 5"
+        />
         <text
           fill="var(--ritwik-color-foreground)"
           fontFamily="monospace"
@@ -546,7 +556,7 @@ function TraceForgeVisual({
           {sealed ? "SEALED · IMMUTABLE" : "CAPTURING BOUNDARIES"}
         </text>
         <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
@@ -555,19 +565,9 @@ function TraceForgeVisual({
         >
           SEQUENCE + REQUEST FINGERPRINT
         </text>
-        <path
-          className={
-            !reduced && ambientTick > 0 ? "trace-ambient-scan" : undefined
-          }
-          d="M329 298 H433 M337 311 H425 M347 324 H415"
-          key={`trace-scan-${ambientTick}`}
-          opacity="0.65"
-          stroke="var(--ritwik-color-signal-cyan)"
-          strokeDasharray="2 5"
-        />
       </g>
 
-      <g opacity={replayActive || diffActive ? 1 : 0.5}>
+      <g opacity={replayActive || diffActive ? 1 : 0.84}>
         <path
           className={
             !reduced && ambientTick > 0 ? "trace-ambient-compare" : undefined
@@ -639,7 +639,7 @@ function TraceForgeVisual({
         </text>
       </g>
 
-      <g opacity={diffActive ? 1 : 0.72}>
+      <g opacity={diffActive ? 1 : 0.86}>
         <path
           d="M649 159 V207 M649 341 V293"
           stroke="var(--ritwik-color-border-strong)"
@@ -677,7 +677,7 @@ function TraceForgeVisual({
           REGRESSION RESULT
         </text>
         <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
@@ -724,7 +724,7 @@ function TraceForgeMobileVisual({
         </circle>
       ) : null}
       <text
-        fill="var(--ritwik-color-foreground-muted)"
+        fill="var(--ritwik-color-foreground)"
         fontFamily="monospace"
         fontSize="8"
         textAnchor="middle"
@@ -805,7 +805,7 @@ function TraceForgeMobileVisual({
         [42, "ORIGINAL", "FINGERPRINT ✓"],
         [172, "REPLAY", "NO LIVE FALLBACK"],
       ].map(([x, label, sub]) => (
-        <g key={String(label)} opacity={activeStep >= 2 ? 1 : 0.55}>
+        <g key={String(label)} opacity={activeStep >= 2 ? 1 : 0.84}>
           <rect
             fill="rgb(7 20 34 / .96)"
             height="46"
@@ -830,7 +830,7 @@ function TraceForgeMobileVisual({
             {String(label)}
           </text>
           <text
-            fill="var(--ritwik-color-foreground-muted)"
+            fill="var(--ritwik-color-foreground-secondary)"
             fontFamily="monospace"
             fontSize="6"
             textAnchor="middle"
@@ -841,7 +841,7 @@ function TraceForgeMobileVisual({
           </text>
         </g>
       ))}
-      <g opacity={activeStep === 3 ? 1 : 0.58}>
+      <g opacity={activeStep === 3 ? 1 : 0.84}>
         <rect
           fill="rgb(242 185 95 / .08)"
           height="72"
@@ -900,7 +900,39 @@ function ConvergeVisual({
       className="system-diagram h-full w-full"
       viewBox="0 0 860 500"
     >
-      <g opacity={activeStep === 0 ? 1 : 0.72}>
+      {!reduced && ambientTick > 0 ? (
+        <g key={`converge-ambient-${ambientTick}`}>
+          <circle
+            className="converge-ambient-operation"
+            fill="rgb(4 7 13 / 0.98)"
+            r="20"
+            stroke="var(--ritwik-color-signal-cyan)"
+          >
+            <animateMotion
+              dur="2.8s"
+              fill="freeze"
+              path={operationPath}
+              repeatCount="1"
+            />
+          </circle>
+          <text
+            className="converge-ambient-operation-label"
+            fill="var(--ritwik-color-foreground)"
+            fontFamily="monospace"
+            fontSize="7"
+            textAnchor="middle"
+          >
+            DEMO {ambientSequence}
+            <animateMotion
+              dur="2.8s"
+              fill="freeze"
+              path={operationPath}
+              repeatCount="1"
+            />
+          </text>
+        </g>
+      ) : null}
+      <g opacity={activeStep === 0 ? 1 : 0.86}>
         {[
           [42, 72, "CLIENT A"],
           [42, 204, "CLIENT B"],
@@ -966,7 +998,7 @@ function ConvergeVisual({
               ? "converge-queue-ambient"
               : undefined
           }
-          opacity={recovered ? 0.18 : offlineActive ? 1 : 0.55}
+          opacity={recovered ? 0.5 : offlineActive ? 1 : 0.72}
         >
           <rect
             fill="rgb(242 185 95 / 0.08)"
@@ -1049,7 +1081,7 @@ function ConvergeVisual({
         </text>
       </g>
 
-      <g opacity={activeStep === 2 ? 1 : 0.8}>
+      <g opacity={activeStep === 2 ? 1 : 0.86}>
         <ellipse
           cx="508"
           cy="190"
@@ -1093,7 +1125,7 @@ function ConvergeVisual({
           COMMIT + OUTBOX
         </text>
         <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
@@ -1117,7 +1149,7 @@ function ConvergeVisual({
         ) : null}
       </g>
 
-      <g opacity={deliveryActive ? 1 : 0.7}>
+      <g opacity={deliveryActive ? 1 : 0.86}>
         <rect
           fill="rgb(242 185 95 / 0.08)"
           height="58"
@@ -1167,7 +1199,7 @@ function ConvergeVisual({
           REDIS STREAM
         </text>
         <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
           fontSize="8"
           textAnchor="middle"
@@ -1188,7 +1220,7 @@ function ConvergeVisual({
               y={116 + index * 128}
             />
             <text
-              fill="var(--ritwik-color-foreground-secondary)"
+              fill="var(--ritwik-color-foreground)"
               fontFamily="monospace"
               fontSize="8"
               textAnchor="middle"
@@ -1241,38 +1273,6 @@ function ConvergeVisual({
           ) : null}
         </g>
       ))}
-      {!reduced && ambientTick > 0 ? (
-        <g key={`converge-ambient-${ambientTick}`}>
-          <circle
-            className="converge-ambient-operation"
-            fill="rgb(4 7 13 / 0.98)"
-            r="20"
-            stroke="var(--ritwik-color-signal-cyan)"
-          >
-            <animateMotion
-              dur="2.8s"
-              fill="freeze"
-              path={operationPath}
-              repeatCount="1"
-            />
-          </circle>
-          <text
-            className="converge-ambient-operation-label"
-            fill="var(--ritwik-color-foreground)"
-            fontFamily="monospace"
-            fontSize="7"
-            textAnchor="middle"
-          >
-            DEMO {ambientSequence}
-            <animateMotion
-              dur="2.8s"
-              fill="freeze"
-              path={operationPath}
-              repeatCount="1"
-            />
-          </text>
-        </g>
-      ) : null}
       <text
         fill="var(--ritwik-color-signal-amber)"
         fontFamily="monospace"
@@ -1393,7 +1393,7 @@ function ConvergeMobileVisual({
           OFFLINE CLIENT
         </text>
         <text
-          fill="var(--ritwik-color-foreground-muted)"
+          fill="var(--ritwik-color-foreground-secondary)"
           fontFamily="monospace"
           fontSize="6"
           textAnchor="middle"
@@ -1467,7 +1467,7 @@ function ConvergeMobileVisual({
         [104, 365, "OUTBOX WORKER", "PUBLISH"],
         [104, 448, "REDIS STREAM", "AT LEAST ONCE"],
       ].map(([x, y, label, sub]) => (
-        <g key={String(label)} opacity={activeStep === 3 ? 1 : 0.72}>
+        <g key={String(label)} opacity={activeStep === 3 ? 1 : 0.86}>
           <rect
             fill="rgb(7 20 34 / .98)"
             height="48"
@@ -1482,7 +1482,7 @@ function ConvergeMobileVisual({
             y={Number(y)}
           />
           <text
-            fill="var(--ritwik-color-foreground-secondary)"
+            fill="var(--ritwik-color-foreground)"
             fontFamily="monospace"
             fontSize="8"
             textAnchor="middle"
@@ -1492,7 +1492,7 @@ function ConvergeMobileVisual({
             {String(label)}
           </text>
           <text
-            fill="var(--ritwik-color-foreground-muted)"
+            fill="var(--ritwik-color-foreground-secondary)"
             fontFamily="monospace"
             fontSize="6"
             textAnchor="middle"
@@ -1553,7 +1553,7 @@ function ConvergeMobileVisual({
             y="606"
           />
           <text
-            fill="var(--ritwik-color-foreground-secondary)"
+            fill="var(--ritwik-color-foreground)"
             fontFamily="monospace"
             fontSize="7"
             textAnchor="middle"

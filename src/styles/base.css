@@ -13,6 +13,10 @@ html {
   scroll-behavior: smooth;
 }
 
+.section-anchor {
+  scroll-margin-top: var(--layout-anchor-offset);
+}
+
 body {
   min-height: 100vh;
   margin: 0;
@@ -387,8 +391,8 @@ body {
 
 .system-diagram text {
   paint-order: stroke fill;
-  stroke: rgb(4 7 13 / 0.78);
-  stroke-width: 1.35px;
+  stroke: rgb(4 7 13 / 0.68);
+  stroke-width: 1px;
   stroke-linejoin: round;
 }
 
@@ -466,6 +470,10 @@ body {
     opacity 240ms var(--ease-standard),
     stroke-width 240ms var(--ease-standard);
   opacity: 0.45;
+}
+
+.contact-finale[data-ambient-active="false"] .contact-route {
+  opacity: 0;
 }
 
 .contact-finale:hover .contact-route,

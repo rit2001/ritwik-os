@@ -107,7 +107,7 @@ export function JourneyTimeline() {
   );
   const [entrySignalVisible, setEntrySignalVisible] = useState(false);
   const reduceMotion = useReducedMotion() === true;
-  const inView = useInView(hostRef, { margin: "120px" });
+  const inView = useInView(hostRef, { margin: "0px 0px -14% 0px" });
   const activeEvent =
     journeyEvents.find((event) => event.id === activeId) ?? journeyEvents[0];
   const activeIndex = journeyEvents.findIndex(

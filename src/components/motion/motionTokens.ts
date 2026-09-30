@@ -15,6 +15,6 @@ export const motionTravel = {
 
 export const motionViewport = {
   once: true,
-  amount: 0.16,
-  margin: "0px 0px -16% 0px",
+  amount: 0.2,
+  margin: "0px 0px -10% 0px",
 } as const;

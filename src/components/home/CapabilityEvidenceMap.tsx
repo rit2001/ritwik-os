@@ -159,7 +159,7 @@ export function CapabilityEvidenceMap() {
   const selectedRecord =
     records.find((record) => record.project === selectedProject) ?? records[0];
   const reduced = useReducedMotion() === true;
-  const inView = useInView(hostRef, { margin: "120px" });
+  const inView = useInView(hostRef, { margin: "0px 0px -12% 0px" });
   const ambientTick = useAmbientPulse(
     inView && !reduced && !manualSelection,
     9600,

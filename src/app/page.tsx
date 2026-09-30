@@ -16,10 +16,12 @@ import { getSocialLink } from "@/data/social-links";
 import { getHomeStructuredData } from "@/lib/structured-data";
 
 function SectionHeader({
+  compactTitle = false,
   eyebrow,
   title,
   description,
 }: Readonly<{
+  compactTitle?: boolean;
   eyebrow: string;
   title: string;
   description?: string;
@@ -27,19 +29,25 @@ function SectionHeader({
   return (
     <header className="grid gap-5 lg:grid-cols-[minmax(0,0.72fr)_minmax(20rem,0.28fr)] lg:gap-12">
       <div>
-        <Reveal y={18}>
+        <Reveal y="clamp(18px, 1.7vw, 24px)">
           <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-accent uppercase">
             {eyebrow}
           </p>
         </Reveal>
-        <Reveal delay={0.06} y={22}>
-          <h2 className="mt-4 max-w-4xl text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold tracking-[-0.03em] text-balance text-foreground">
+        <Reveal delay={0.06} y="clamp(20px, 2.2vw, 32px)">
+          <h2
+            className={`mt-4 leading-[var(--text-heading-2-line-height)] font-semibold tracking-[-0.03em] text-balance text-foreground ${
+              compactTitle
+                ? "max-w-3xl text-[clamp(1.9rem,4.5vw,3.2rem)]"
+                : "max-w-4xl text-[length:var(--text-heading-2-size)]"
+            }`}
+          >
             {title}
           </h2>
         </Reveal>
       </div>
       {description ? (
-        <Reveal className="self-end" delay={0.11} y={20}>
+        <Reveal className="self-end" delay={0.13} y="clamp(18px, 1.9vw, 28px)">
           <p className="text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-muted">
             {description}
           </p>
@@ -77,62 +85,78 @@ export default function Home() {
           width="wide"
         >
           <div className="relative z-10">
-            <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.18em] text-signal-cyan uppercase">
-              {profile.displayName}
-            </p>
-            <h1 className="mt-6 max-w-[15ch] text-[clamp(2.7rem,3.35vw,3.65rem)] leading-[0.92] font-semibold tracking-[-0.025em] text-white uppercase min-[1200px]:max-w-none">
-              <span className="flex flex-wrap gap-x-[0.32em] min-[1200px]:flex-nowrap">
-                <span>Engineering</span>
-                <span>Intelligence</span>
-              </span>
-              <span className="mt-[0.08em] flex flex-wrap gap-x-[0.32em] min-[1200px]:flex-nowrap">
-                <span>Into</span>
-                <span>Production.</span>
-              </span>
-            </h1>
-            <p className="mt-7 whitespace-pre-line font-mono text-[length:var(--text-technical-size)] leading-[1.8] font-semibold tracking-[0.08em] text-signal-cyan uppercase">
-              {profile.shortRoleLine}
-            </p>
-            <p className="mt-5 max-w-xl text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-              Building AI products, distributed systems, and full-stack
-              platforms that solve real engineering problems.
-            </p>
+            <Reveal y="clamp(12px, 1.2vw, 18px)">
+              <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.18em] text-signal-cyan uppercase">
+                {profile.displayName}
+              </p>
+            </Reveal>
+            <Reveal delay={0.05} y="clamp(14px, 1.4vw, 20px)">
+              <h1 className="mt-6 max-w-[15ch] text-[clamp(2.7rem,3.35vw,3.65rem)] leading-[0.92] font-semibold tracking-[-0.025em] text-white uppercase min-[1200px]:max-w-none">
+                <span className="flex flex-wrap gap-x-[0.32em] min-[1200px]:flex-nowrap">
+                  <span>Engineering</span>
+                  <span>Intelligence</span>
+                </span>
+                <span className="mt-[0.08em] flex flex-wrap gap-x-[0.32em] min-[1200px]:flex-nowrap">
+                  <span>Into</span>
+                  <span>Production.</span>
+                </span>
+              </h1>
+            </Reveal>
+            <Reveal delay={0.11} y="clamp(16px, 1.6vw, 22px)">
+              <p className="mt-7 whitespace-pre-line font-mono text-[length:var(--text-technical-size)] leading-[1.8] font-semibold tracking-[0.08em] text-signal-cyan uppercase">
+                {profile.shortRoleLine}
+              </p>
+            </Reveal>
+            <Reveal delay={0.17} y="clamp(18px, 1.8vw, 24px)">
+              <p className="mt-5 max-w-xl text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
+                Building AI products, distributed systems, and full-stack
+                platforms that solve real engineering problems.
+              </p>
+            </Reveal>
           </div>
 
-          <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <Reveal
+            className="lg:col-start-2 lg:row-span-2 lg:row-start-1"
+            delay={0.12}
+            y="clamp(14px, 1.5vw, 20px)"
+          >
             <ProfessionalTopology />
-          </div>
+          </Reveal>
 
           <div className="relative z-10 lg:col-start-1 lg:row-start-2 lg:self-start">
-            <div className="mt-7 grid max-w-2xl gap-4 border-y border-border py-4 sm:grid-cols-2">
-              <div>
-                <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-                  Current base
-                </p>
-                <p className="mt-2 text-[length:var(--text-body-size)] font-semibold text-foreground">
-                  {profile.location}
-                </p>
+            <Reveal delay={0.22} y="clamp(18px, 1.8vw, 24px)">
+              <div className="mt-7 grid max-w-2xl gap-4 border-y border-border py-4 sm:grid-cols-2">
+                <div>
+                  <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
+                    Current base
+                  </p>
+                  <p className="mt-2 text-[length:var(--text-body-size)] font-semibold text-foreground">
+                    {profile.location}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
+                    Availability
+                  </p>
+                  <p className="mt-2 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
+                    Open to relevant full-time engineering roles.{" "}
+                    {profile.availability.immediate}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-                  Availability
-                </p>
-                <p className="mt-2 text-[length:var(--text-body-size)] leading-[var(--text-body-line-height)] text-foreground-secondary">
-                  Open to relevant full-time engineering roles.{" "}
-                  {profile.availability.immediate}
-                </p>
-              </div>
-            </div>
+            </Reveal>
 
-            <div className="mt-7 flex flex-wrap gap-3">
-              <ActionLink href="#systems" variant="primary">
-                Explore My Work
-              </ActionLink>
-              <ActionLink href={profile.resumePath}>View Résumé</ActionLink>
-              <ActionLink href={`mailto:${profile.email}`} variant="text">
-                Email Me
-              </ActionLink>
-            </div>
+            <Reveal delay={0.28} y="clamp(18px, 1.8vw, 24px)">
+              <div className="mt-7 flex flex-wrap gap-3">
+                <ActionLink href="#systems" variant="primary">
+                  Explore My Work
+                </ActionLink>
+                <ActionLink href={profile.resumePath}>View Résumé</ActionLink>
+                <ActionLink href={`mailto:${profile.email}`} variant="text">
+                  Email Me
+                </ActionLink>
+              </div>
+            </Reveal>
           </div>
         </Container>
       </section>
@@ -169,12 +193,12 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container className="relative" width="wide">
-          <Reveal y={18}>
+          <Reveal y="clamp(18px, 1.7vw, 24px)">
             <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.16em] text-signal-cyan uppercase">
               My Journey
             </p>
           </Reveal>
-          <Reveal delay={0.06} y={22}>
+          <Reveal delay={0.06} y="clamp(20px, 2.2vw, 32px)">
             <h2
               className="mt-4 max-w-5xl text-[length:var(--text-heading-2-size)] leading-[var(--text-heading-2-line-height)] font-semibold tracking-[-0.035em] text-foreground uppercase"
               id="journey-title"
@@ -188,7 +212,7 @@ export default function Home() {
         </Container>
       </section>
 
-      <section id="systems" className="scroll-mt-32 py-20 lg:py-28">
+      <section id="systems" className="section-anchor py-20 lg:py-28">
         <Container width="wide">
           <SectionHeader
             eyebrow="Systems / Flagship Portfolio"
@@ -201,7 +225,7 @@ export default function Home() {
 
       <section
         id="experience"
-        className="scroll-mt-32 border-y border-border bg-background-elevated/25 py-20 lg:py-24"
+        className="section-anchor border-y border-border bg-background-elevated/25 py-20 lg:py-24"
       >
         <Container width="wide">
           <SectionHeader
@@ -230,7 +254,7 @@ export default function Home() {
         </Container>
       </section>
 
-      <section id="capabilities" className="scroll-mt-32 py-20 lg:py-24">
+      <section id="capabilities" className="section-anchor py-20 lg:py-24">
         <Container width="wide">
           <SectionHeader
             eyebrow="Capability Evidence Map"
@@ -245,10 +269,11 @@ export default function Home() {
 
       <section
         id="foundations"
-        className="scroll-mt-32 border-y border-border bg-background-elevated/25 py-20 lg:py-24"
+        className="section-anchor border-y border-border bg-background-elevated/25 py-20 lg:py-24"
       >
         <Container width="wide">
           <SectionHeader
+            compactTitle
             eyebrow="Foundations"
             title="Algorithmic depth and engineering education—supporting signals, not the main identity."
           />
@@ -258,7 +283,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="relative isolate scroll-mt-32 overflow-hidden py-18 lg:py-24"
+        className="section-anchor relative isolate overflow-hidden py-18 lg:py-24"
       >
         <div
           className="signal-grid pointer-events-none absolute inset-0 -z-20 opacity-45"
@@ -269,7 +294,10 @@ export default function Home() {
           aria-hidden="true"
         />
         <Container width="wide">
-          <ViewportActivity className="contact-finale relative grid gap-10 border-y border-border py-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-center lg:gap-16 lg:py-12">
+          <ViewportActivity
+            activationDelay={720}
+            className="contact-finale relative grid gap-10 border-y border-border py-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-center lg:gap-16 lg:py-12"
+          >
             <svg
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 hidden h-full w-full opacity-70 lg:block"
@@ -367,12 +395,12 @@ export default function Home() {
               />
             </svg>
             <div>
-              <Reveal y={18}>
+              <Reveal y="clamp(18px, 1.7vw, 24px)">
                 <p className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
                   Contact / Final signal destination
                 </p>
               </Reveal>
-              <Reveal delay={0.06} y={22}>
+              <Reveal delay={0.06} y="clamp(20px, 2.2vw, 32px)">
                 <h2 className="mt-5 max-w-4xl text-[clamp(2.55rem,4.5vw,4.65rem)] leading-[0.92] font-semibold tracking-[-0.045em] text-foreground uppercase">
                   <span className="block lg:whitespace-nowrap">
                     Build systems that survive
@@ -382,7 +410,7 @@ export default function Home() {
                   </span>
                 </h2>
               </Reveal>
-              <Reveal delay={0.11} y={20}>
+              <Reveal delay={0.13} y="clamp(18px, 1.9vw, 28px)">
                 <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
                   {profile.availability.summary}{" "}
                   {profile.availability.immediate}
@@ -390,7 +418,7 @@ export default function Home() {
               </Reveal>
             </div>
 
-            <Reveal delay={0.15} y={22}>
+            <Reveal delay={0.2} y="clamp(20px, 2.2vw, 32px)">
               <div className="relative border border-border bg-background/88 px-6 py-7 shadow-[0_22px_70px_rgb(0_0_0_/.25)] backdrop-blur-sm lg:px-7">
                 <span
                   className="signal-ripple absolute top-6 right-6 h-4 w-4 rounded-full border border-signal-amber"

@@ -19,12 +19,12 @@ export function FoundationsSection() {
   const reduced = useReducedMotion() === true;
 
   return (
-    <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(23rem,0.94fr)]">
+    <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(23rem,0.94fr)]">
       <motion.section
         aria-label="IIT Kharagpur academic foundation"
         className="foundation-panel group relative isolate min-h-[34rem] overflow-hidden border-y border-border bg-[radial-gradient(circle_at_75%_32%,rgb(47_127_255_/_0.15),transparent_25rem),linear-gradient(145deg,rgb(11_25_42_/_0.94),rgb(4_7_13_/_0.97))] px-6 py-8 outline-none transition-[border-color,box-shadow] hover:border-signal-cyan/45 hover:shadow-[0_24px_80px_rgb(47_127_255_/.08)] focus-visible:border-signal-cyan/55 focus-visible:shadow-[0_24px_80px_rgb(47_127_255_/.1)] sm:px-10 sm:py-10"
         initial={
-          reduced ? false : { opacity: 0, y: "clamp(22px, 2.2vw, 32px)" }
+          reduced ? false : { opacity: 0, y: "clamp(20px, 2.5vw, 36px)" }
         }
         tabIndex={0}
         transition={{
@@ -219,7 +219,7 @@ export function FoundationsSection() {
         className="grid gap-4"
         aria-labelledby="algorithm-foundations-title"
         initial={
-          reduced ? false : { opacity: 0, y: "clamp(22px, 2.2vw, 32px)" }
+          reduced ? false : { opacity: 0, y: "clamp(20px, 2.5vw, 36px)" }
         }
         transition={{
           delay: reduced ? 0 : 0.25,
