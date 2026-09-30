@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the V1 completed baseline and the V2 content-model foundation on `feat/ritwik-os-v2`.
+This repository contains the V1 baseline and the current V2 experience on `feat/ritwik-os-v2`. The homepage visual system is frozen at H1.9; subsequent work must preserve that approved structure unless a regression is found.
 
 ## What This Project Is
 
@@ -51,6 +51,7 @@ Current status:
 - Minimal layout primitives and the global application shell are implemented.
 - Typed canonical identity and external link data are implemented.
 - The app renders the V2 static-first homepage hierarchy with editorial flagship systems, evidence placement, professional topology, concise experience, capability mapping, Foundations, and contact.
+- H1.9 is the frozen homepage baseline, including its approved first-entry motion, project diagrams, responsive behavior, and anchor navigation.
 - H1.2 implements a living signal system across the homepage: a lazy direct-Three.js professional globe, linked journey timeline, distinct flagship system stages, expandable evidence, connected experience and capability networks, and a routed contact finale.
 - Static semantic content remains server-rendered; WebGL and interactive visual stages are bounded client enhancements with reduced-motion, intersection, and page-visibility controls.
 - The official Next.js MDX pipeline is implemented for local Work content.
@@ -99,6 +100,8 @@ Research files should capture source-backed evidence before a public case study 
 
 Personal identity, availability, education, and resume path are centralized in `src/data/profile.ts`. This is the authoritative public identity record; launch metadata derives from it.
 
+The canonical public portfolio URL is `https://ritwik-os.vercel.app/`. SEO metadata, JSON-LD, robots, and sitemap output must resolve against that URL unless an explicit production URL environment variable overrides it.
+
 External professional links are centralized in `src/data/social-links.ts`. GitHub and LinkedIn are primary public links. LeetCode and Codeforces appear as algorithm evidence; X remains stored for later placement and is not shown in the homepage header, hero, or primary footer.
 
 Homepage project, experience, capability, algorithm, and recruiter-brief content is centralized in:
@@ -121,11 +124,13 @@ and next links operate only across the four registered MDX case studies:
 ThesisLens, TraceForge, Converge, and Stateful Agentic AI Assistant. AI Mock
 Interview Platform remains a portfolio entry without a placeholder route.
 
-The resume PDF is expected at:
+The public resume PDF is served from:
 
 ```text
 public/resume/ritwik-biswas-resume.pdf
 ```
+
+No editable source for that binary is currently available in the repository. Its Phase 8.11 reconciliation copy is maintained in `docs/RESUME_RECONCILIATION.md`; regenerate and visually verify the PDF from that copy instead of attempting to patch the binary.
 
 ## Navigation Principle
 
@@ -133,20 +138,20 @@ Keep navigation immediately understandable to recruiters. Use RITWIK OS terminol
 
 The Phase 3 prototype intentionally does not use a profile photograph. The brand remains typography-led until a stronger visual asset strategy is approved.
 
-The Phase 4 homepage uses recruiter-friendly internal anchor navigation:
+The current homepage uses recruiter-friendly internal anchor navigation:
 
 - `overview`
 - `systems`
 - `experience`
 - `capabilities`
-- `algorithms`
+- `foundations`
 - `contact`
 
 TraceForge has a verified public repository at `https://github.com/rit2001/traceforge`. Its public claims must follow `docs/research/traceforge-evidence.md`; no hosted demo or production deployment is claimed.
 
 Project presentation is currently text-first. Screenshots are deferred until polished recaptures or case-study assets are available.
 
-The Stateful Agentic AI Assistant is registered as the second Work case study. Its public stack uses HuggingFace Embeddings and FAISS based on the audited repository. It has a real GitHub repository link and no continuously hosted demo.
+The Stateful Agentic AI Assistant is a registered selected Work case study. Its public stack uses HuggingFace Embeddings and FAISS based on the audited repository. HITL applies to the verified simulated-purchase flow, and its AWS EC2 deployment is on demand rather than continuously hosted.
 
 ## Content Pipeline
 
@@ -160,6 +165,10 @@ src/content/work/
   thesislens.mdx
   traceforge.meta.ts
   traceforge.mdx
+  converge.meta.ts
+  converge.mdx
+  stateful-agentic-ai-assistant.meta.ts
+  stateful-agentic-ai-assistant.mdx
 
 src/lib/content/
   schemas.ts
@@ -220,7 +229,7 @@ Motion rules:
 - Section reveals are one-time and use opacity plus small vertical transforms.
 - Scroll-linked motion is limited to the top progress line, restrained desktop hero response, and Experience timeline progress.
 - Reduced-motion users receive immediately visible content without vertical movement, parallax, or stagger delays.
-- The site does not use scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, animated backgrounds, or continuous animation.
+- The site does not use scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, animated backgrounds, or an unbounded global animation loop. Existing semantic ambient visuals are bounded by visibility and reduced-motion controls.
 - Content remains visible before and without JavaScript; motion progressively enhances visible content.
 - Interactive surfaces are only used for real actions. Static surfaces such as education and non-linked information panels do not lift or pretend to be links.
 - Project and algorithm cards with real destinations use card-level accessible anchors.

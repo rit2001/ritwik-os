@@ -12,6 +12,8 @@ if (!github || !linkedIn || !leetCode || !codeforces) {
 
 export const launchSiteConfig = {
   brand: "RITWIK OS",
+  url: "https://ritwik-os.vercel.app/",
+  displayName: profile.displayName,
   owner: profile.editorialName,
   tagline: profile.tagline,
   headline: profile.headline,

@@ -223,7 +223,7 @@ Phase 3 real identity, brand shell, and first visual prototype has been complete
 - Canonical external link data lives in `src/data/social-links.ts`.
 - Site metadata and brand constants live in `src/data/site.ts`.
 - Display name is `RITWIK BISWAS`; editorial metadata name is `Ritwik Biswas`.
-- Public email is `biswas.ritwik2001@gmail.com`; no secondary email or phone number is displayed.
+- Public email is `thisisritwikbiswas@gmail.com`; no secondary email or phone number is displayed.
 - Primary professional positioning is Software Engineer work across AI systems, scalable backend platforms, and cloud-native infrastructure.
 - Header and footer expose only recruiter-readable actions: GitHub, LinkedIn, Resume, and Email where appropriate.
 - LeetCode, Codeforces, and X are stored in canonical data for later placement, but are not part of the first viewport or primary footer.
@@ -505,3 +505,59 @@ changing the audited technical record or beginning Phase 8.9:
   specific visual stages. The audited MDX case-study content remains unchanged.
 
 The mandatory human visual review gate remains active. Do not begin Phase 8.9.
+
+## H1.9 — Frozen Homepage Baseline
+
+H1.9 is complete on `feat/ritwik-os-v2` and is the frozen homepage design
+baseline:
+
+- Hero, globe, Journey, flagship ordering and visual identities, Experience,
+  Earlier Systems, Capability Evidence Map, Foundations, and Contact are
+  structurally approved.
+- First-entry reveals are perceptible, restrained, one-time, responsive, and
+  reduced-motion safe. Existing semantic ambient systems remain visibility
+  bounded.
+- ThesisLens, TraceForge, and Converge internal diagram labels meet the approved
+  readability hierarchy. Sticky navigation uses shared anchor offsets.
+- Future content, SEO, resume, and launch work must not redesign or re-sequence
+  the frozen homepage unless it is correcting a demonstrated regression.
+
+## Phase 8.11 — Public Artifact Reconciliation
+
+Phase 8.11 establishes one conservative public engineering record:
+
+- Canonical identity is `RITWIK BISWAS`, `Software Engineer | Backend,
+Distributed Systems & AI`, based in Kolkata, India, with public email
+  `thisisritwikbiswas@gmail.com`.
+- Canonical portfolio URL is `https://ritwik-os.vercel.app/`; GitHub and
+  LinkedIn remain the URLs in `src/data/social-links.ts`.
+- Flagship order remains ThesisLens, TraceForge, Converge. Registered Work
+  routes then include Stateful Agentic AI Assistant; AI Mock Interview Platform
+  intentionally has no case-study route.
+- ThesisLens evidence is 44 queries and 1,012 judged pairs. The eight-query
+  frozen holdout moved nDCG@5 from 0.704 to 0.811 and Recall@3 from 0.448 to
+  0.604. MiniLM reranking measured about 3.19 seconds per query on local CPU;
+  lexical retrieval remains the serving default because top-rank MRR declined.
+- TraceForge claims stop at exact recorded model/HTTP replay, sealed Replay
+  Capsules, structural comparison, developer-authored regression
+  specifications, Go/Kafka at-least-once capture, SQLite event-ID deduplication,
+  and bounded local infrastructure. Do not claim PostgreSQL trace persistence,
+  API-key isolation, generic OTLP ingestion, exactly-once semantics, consumer
+  lag or throughput benchmarks, or production-scale Kubernetes.
+- Converge claims stop at board-local PostgreSQL authority, transactional
+  operation/projection/outbox/receipt patterns, application idempotency,
+  at-least-once Redis Stream fanout, persist-before-optimism, fixed-watermark
+  catch-up, snapshot/tail recovery, and generation-fenced reconnect. Evidence is
+  245 PostgreSQL integration tests across 29 files, 59 failure scenarios, 93
+  Playwright scenarios, bounded local k6 runs, and one recorded API plus one
+  worker. Do not claim exactly once or demonstrated horizontal production
+  scale; say CI, not CI/CD, unless deployment automation is later evidenced.
+- Stateful Agentic AI Assistant HITL applies to verified flows only; its EC2
+  deployment is on demand, not continuously hosted. Earlier Whiteboard is
+  engineering progression toward Converge, not direct code lineage.
+- LeetCode evidence is Knight, peak 1923, Top 5.6%, 1,550+ solved, and a 600+
+  Problem-of-the-Day streak. Codeforces evidence is Specialist, peak 1415, and
+  Global Rank 818 in Round 952.
+- The repository has no editable resume source. The existing public PDF is
+  stale and remains unchanged; `docs/RESUME_RECONCILIATION.md` contains exact
+  replacement copy for human regeneration and visual verification.

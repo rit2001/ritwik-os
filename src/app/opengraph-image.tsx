@@ -76,8 +76,9 @@ export default function OpenGraphImage() {
             maxWidth: 900,
           }}
         >
-          <span>{launchSiteConfig.owner}</span>
-          <span>Software Engineer · AI Systems · Backend · Cloud</span>
+          <span>{launchSiteConfig.displayName}</span>
+          <span>Software Engineer</span>
+          <span>Backend / Distributed Systems / AI</span>
         </div>
       </div>
 

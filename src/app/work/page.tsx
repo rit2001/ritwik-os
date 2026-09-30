@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Work — RITWIK OS",
   description:
     "Flagship engineering systems, selected earlier work, and archived portfolio context by Ritwik Biswas.",
+  alternates: {
+    canonical: "/work",
+  },
 };
 
 export default function WorkPage() {

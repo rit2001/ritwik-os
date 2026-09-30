@@ -1,3 +1,5 @@
+import { launchSiteConfig } from "@/config/site";
+
 function normalizeUrl(value: string) {
   const withProtocol = /^https?:\/\//.test(value) ? value : `https://${value}`;
   const url = new URL(withProtocol);
@@ -11,7 +13,6 @@ function getConfiguredUrl() {
     process.env.NEXT_PUBLIC_SITE_URL,
     process.env.SITE_URL,
     process.env.VERCEL_PROJECT_PRODUCTION_URL,
-    process.env.VERCEL_URL,
   ];
 
   for (const candidate of candidates) {
@@ -30,7 +31,7 @@ function getConfiguredUrl() {
 }
 
 export function getPublicSiteUrl() {
-  return getConfiguredUrl();
+  return getConfiguredUrl() ?? normalizeUrl(launchSiteConfig.url);
 }
 
 export function getLocalDevelopmentSiteUrl() {
@@ -46,7 +47,7 @@ export function getMetadataSiteUrl() {
 }
 
 export function getSitemapSiteUrl() {
-  return getPublicSiteUrl() ?? getLocalDevelopmentSiteUrl();
+  return getPublicSiteUrl();
 }
 
 export function createSiteUrl(path: string, base = getPublicSiteUrl()) {

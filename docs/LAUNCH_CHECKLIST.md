@@ -10,9 +10,9 @@
 
 ## Content
 
-- [x] Homepage is complete and frozen for launch preview.
+- [x] Homepage is complete and frozen at H1.9 for launch preview.
 - [x] Work Registry contains only real entries.
-- [x] TraceForge is marked as in development with no fake repository or demo.
+- [x] TraceForge is marked as in development with its real repository and no fake demo.
 - [x] Stateful Agentic AI Assistant uses HuggingFace Embeddings in public project data.
 - [ ] Screenshots are captured and approved for future case-study enhancement.
 
@@ -22,7 +22,7 @@
 - [x] Open Graph image route exists.
 - [x] Structured data is conservative and source-backed.
 - [x] Robots and sitemap routes exist.
-- [ ] Real production URL configured through `NEXT_PUBLIC_SITE_URL`.
+- [x] Canonical production URL is `https://ritwik-os.vercel.app/`; explicit production environment variables may override it.
 - [ ] Open Graph preview inspected after deployment.
 - [ ] Custom domain configured later, if approved.
 
@@ -69,12 +69,15 @@
 
 - [ ] `/` verified.
 - [ ] `/work` verified.
+- [ ] `/work/thesislens` verified.
 - [ ] `/work/traceforge` verified.
+- [ ] `/work/converge` verified.
 - [ ] `/work/stateful-agentic-ai-assistant` verified.
+- [ ] `/work/ai-mock-interview-platform` verified as intentionally not found.
 - [ ] `/robots.txt` verified.
 - [ ] `/sitemap.xml` verified.
 - [ ] `/opengraph-image` verified.
-- [ ] Resume PDF verified.
+- [ ] Resume PDF regenerated from `docs/RESUME_RECONCILIATION.md` and visually verified.
 
 ## Recruiter Review
 
@@ -82,4 +85,5 @@
 - [ ] Resume download checked.
 - [ ] GitHub and LinkedIn links checked.
 - [ ] TraceForge truthfulness reviewed.
+- [ ] Converge exactly-once, scale, and CI boundaries reviewed.
 - [ ] Agentic AI deployment and reliability caveats reviewed.

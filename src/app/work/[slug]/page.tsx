@@ -35,6 +35,9 @@ export async function generateMetadata({
   return {
     title: entry.meta.seoTitle,
     description: entry.meta.seoDescription,
+    alternates: {
+      canonical: entry.meta.caseStudyPath,
+    },
     openGraph: {
       title: entry.meta.seoTitle,
       description: entry.meta.seoDescription,

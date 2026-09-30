@@ -16,18 +16,20 @@ export function getHomeStructuredData() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: launchSiteConfig.owner,
+    ...(siteUrl ? { url: siteUrl } : {}),
     email: `mailto:${launchSiteConfig.email}`,
     jobTitle: launchSiteConfig.compactTitle,
     description: launchSiteConfig.headline,
     address: {
       "@type": "PostalAddress",
-      addressLocality: launchSiteConfig.location,
+      addressLocality: "Kolkata",
+      addressCountry: "IN",
     },
     alumniOf: {
       "@type": "CollegeOrUniversity",
       name: "Indian Institute of Technology Kharagpur",
       description:
-        "Dual Degree graduate in Mechanical Engineering from IIT Kharagpur.",
+        "Dual Degree (B.Tech + M.Tech) in Mechanical Engineering, 2021–2026.",
     },
     sameAs,
   };

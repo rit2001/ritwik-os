@@ -126,8 +126,9 @@ Evidence highlights are `delta`, `count`, or `proof`. Delta evidence must includ
 `src/data/professional-signals.ts` stores approved public geography signals separately from identity. Public signals are limited to approved relationship labels and must not imply residence or relocation for remote work. Withheld signals must not render.
 
 H1.2 adds the `country-marker` relationship for the public USA marker. It may
-render only the approved country-level wording `USA / United States`; it must not
-imply employment, title, residence, relocation, or a Scale AI relationship.
+render only the approved country-level Scale AI freelance/part-time LLM
+evaluation relationship. It must not imply residence, relocation, full-time
+employment, or a stronger employment status.
 
 `src/data/capabilities.ts` expresses techniques/tools plus demonstrated project or experience references; it does not use proficiency labels.
 
@@ -136,11 +137,12 @@ TraceForge is an ongoing case study backed by the verified public repository
 `docs/research/traceforge-evidence.md`: exact replay is fixture-scoped to recorded
 model and HTTP outcomes; comparison is structural; Kafka is at least once;
 SQLite supplies single-writer event idempotency; and Docker, kind/Kustomize, and
-Terraform evidence is local development only. PostgreSQL, API-key isolation,
-asynchronous evaluators, consumer lag, performance, hosted operation, cloud, and
-production claims are not supported.
+Terraform evidence is local development only. PostgreSQL trace/span persistence,
+API-key isolation, asynchronous evaluators, generic OTLP ingestion, consumer
+lag, throughput benchmarks, exactly-once semantics, hosted operation, cloud,
+and production-scale Kubernetes claims are not supported.
 
-Stateful Agentic AI Assistant is the second registered Work entry. It is a completed implemented-system case study with a real public GitHub repository and no continuously hosted demo. Its public metadata must use `HuggingFace Embeddings`, not `Google Embeddings`, unless future historical evidence supports both.
+Stateful Agentic AI Assistant is a registered selected Work entry. It is a completed implemented-system case study with a real public GitHub repository and no continuously hosted demo. Its public metadata must use `HuggingFace Embeddings`, not `Google Embeddings`, unless future historical evidence supports both. Human-in-the-Loop claims apply only to verified flows; the implemented interrupt/resume evidence is the simulated stock-purchase action. AWS EC2 deployment is on demand.
 
 ThesisLens is the first V2 flagship case study and the third registered MDX Work
 entry. Its public claims are constrained by
@@ -162,11 +164,39 @@ the recorded deployment uses one API and one worker. Do not claim global order,
 exactly-once delivery, production horizontal scale, complete version history,
 active production compaction, or tested disaster recovery.
 
+Converge automation must be called CI unless deployment automation is separately
+implemented and evidenced. Do not collapse application idempotency and
+at-least-once fanout into an exactly-once claim.
+
+The Real-Time Collaborative Whiteboard is historical progression toward
+Converge, not a direct code-lineage claim. Its earlier resume-scale statements
+must not be reused without fresh repository evidence.
+
 Case-study cover visuals are presentation components, not evidence sources.
 ThesisLens, TraceForge, and Converge may share visual-stage infrastructure while
 retaining distinct retrieval, replay, and distributed-state diagrams. Their
 audited MDX narrative, TOCs, limitations, and canonical project metadata remain
 authoritative.
+
+#### Canonical Public Artifact Record
+
+All public artifacts must use these identity fields:
+
+- `RITWIK BISWAS`
+- `Software Engineer | Backend, Distributed Systems & AI`
+- current base `Kolkata, India`
+- `thisisritwikbiswas@gmail.com`
+- `https://ritwik-os.vercel.app/`
+- canonical GitHub and LinkedIn URLs from `src/data/social-links.ts`
+
+Algorithm evidence is fixed at LeetCode Knight, peak 1923, Top 5.6%, 1,550+
+solved, and a 600+ Problem-of-the-Day streak; and Codeforces Specialist, peak
+1415, Global Rank 818 in Round 952. Do not silently increase these values.
+
+The public resume PDF has no editable source in this repository. Exact approved
+replacement copy and its mismatch audit live in
+`docs/RESUME_RECONCILIATION.md`. Regenerate and visually verify the PDF before
+replacing the binary.
 
 ### Builds
 
