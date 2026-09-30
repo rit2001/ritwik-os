@@ -1,0 +1,142 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=0.455in]{geometry}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\setmainfont[
+  Ligatures=NoCommon,
+  BoldFont=texgyreheros-bold.otf,
+  ItalicFont=texgyreheros-italic.otf,
+  BoldItalicFont=texgyreheros-bolditalic.otf
+]{texgyreheros-regular.otf}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{1.5em}
+
+\definecolor{accent}{HTML}{173A5E}
+\definecolor{secondary}{HTML}{46586A}
+\definecolor{rule}{HTML}{9AA9B8}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=accent,
+  pdfauthor={Ritwik Biswas},
+  pdftitle={Ritwik Biswas - Software Engineer Resume},
+  pdfsubject={Backend, Distributed Systems, and AI Engineering},
+  pdfkeywords={Software Engineer, Backend, Distributed Systems, AI}
+}
+
+\newcommand{\resumesection}[1]{%
+  \vspace{4.2pt}%
+  {\color{accent}\fontsize{11.2pt}{12pt}\selectfont\bfseries\MakeUppercase{#1}}%
+  \vspace{1.4pt}\par%
+  {\color{rule}\hrule height 0.45pt}%
+  \vspace{2.8pt}%
+}
+
+\newcommand{\entryline}[4]{%
+  \textbf{#1} \textbar{} #2\hfill{\color{secondary}#3 \textbar{} #4}\par%
+}
+
+\newcommand{\projectline}[2]{%
+  \textbf{#1} \textbar{} #2\par%
+}
+
+\newcommand{\techline}[1]{%
+  {\color{secondary}\fontsize{8.9pt}{10.2pt}\selectfont #1}\par%
+}
+
+\newenvironment{resumeitems}{%
+  \begin{itemize}[
+    leftmargin=12pt,
+    labelsep=4.2pt,
+    itemsep=0.8pt,
+    parsep=0pt,
+    topsep=1.2pt,
+    partopsep=0pt
+  ]%
+}{%
+  \end{itemize}%
+}
+
+\begin{document}
+\fontsize{9.75pt}{11.2pt}\selectfont
+
+\begin{center}
+  {\color{accent}\fontsize{23.5pt}{24.5pt}\selectfont\bfseries RITWIK BISWAS}\par
+  \vspace{1.7pt}
+  {\fontsize{11.3pt}{12pt}\selectfont Software Engineer \textbar{} Backend, Distributed Systems \& AI}\par
+  \vspace{2.6pt}
+  {\fontsize{9.2pt}{10.2pt}\selectfont
+    Kolkata, India \textbar{}
+    \href{mailto:thisisritwikbiswas@gmail.com}{thisisritwikbiswas@gmail.com} \textbar{}
+    \href{https://www.linkedin.com/in/ritwik-biswas-958318234/}{LinkedIn} \textbar{}
+    \href{https://github.com/rit2001}{GitHub} \textbar{}
+    \href{https://ritwik-os.vercel.app/}{Portfolio}
+  }
+\end{center}
+\vspace{-4.2pt}
+
+\resumesection{Education}
+\textbf{Indian Institute of Technology Kharagpur} \textbar{} {\color{secondary}2021 - 2026}\par
+Dual Degree \textbar{} B.Tech + M.Tech \textbar{} Mechanical Engineering \textbar{} CGPA: 7.84 / 10\par
+{\color{secondary}Shyamal Ghosh \& Sunanda Ghosh Endowment Honour}\par
+
+\resumesection{Experience}
+\entryline{Taskly Technologies Inc.}{Software Engineering Intern}{Remote, Canada}{Mar 2025 - Jul 2025}
+\begin{resumeitems}
+  \item Built core JobSense modules with Next.js, FastAPI, and PostgreSQL for job-description analysis, resume scoring, ATS checks, interview preparation, and company research.
+  \item Integrated Groq, Firebase Authentication, JWT-secured sessions, and protected AI endpoints; resolved scraping, payload, environment, and Docker failures while supporting Vercel and cloud deployment workflows.
+\end{resumeitems}
+
+\entryline{Search-in}{Full-Stack Developer Intern}{Remote, Bengaluru}{Jun 2024 - Jul 2024}
+\begin{resumeitems}
+  \item Built a React administration platform and Node.js/Express APIs supporting operational analytics, order workflows, 10K+ users, 1K+ orders, and 500+ managed records.
+  \item Improved data paths with MongoDB indexing, Redis caching, and query tuning; redesigned workflows that reduced order-processing time by 30\% and deployed frontend assets to AWS S3.
+\end{resumeitems}
+
+\entryline{Pepcorns}{Full-Stack Developer Intern}{Remote, Pune}{Mar 2024 - Apr 2024}
+\begin{resumeitems}
+  \item Built a Node.js/SQL referral and rewards platform with referral attribution, reward issuance, social sharing, backend integrations, and reusable React components.
+\end{resumeitems}
+
+\resumesection{Flagship Engineering Systems}
+\projectline{ThesisLens}{Applied AI / Retrieval / Evaluation}
+\techline{Python \textbar{} FastAPI \textbar{} Azure OpenAI \textbar{} Azure AI Search \textbar{} PostgreSQL \textbar{} Docker}
+\begin{resumeitems}
+  \item Built evidence-grounded financial research foundations spanning filing ingestion, evidence-guarded KPI extraction, deterministic SQL/RAG routing, and current-request citation validation.
+  \item Evaluated 44 queries and 1,012 judged query-document pairs. On an eight-query frozen holdout, a fine-tuned MiniLM reranker moved nDCG@5 from 0.704 to 0.811 and Recall@3 from 0.448 to 0.604; lexical retrieval remained the serving default after a top-rank MRR tradeoff and approximately 3.19 s/query local CPU reranking latency.
+\end{resumeitems}
+
+\projectline{TraceForge}{AI Reliability / Deterministic Replay}
+\techline{Python \textbar{} Go \textbar{} Kafka \textbar{} SQLite \textbar{} LangGraph \textbar{} OpenTelemetry \textbar{} Docker}
+\begin{resumeitems}
+  \item Sealed sanitized execution evidence into versioned Replay Capsules and replayed recorded model and HTTP boundaries offline using ordered request fingerprints that fail closed on mismatch.
+  \item Added normalized structural comparison, developer-authored regression specifications, and pytest export; the optional capture path uses a Go gateway, Kafka at-least-once delivery, and SQLite event-ID deduplication.
+\end{resumeitems}
+
+\projectline{Converge}{Distributed Real-Time Collaboration}
+\techline{TypeScript \textbar{} React \textbar{} Konva \textbar{} Fastify \textbar{} Socket.IO \textbar{} PostgreSQL \textbar{} Redis \textbar{} IndexedDB}
+\begin{resumeitems}
+  \item Built board-authoritative state with a strict monotonic total order per board and atomic PostgreSQL operation, projection, receipt, heads, undo-evidence, and outbox updates; Redis Streams provide retained at-least-once fanout with application-level idempotency.
+  \item Implemented persistence-before-optimism, fixed-watermark catch-up, generation-fenced reconnect, and verified snapshot-plus-tail recovery. Release evidence records 245 PostgreSQL integration tests across 29 files, 59 failure scenarios, 93 Playwright scenarios, and bounded local k6 runs.
+\end{resumeitems}
+
+\resumesection{Technical Skills}
+\textbf{Languages:} TypeScript, Go, Python, SQL, JavaScript\par
+\textbf{Systems:} PostgreSQL, Redis, Kafka, Fastify, FastAPI, Socket.IO, IndexedDB\par
+\textbf{AI / Retrieval:} LangGraph, Azure OpenAI, Azure AI Search, RAG, BM25, SentenceTransformers, FAISS\par
+\textbf{Quality / Infrastructure:} Docker, GitHub Actions, Playwright, k6, OpenTelemetry, Prometheus\par
+
+\resumesection{Achievements}
+\begin{resumeitems}
+  \item \textbf{LeetCode:} Knight; peak 1923; Top 5.6\%; 1,550+ solved; 600+ Problem-of-the-Day streak.
+  \item \textbf{Codeforces:} Specialist; peak 1415; Global Rank 818 in Round 952.
+  \item Amazon ML Summer School 2024; Top 3 in GCOS 2024 at IIT Kharagpur; Top 5 in Overnite at Kshitij, IIT Kharagpur.
+\end{resumeitems}
+
+\end{document}

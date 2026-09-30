@@ -130,7 +130,7 @@ The public resume PDF is served from:
 public/resume/ritwik-biswas-resume.pdf
 ```
 
-No editable source for that binary is currently available in the repository. Its Phase 8.11 reconciliation copy is maintained in `docs/RESUME_RECONCILIATION.md`; regenerate and visually verify the PDF from that copy instead of attempting to patch the binary.
+The maintainable XeLaTeX source lives at `resume/ritwik-biswas-resume.tex`, with build instructions in `resume/README.md`. Its claims derive from `docs/RESUME_RECONCILIATION.md`; regenerate and visually verify the PDF from that source instead of attempting to patch the binary.
 
 ## Navigation Principle
 

@@ -8,10 +8,11 @@ The repository contains one public resume artifact:
 public/resume/ritwik-biswas-resume.pdf
 ```
 
-It is a one-page PDF with no editable `.docx`, `.tex`, `.typ`, `.odt`, or other
-source file in the repository. The PDF is stale and must not be binary-patched.
-Regenerate it from the exact replacement copy below, inspect the rendered page,
-and replace the public PDF only after human approval.
+Phase 8.11R added the maintainable source at
+`resume/ritwik-biswas-resume.tex` and regenerated the one-page public PDF from
+the exact replacement copy below. Future updates must change the source,
+rebuild to a temporary path, inspect the rendered page, and verify extracted
+text and links before replacing the public PDF.
 
 ## Phase 8.11 Reconciliation Audit
 

@@ -558,6 +558,16 @@ Distributed Systems & AI`, based in Kolkata, India, with public email
 - LeetCode evidence is Knight, peak 1923, Top 5.6%, 1,550+ solved, and a 600+
   Problem-of-the-Day streak. Codeforces evidence is Specialist, peak 1415, and
   Global Rank 818 in Round 952.
-- The repository has no editable resume source. The existing public PDF is
-  stale and remains unchanged; `docs/RESUME_RECONCILIATION.md` contains exact
-  replacement copy for human regeneration and visual verification.
+- Phase 8.11 established `docs/RESUME_RECONCILIATION.md` as the exact audited
+  replacement copy for resume regeneration.
+
+## Phase 8.11R — Audited Resume Regeneration
+
+- `resume/ritwik-biswas-resume.tex` is the maintainable XeLaTeX source for the
+  public resume. `resume/README.md` documents the local build command.
+- `public/resume/ritwik-biswas-resume.pdf` is generated from that source and
+  remains the only public resume asset.
+- The resume is one A4 page, single-column, text-selectable, searchable, and
+  uses standard hyperlinks for email, LinkedIn, GitHub, and the portfolio.
+- Resume claims remain governed by `docs/RESUME_RECONCILIATION.md`; source and
+  layout work must not strengthen or independently rewrite those claims.

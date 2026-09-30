@@ -193,10 +193,11 @@ Algorithm evidence is fixed at LeetCode Knight, peak 1923, Top 5.6%, 1,550+
 solved, and a 600+ Problem-of-the-Day streak; and Codeforces Specialist, peak
 1415, Global Rank 818 in Round 952. Do not silently increase these values.
 
-The public resume PDF has no editable source in this repository. Exact approved
-replacement copy and its mismatch audit live in
-`docs/RESUME_RECONCILIATION.md`. Regenerate and visually verify the PDF before
-replacing the binary.
+The public resume PDF is generated from
+`resume/ritwik-biswas-resume.tex`. Exact approved replacement copy and its
+mismatch audit live in `docs/RESUME_RECONCILIATION.md`. Build to a temporary
+path, inspect the rendered page, and verify extracted text and hyperlinks before
+replacing the public binary.
 
 ### Builds
 
