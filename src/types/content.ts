@@ -3,7 +3,18 @@ import type { ComponentType } from "react";
 export type WorkStatus =
   "in-development" | "completed" | "maintained" | "archived";
 
+export type CaseStudyTocItem = {
+  href: string;
+  label: string;
+};
+
+export type CaseStudyHeaderFact = {
+  label: string;
+  value: string;
+};
+
 export type WorkMeta = {
+  projectId: string;
   slug: string;
   title: string;
   shortTitle?: string;
@@ -27,6 +38,8 @@ export type WorkMeta = {
   draft: boolean;
   relatedProjectSlugs?: readonly string[];
   currentMilestone?: string;
+  toc: readonly CaseStudyTocItem[];
+  headerFacts?: readonly CaseStudyHeaderFact[];
 };
 
 export type WorkEntry = {

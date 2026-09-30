@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   publisher: launchSiteConfig.owner,
   category: "technology",
   keywords: [...launchSiteConfig.metadata.keywords],
+  alternates: {
+    canonical: "/",
+  },
   robots: {
     index: true,
     follow: true,
@@ -74,7 +77,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <MotionProvider>
           <SiteShell>{children}</SiteShell>

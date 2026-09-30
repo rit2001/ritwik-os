@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 
 import { launchSiteConfig } from "../src/config/site";
-import { selectedProjects } from "../src/data/projects";
+import { projects } from "../src/data/projects";
 import { workMetaEntries } from "../src/lib/content/work-manifest";
 
 function isHttpsUrl(value: string) {
@@ -75,7 +75,7 @@ for (const [key, href] of Object.entries(launchSiteConfig.links)) {
   }
 }
 
-for (const project of selectedProjects) {
+for (const project of projects) {
   if (project.stack.includes("Google Embeddings")) {
     errors.push(`${project.title} still contains Google Embeddings`);
   }

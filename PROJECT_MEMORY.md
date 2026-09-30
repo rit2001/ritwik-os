@@ -223,7 +223,7 @@ Phase 3 real identity, brand shell, and first visual prototype has been complete
 - Canonical external link data lives in `src/data/social-links.ts`.
 - Site metadata and brand constants live in `src/data/site.ts`.
 - Display name is `RITWIK BISWAS`; editorial metadata name is `Ritwik Biswas`.
-- Public email is `biswas.ritwik2001@gmail.com`; no secondary email or phone number is displayed.
+- Public email is `thisisritwikbiswas@gmail.com`; no secondary email or phone number is displayed.
 - Primary professional positioning is Software Engineer work across AI systems, scalable backend platforms, and cloud-native infrastructure.
 - Header and footer expose only recruiter-readable actions: GitHub, LinkedIn, Resume, and Email where appropriate.
 - LeetCode, Codeforces, and X are stored in canonical data for later placement, but are not part of the first viewport or primary footer.
@@ -348,14 +348,256 @@ Production hardening and launch-readiness has been completed:
 - Browser console launch QA should use a clean profile or disabled DOM-modifying extensions such as Dark Reader, because extension-injected attributes can create false hydration warnings.
 - Manual launch tracking lives in `docs/LAUNCH_CHECKLIST.md`.
 
+## V2 Content Model — Phase 8.3
+
+Phase 8.3 is complete on branch `feat/ritwik-os-v2` in the canonical repository
+workspace.
+
+- `src/data/profile.ts` is the authoritative public identity record: Ritwik Biswas, Kolkata, India, `thisisritwikbiswas@gmail.com`, approved availability, and education.
+- Portfolio hierarchy is canonical: ThesisLens, TraceForge, and Converge are flagship; Stateful Agentic AI Assistant and AI Mock Interview Platform are selected; Real-Time Collaborative Whiteboard is archive and superseded by Converge.
+- Public professional signals are evidence-oriented. They must not imply relocation or physical residence for remote work; no United States signal is public.
+- Work case-study routes remain limited to real registered MDX entries: TraceForge and Stateful Agentic AI Assistant. ThesisLens and Converge have no placeholder route.
+- The baseline resume PDF remains intentionally untouched until the later resume/SEO phase.
+
 ## Next Expected Phase
 
-The next implementation phase should review the production preview for launch acceptance:
+Phase 8.4 static homepage hierarchy is complete on `feat/ritwik-os-v2`:
 
-1. Configure a real preview URL through `NEXT_PUBLIC_SITE_URL`.
-2. Run `npm run verify`.
-3. Deploy a preview without merging or promoting to production until reviewed.
-4. Complete the manual checks in `docs/LAUNCH_CHECKLIST.md`.
-5. Do not add fake domains, placeholder routes, screenshots, demos, metrics, or unsupported deployment claims.
+- Homepage order is Hero, Credibility Rail, Flagship Systems, Experience, Capability Evidence Map, Foundations, Contact, and Footer.
+- ThesisLens, TraceForge, and Converge are presented as distinct editorial flagship sections with static semantic architecture flows and evidence-first hierarchy.
+- The hero includes a static SVG professional topology with adjacent text; it requires no client JavaScript and does not imply relocation or residence for remote work.
+- Standalone Current Build, Recruiter Brief, and legacy-project homepage cards are no longer rendered.
+- ThesisLens and Converge do not expose placeholder actions or routes. TraceForge retains its real case-study action.
+- Existing client boundaries are limited to the established navigation, scroll progress, provider, and restrained section reveal primitives; homepage content remains present without motion.
 
-Do not start implementation until the user explicitly asks for it.
+Phase 8.5 Work index and evidence primitives are complete on `feat/ritwik-os-v2`:
+
+- `/work` is organized from the canonical registry into Flagship Systems, Selected Earlier Work, and Archive / Superseded sections.
+- Portfolio projects can remain visible without routes; only the registered TraceForge and Stateful Agentic AI Assistant MDX entries resolve as case studies.
+- Case-study headers, facts, TOCs, and previous/next navigation are metadata-driven. TOC anchors are validated against the authored MDX section IDs.
+- Shared evidence primitives provide metric deltas, semantic evidence tables, responsive system flows, invariant callouts, trade-off records, and case-study fact lists without introducing dependencies.
+- ThesisLens and Converge have no placeholder case-study route or action. The resume PDF remains unchanged.
+
+## Next Expected Phase
+
+Phase 8.6 ThesisLens evidence audit and case study are complete on `feat/ritwik-os-v2`:
+
+- The authoritative public source is `https://github.com/rit2001/thesislens`, audited at commit `a1a394c13977fc83d8cf2b80bbeec2efc7c5d902` with its 221-test zero-cloud suite passing.
+- Evidence and safe wording are recorded in `docs/research/thesislens-evidence.md`.
+- `/work/thesislens` is a real registered MDX case study. Published-only navigation now orders ThesisLens, TraceForge, and Stateful Agentic AI Assistant.
+- The 44-query, 1,012-pair dataset is content-adjudicated across Apple and Tesla FY2024. The reported nDCG@5, Recall@3, MRR, and latency comparison uses the eight-query frozen final holdout.
+- The fine-tuned MiniLM reranker remains offline and experimental after a mixed result; lexical retrieval remains the serving default.
+- Citation controls validate current-request evidence IDs and report scope. They are not described as independent semantic-entailment verification.
+- Converge and AI Mock Interview Platform still have no case-study routes. No dependencies, resume assets, global SEO, or interactive-topology work changed.
+
+## Next Expected Phase
+
+Phase 8.7 TraceForge evidence audit and case-study rewrite are complete on `feat/ritwik-os-v2`:
+
+- The authoritative public source is `https://github.com/rit2001/traceforge`, audited at `660506fe07f0fb99d8829340121b9c537ec5616d`; evidence and safe wording are recorded in `docs/research/traceforge-evidence.md`.
+- `/work/traceforge` now centers immutable Replay Capsules, exact offline recorded model/HTTP playback, normalized structural comparison, developer-authored regression specifications, and pytest export.
+- The optional Go/Kafka path is described as bounded queue acceptance plus at-least-once delivery and single-writer SQLite event-ID idempotency. A gateway `202` is not broker acknowledgement or sealed evidence.
+- PostgreSQL, API-key/tenant isolation, asynchronous evaluators, consumer lag, throughput/latency metrics, and production-scale implications were removed. Generic tools, real-agent capture, fork replay, richer diffs, recovery operations, and benchmarks remain planned.
+- Native OpenTelemetry/Prometheus instrumentation, non-root Docker images, one verified local kind deployment, and a narrow locally verified Terraform foundation remain bounded development evidence—not cloud or production claims.
+- The verified public repository action now derives from canonical project metadata. Published-only navigation remains ThesisLens, TraceForge, and Stateful Agentic AI Assistant; Converge still has no route.
+- No dependencies, resume assets, global SEO, deployment, or interactive-topology work changed.
+
+## Phase 8.8 — Converge Evidence Audit and Case Study
+
+Phase 8.8 is complete on `feat/ritwik-os-v2`:
+
+- The authoritative public source is `https://github.com/rit2001/converge`,
+  audited at `966525daa9f9bea479c7f9d28d2cf3dcd9f735f2`; evidence and safe
+  wording are recorded in `docs/research/converge-evidence.md`.
+- `/work/converge` is a real registered MDX case study. Published-only
+  navigation now orders ThesisLens, TraceForge, Converge, and Stateful Agentic
+  AI Assistant.
+- PostgreSQL establishes a strict monotonic total order per board. Operation,
+  projection, receipt, board heads, undo evidence, and outbox commit or roll
+  back together; stable operation receipts provide application idempotency, not
+  exactly-once delivery.
+- Redis Stream delivery is at least once and non-authoritative. IndexedDB
+  retains pending command identity before optimism, while generation fencing,
+  fixed-watermark catch-up, and verified snapshot/tail recovery bound reconnect
+  and reconstruction.
+- Recorded release evidence includes 245 PostgreSQL integration tests across 29
+  files, 59 failure-injection scenarios, 93 production-build Chromium
+  scenarios, and one explicitly bounded 10-editor local k6 baseline.
+- The component-library figure is corrected to 39 architecture presets built
+  from 12 primitives. Docker is limited to local Docker Compose dependencies,
+  GitHub automation is described as CI, and complete version-history restore is
+  not claimed.
+- The recorded deployment uses one API and one worker. Production horizontal
+  scale, exactly-once delivery, active compaction, tested backup restore,
+  adoption, HA, and multi-region operation remain excluded.
+- No dependencies, resume assets, global SEO, deployment, or interactive
+  topology work changed.
+
+## H1.2 — Interactive Visual Experience
+
+H1.2 is implemented as a two-commit human-review correction on
+`feat/ritwik-os-v2`:
+
+- The hero is led by “Engineering Intelligence into Production” and a lazy
+  direct-Three.js globe rather than the name and static topology triangle.
+- Public globe signals are Kolkata, Bengaluru, Pune, Toronto, and a restrained
+  USA country marker. Toronto represents Taskly remote engineering experience;
+  USA carries no employment or residence claim.
+- `SignalProvider` connects selected location, project, capability, and journey
+  context without adding a state-management dependency.
+- The journey timeline links IIT Kharagpur, Pepcorns, Search-in, Taskly, and the
+  2026 flagship systems through clickable/focusable signal nodes.
+- ThesisLens, TraceForge, and Converge use distinct retrieval, Replay Capsule,
+  and authoritative-distribution stages. Evidence rows are real expandable
+  buttons linked to the active stage; the five-box static strips are removed.
+- Experience is a connected Pepcorns → Search-in → Taskly track. Capabilities
+  use a deterministic project relationship network rather than a table.
+- Foundations gives IIT Kharagpur visual priority with code-drawn geometry and
+  no campus photography. Algorithm profiles remain real external links with
+  visible proof.
+- Contact routes the signal language toward the public email CTA. No form is
+  introduced.
+- The three flagship Work routes use interactive visual covers while retaining
+  their audited MDX bodies, TOCs, limitations, and published navigation.
+- Homepage scroll-spy now evaluates a header-offset activation line and dominant
+  visible section rather than a narrow center-band intersection.
+- `three` is the only new runtime dependency; `@types/three` supports TypeScript
+  development. The WebGL chunk is dynamically loaded and pauses offscreen or
+  while the document is hidden.
+
+## Mandatory Human Visual Review Gate
+
+Do not treat H1.2 as launch approval. Review the homepage, `/work`, ThesisLens,
+TraceForge, Converge, and Stateful Agentic AI Assistant at desktop, tablet, and
+320–390px mobile widths before any Phase 8.9 work.
+
+## H1.3 — Visual Fidelity Pass
+
+H1.3 refines the cinematic system experience on `feat/ritwik-os-v2` without
+changing the audited technical record or beginning Phase 8.9:
+
+- The desktop hero enforces the approved two-line headline composition. The
+  globe is smaller, shaded, atmosphere-lit, and labelled directly from real
+  latitude/longitude markers; the detached location-card row is removed.
+- Kolkata, Bengaluru, Pune, Toronto, and USA remain the public professional
+  geography. USA is explicitly described as “Scale AI · LLM evaluation work ·
+  Freelance / part-time” and never as residence.
+- The globe retains lazy client loading, offscreen/document-visibility pausing,
+  reduced-motion behavior, draggable rotation, selectable labels, projected
+  marker positions, restrained node pulses, and traveling arc lights.
+- The journey timeline positions every milestone on its path, advances route
+  energy chronologically, and links IIT Kharagpur, Pepcorns, Search-in, Taskly,
+  and the 2026 flagship systems to shared geography/project state.
+- ThesisLens uses a filing-to-citation evidence funnel; TraceForge uses a
+  center-weighted Replay Capsule with seal, branch, and diff semantics;
+  Converge uses a distributed client/authority/commit/stream/replica topology
+  with offline catch-up. Evidence interactions activate the relevant stage.
+- Experience is a continuous milestone rail with one active evidence panel.
+  Capabilities are an explicit capability → system → concrete evidence model.
+- Foundations uses an institutional IIT Kharagpur anchor plus distinct symbolic
+  LeetCode knight/streak and Codeforces ranking-ladder proof modules. No rating
+  history or campus imagery is invented.
+- Selected Earlier Systems returns to the homepage as an evolution strip for
+  the Stateful Agentic AI Assistant, AI Mock Interview Platform, and Real-Time
+  Collaborative Whiteboard. Progression language does not claim direct code
+  lineage.
+- The three published flagship case-study covers inherit the richer project-
+  specific visual stages. The audited MDX case-study content remains unchanged.
+
+The mandatory human visual review gate remains active. Do not begin Phase 8.9.
+
+## H1.9 — Frozen Homepage Baseline
+
+H1.9 is complete on `feat/ritwik-os-v2` and is the frozen homepage design
+baseline:
+
+- Hero, globe, Journey, flagship ordering and visual identities, Experience,
+  Earlier Systems, Capability Evidence Map, Foundations, and Contact are
+  structurally approved.
+- First-entry reveals are perceptible, restrained, one-time, responsive, and
+  reduced-motion safe. Existing semantic ambient systems remain visibility
+  bounded.
+- ThesisLens, TraceForge, and Converge internal diagram labels meet the approved
+  readability hierarchy. Sticky navigation uses shared anchor offsets.
+- Future content, SEO, resume, and launch work must not redesign or re-sequence
+  the frozen homepage unless it is correcting a demonstrated regression.
+
+## Phase 8.11 — Public Artifact Reconciliation
+
+Phase 8.11 establishes one conservative public engineering record:
+
+- Canonical identity is `RITWIK BISWAS`, `Software Engineer | Backend,
+Distributed Systems & AI`, based in Kolkata, India, with public email
+  `thisisritwikbiswas@gmail.com`.
+- Canonical portfolio URL is `https://ritwik-os.vercel.app/`; GitHub and
+  LinkedIn remain the URLs in `src/data/social-links.ts`.
+- Flagship order remains ThesisLens, TraceForge, Converge. Registered Work
+  routes then include Stateful Agentic AI Assistant; AI Mock Interview Platform
+  intentionally has no case-study route.
+- ThesisLens evidence is 44 queries and 1,012 judged pairs. The eight-query
+  frozen holdout moved nDCG@5 from 0.704 to 0.811 and Recall@3 from 0.448 to
+  0.604. MiniLM reranking measured about 3.19 seconds per query on local CPU;
+  lexical retrieval remains the serving default because top-rank MRR declined.
+- TraceForge claims stop at exact recorded model/HTTP replay, sealed Replay
+  Capsules, structural comparison, developer-authored regression
+  specifications, Go/Kafka at-least-once capture, SQLite event-ID deduplication,
+  and bounded local infrastructure. Do not claim PostgreSQL trace persistence,
+  API-key isolation, generic OTLP ingestion, exactly-once semantics, consumer
+  lag or throughput benchmarks, or production-scale Kubernetes.
+- Converge claims stop at board-local PostgreSQL authority, transactional
+  operation/projection/outbox/receipt patterns, application idempotency,
+  at-least-once Redis Stream fanout, persist-before-optimism, fixed-watermark
+  catch-up, snapshot/tail recovery, and generation-fenced reconnect. Evidence is
+  245 PostgreSQL integration tests across 29 files, 59 failure scenarios, 93
+  Playwright scenarios, bounded local k6 runs, and one recorded API plus one
+  worker. Do not claim exactly once or demonstrated horizontal production
+  scale; say CI, not CI/CD, unless deployment automation is later evidenced.
+- Stateful Agentic AI Assistant HITL applies to verified flows only; its EC2
+  deployment is on demand, not continuously hosted. Earlier Whiteboard is
+  engineering progression toward Converge, not direct code lineage.
+- LeetCode evidence is Knight, peak 1923, Top 5.6%, 1,550+ solved, and a 600+
+  Problem-of-the-Day streak. Codeforces evidence is Specialist, peak 1415, and
+  Global Rank 818 in Round 952.
+- Phase 8.11 established `docs/RESUME_RECONCILIATION.md` as the exact audited
+  replacement copy for resume regeneration.
+
+## Phase 8.11R — Audited Resume Regeneration
+
+- `resume/ritwik-biswas-resume.tex` is the maintainable XeLaTeX source for the
+  public resume. `resume/README.md` documents the local build command.
+- `public/resume/ritwik-biswas-resume.pdf` remains the only public resume asset.
+  The launch version is manually approved and frozen at SHA-256
+  `8432182c3c0d66397b002c3a9991a7dcff7301bda398d83cb3556e69b4bd38b6`.
+  Do not regenerate or replace it automatically; any future replacement needs
+  explicit human approval.
+- The resume is one A4 page, single-column, text-selectable, searchable, and
+  uses standard hyperlinks for email, LinkedIn, GitHub, and the portfolio.
+- Resume claims remain governed by `docs/RESUME_RECONCILIATION.md`; source and
+  layout work must not strengthen or independently rewrite those claims.
+
+## Phase 8.12 — Launch Hardening
+
+- The H1.9 homepage visual system, project claims, globe assets, and approved
+  resume remain frozen. Phase 8.12 changes are limited to production readiness,
+  accessibility semantics, SEO correctness, public-file hygiene, and launch
+  documentation.
+- `npm run start` is the canonical local production-server command. Development
+  and production smoke checks cover the homepage, Work registry, four approved
+  case studies, resume, robots, sitemap, manifest, Open Graph image, and clean
+  404 responses for unpublished or invalid routes.
+- Case-study SEO titles that already contain the owner suffix must use an
+  absolute metadata title so the root title template does not duplicate it.
+- Every `aria-controls` reference must resolve in server-rendered HTML, including
+  collapsed Earlier Systems evidence. Collapsed flagship evidence is hidden from
+  assistive technology, and non-interactive Foundations surfaces do not enter the
+  keyboard tab order.
+- Reduced-motion mode suppresses the contact route photon as well as the
+  existing globe, route, ambient, and entry animation loops. Manual interaction
+  remains available.
+- Machine-local checkout paths are not part of public evidence records. Record
+  audited commits and repositories without publishing contributor filesystem
+  layouts.
+- The full quality gate and a fresh `next start` smoke pass at Phase 8.12.
+  In-app visual browser tooling was unavailable during this phase, so final
+  keyboard-only, reduced-motion, and 1440/1280/1024/768/390/320 visual checks
+  remain human production-preview tasks.

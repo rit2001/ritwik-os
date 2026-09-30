@@ -51,9 +51,6 @@ export function CapabilityMatrix({
               <h3 className="text-[length:var(--text-body-large-size)] leading-tight font-semibold text-foreground">
                 {group.title}
               </h3>
-              <span className="rounded-xs border border-border bg-surface px-2.5 py-1 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase transition-colors duration-[var(--duration-base)] group-hover/capability:border-accent group-hover/capability:text-foreground">
-                {group.status}
-              </span>
             </div>
             <span
               aria-hidden="true"
@@ -84,6 +81,9 @@ export function CapabilityMatrix({
                 </motion.li>
               ))}
             </motion.ul>
+            <p className="mt-5 font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.06em] text-foreground-muted uppercase">
+              Demonstrated in: {group.demonstratedIn.join(" · ")}
+            </p>
           </motion.article>
         ))}
       </div>

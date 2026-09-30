@@ -1,32 +1,43 @@
+import { profile } from "@/data/profile";
+import { getSocialLink } from "@/data/social-links";
+
+const github = getSocialLink("github");
+const linkedIn = getSocialLink("linkedin");
+const leetCode = getSocialLink("leetcode");
+const codeforces = getSocialLink("codeforces");
+
+if (!github || !linkedIn || !leetCode || !codeforces) {
+  throw new Error("Required canonical social links are missing.");
+}
+
 export const launchSiteConfig = {
   brand: "RITWIK OS",
-  owner: "Ritwik Biswas",
-  tagline: "Engineering Intelligence into Production.",
-  headline:
-    "Software Engineer building AI systems, scalable backend platforms, and cloud-native infrastructure.",
-  compactTitle: "Software Engineer | AI Systems, Backend & Cloud",
-  location: "Bengaluru, India",
-  email: "biswas.ritwik2001@gmail.com",
-  resumePath: "/resume/ritwik-biswas-resume.pdf",
+  url: "https://ritwik-os.vercel.app/",
+  displayName: profile.displayName,
+  owner: profile.editorialName,
+  tagline: profile.tagline,
+  headline: profile.headline,
+  compactTitle: profile.professionalTitle,
+  location: profile.location,
+  email: profile.email,
+  resumePath: profile.resumePath,
   links: {
-    linkedIn: "https://www.linkedin.com/in/ritwik-biswas-958318234/",
-    github: "https://github.com/rit2001",
-    leetCode: "https://leetcode.com/u/Britwik2025/",
-    codeforces: "https://codeforces.com/profile/Eagle2.00",
+    linkedIn: linkedIn.href,
+    github: github.href,
+    leetCode: leetCode.href,
+    codeforces: codeforces.href,
   },
   metadata: {
     defaultTitle: "RITWIK OS — Ritwik Biswas",
     titleTemplate: "%s | Ritwik Biswas",
-    description:
-      "RITWIK OS is the engineering portfolio of Ritwik Biswas, featuring AI systems, backend platforms, cloud deployment, distributed systems, and production-focused case studies.",
+    description: profile.seoDescription,
     keywords: [
       "Ritwik Biswas",
       "RITWIK OS",
       "Software Engineer",
-      "AI Systems",
       "Backend Engineering",
-      "Cloud Infrastructure",
       "Distributed Systems",
+      "Applied AI",
       "Engineering Portfolio",
     ],
   },

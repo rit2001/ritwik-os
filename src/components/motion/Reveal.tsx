@@ -3,19 +3,14 @@
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
-import {
-  motionEase,
-  motionTiming,
-  motionTravel,
-  motionViewport,
-} from "./motionTokens";
+import { motionEase, motionTiming, motionViewport } from "./motionTokens";
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
   id?: string;
   delay?: number;
-  y?: number;
+  y?: number | string;
 };
 
 export function Reveal({
@@ -23,7 +18,7 @@ export function Reveal({
   className,
   id,
   delay = 0,
-  y = motionTravel.section,
+  y = "clamp(20px, 2.5vw, 36px)",
 }: Readonly<RevealProps>) {
   const shouldReduceMotion = useReducedMotion();
   const reduce = shouldReduceMotion === true;
@@ -32,7 +27,7 @@ export function Reveal({
     <motion.div
       id={id}
       className={className}
-      initial={reduce ? false : { opacity: 0.72, y }}
+      initial={reduce ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={motionViewport}
       transition={{

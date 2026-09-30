@@ -3,29 +3,25 @@ import Link from "next/link";
 import { ActionLink } from "@/components/ui/ActionLink";
 import type { WorkMeta } from "@/types/content";
 
-import { StatusBadge } from "./StatusBadge";
+import { AgenticCaseStudyCover } from "./AgenticCaseStudyCover";
+import { CaseStudyVisualStage } from "./CaseStudyVisualStage";
 
 export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
-  const isTraceForge = meta.slug === "traceforge";
-  const isAgenticAssistant = meta.slug === "stateful-agentic-ai-assistant";
-  const summary = isTraceForge
-    ? "TraceForge is an ongoing distributed tracing and telemetry-pipeline project focused on context propagation, OpenTelemetry ingestion, Kafka-backed event transport, scalable processing boundaries, infrastructure automation, and measurable operational visibility."
-    : meta.summary;
-  const projectPeriodLabel = isTraceForge
-    ? "Current milestone"
-    : "Project period";
-  const projectPeriodValue = isTraceForge ? meta.currentMilestone : meta.year;
-  const repositoryValue = meta.repositoryUrl
-    ? "Public GitHub repository"
-    : "Not published yet";
-  const demoValue = isAgenticAssistant
-    ? "Not continuously hosted"
-    : meta.demoUrl
-      ? "Available"
-      : "Not available";
+  const facts = [
+    { label: "Status", value: meta.statusLabel },
+    { label: "Project period", value: meta.year },
+    ...(meta.repositoryUrl
+      ? [{ label: "Repository", value: "Public GitHub repository" }]
+      : []),
+    ...(meta.headerFacts ?? []),
+  ];
+  const isVisualFlagship = ["thesislens", "traceforge", "converge"].includes(
+    meta.projectId,
+  );
+  const isAgenticAssistant = meta.projectId === "stateful-agentic-ai-assistant";
 
   return (
-    <header className="border-b border-border pb-10">
+    <header className="relative border-b border-border pb-12">
       <nav
         className="mb-8 flex flex-wrap gap-3 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.08em] uppercase"
         aria-label="Case study breadcrumb"
@@ -47,89 +43,73 @@ export function CaseStudyHeader({ meta }: Readonly<{ meta: WorkMeta }>) {
         </Link>
       </nav>
 
-      <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-accent uppercase">
-        {meta.category}
-      </p>
-      <h1 className="mt-5 max-w-4xl text-[clamp(2.4rem,7vw,5rem)] leading-[0.95] font-semibold text-balance text-foreground">
-        {meta.title}
-      </h1>
-      <p className="mt-6 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
-        {summary}
-      </p>
-
-      <dl className="mt-8 grid gap-5 border-y border-border py-6 md:grid-cols-2 xl:grid-cols-4">
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            Status
-          </dt>
-          <dd className="mt-2">
-            <StatusBadge>{meta.statusLabel}</StatusBadge>
-          </dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            {projectPeriodLabel}
-          </dt>
-          <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {projectPeriodValue}
-          </dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            Repository
-          </dt>
-          <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {repositoryValue}
-          </dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-            {isAgenticAssistant ? "Deployment" : "Demo"}
-          </dt>
-          <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-            {isAgenticAssistant ? "On-demand AWS EC2" : demoValue}
-          </dd>
-        </div>
-        {isAgenticAssistant ? (
+      {isAgenticAssistant ? (
+        <AgenticCaseStudyCover meta={meta} />
+      ) : (
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end">
           <div>
-            <dt className="font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
-              Demo
-            </dt>
-            <dd className="mt-2 text-[length:var(--text-body-small-size)] leading-[var(--text-body-small-line-height)] text-foreground-secondary">
-              {demoValue}
-            </dd>
+            <p className="font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] font-semibold tracking-[0.14em] text-signal-cyan uppercase">
+              {meta.category}
+            </p>
+            <h1 className="mt-5 max-w-4xl text-[clamp(3.2rem,8vw,7.2rem)] leading-[0.86] font-semibold tracking-[-0.055em] text-balance text-foreground">
+              {meta.title}
+            </h1>
+            <p className="mt-7 max-w-3xl text-[length:var(--text-body-large-size)] leading-[var(--text-body-large-line-height)] text-foreground-secondary">
+              {meta.summary}
+            </p>
           </div>
-        ) : null}
-      </dl>
 
-      {meta.repositoryUrl ? (
-        <div className="mt-6 flex flex-wrap gap-3">
-          <ActionLink
-            href={meta.repositoryUrl}
-            rel="noopener noreferrer"
-            target="_blank"
-            variant="secondary"
-          >
-            GitHub Repository
-          </ActionLink>
-          {isAgenticAssistant ? (
-            <span className="inline-flex min-h-11 items-center rounded-lg border border-border bg-transparent px-4 py-2 font-mono text-[length:var(--text-technical-size)] leading-none font-semibold tracking-[0.08em] text-foreground-muted uppercase">
-              Demo: Not continuously hosted
-            </span>
-          ) : null}
+          <div className="border-l border-border pl-5">
+            <dl className="space-y-4">
+              {facts.map((fact) => (
+                <div key={`${fact.label}-${fact.value}`}>
+                  <dt className="font-mono text-[0.62rem] font-semibold tracking-[0.1em] text-foreground-muted uppercase">
+                    {fact.label}
+                  </dt>
+                  <dd className="mt-1 text-xs leading-5 text-foreground-secondary">
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            {meta.repositoryUrl || meta.demoUrl ? (
+              <div className="mt-6 flex flex-wrap gap-3">
+                {meta.repositoryUrl ? (
+                  <ActionLink
+                    href={meta.repositoryUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    variant="secondary"
+                  >
+                    GitHub ↗
+                  </ActionLink>
+                ) : null}
+                {meta.demoUrl ? (
+                  <ActionLink
+                    href={meta.demoUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    variant="secondary"
+                  >
+                    Live Demo ↗
+                  </ActionLink>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
         </div>
+      )}
+
+      {isVisualFlagship ? (
+        <CaseStudyVisualStage
+          project={meta.projectId as "thesislens" | "traceforge" | "converge"}
+        />
       ) : null}
 
-      <ul className="mt-6 flex flex-wrap gap-2">
-        {meta.stack.map((item) => (
-          <li
-            className="rounded-xs border border-border bg-surface-muted px-2.5 py-1 font-mono text-[length:var(--text-label-size)] font-semibold tracking-[0.04em] text-foreground-secondary"
-            key={item}
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
+      <p className="mt-6 border-t border-border pt-5 font-mono text-[length:var(--text-label-size)] leading-[var(--text-label-line-height)] text-foreground-muted">
+        {meta.stack.join(" · ")}
+      </p>
     </header>
   );
 }

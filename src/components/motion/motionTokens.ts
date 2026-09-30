@@ -1,7 +1,7 @@
 export const motionEase = [0.22, 1, 0.36, 1] as const;
 
 export const motionTiming = {
-  sectionReveal: 0.66,
+  sectionReveal: 0.62,
   itemReveal: 0.58,
   quick: 0.22,
   stagger: 0.085,
@@ -15,6 +15,6 @@ export const motionTravel = {
 
 export const motionViewport = {
   once: true,
-  amount: 0.16,
-  margin: "0px 0px -16% 0px",
+  amount: 0.2,
+  margin: "0px 0px -10% 0px",
 } as const;

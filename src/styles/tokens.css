@@ -1,17 +1,22 @@
 :root {
   color-scheme: dark;
 
-  --ritwik-color-canvas: #08090b;
-  --ritwik-color-background-elevated: #0d0f13;
-  --ritwik-color-surface: #111419;
-  --ritwik-color-surface-muted: #181c22;
+  --ritwik-color-canvas: #04070d;
+  --ritwik-color-background-elevated: #07101b;
+  --ritwik-color-surface: #0a1421;
+  --ritwik-color-surface-muted: #101d2d;
   --ritwik-color-foreground-primary: #f5f7fa;
   --ritwik-color-foreground-secondary: #c8d0da;
   --ritwik-color-foreground-muted: #8f9aa8;
-  --ritwik-color-border-subtle: #242a33;
-  --ritwik-color-border-strong: #3a424e;
-  --ritwik-color-accent: #8fb8ff;
-  --ritwik-color-accent-muted: #1c2a44;
+  --ritwik-color-border-subtle: #17283a;
+  --ritwik-color-border-strong: #2a4863;
+  --ritwik-color-accent: #66a8ff;
+  --ritwik-color-accent-muted: #0d2a50;
+  --ritwik-color-signal-cyan: #5ee7f7;
+  --ritwik-color-signal-amber: #f2b95f;
+  --ritwik-color-signal-blue: #2f7fff;
+  --ritwik-color-signal-glow: rgb(47 127 255 / 0.42);
+  --ritwik-color-route: rgb(94 231 247 / 0.38);
   --ritwik-color-success: #78d9a3;
   --ritwik-color-warning: #e3c16f;
   --ritwik-color-focus-ring: #9dc2ff;
@@ -62,6 +67,7 @@
   --layout-reading-width: 44rem;
   --layout-page-gutter: clamp(1rem, 4vw, 3rem);
   --layout-header-height: 4.5rem;
+  --layout-anchor-offset: 12rem;
 
   --radius-none: 0;
   --radius-xs: 0.125rem;
@@ -79,6 +85,9 @@
   --duration-fast: 120ms;
   --duration-base: 180ms;
   --duration-slow: 260ms;
+  --duration-route: 520ms;
+  --duration-signal: 760ms;
+  --duration-stage: 820ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -86,6 +95,24 @@
   --z-header: 20;
   --z-skip-link: 50;
   --z-overlay: 80;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --layout-anchor-offset: 9.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --layout-anchor-offset: 9rem;
+  }
+}
+
+@media (min-width: 75rem) {
+  :root {
+    --layout-anchor-offset: 6.5rem;
+  }
 }
 
 @theme inline {
@@ -100,6 +127,9 @@
   --color-border-strong: var(--ritwik-color-border-strong);
   --color-accent: var(--ritwik-color-accent);
   --color-accent-muted: var(--ritwik-color-accent-muted);
+  --color-signal-cyan: var(--ritwik-color-signal-cyan);
+  --color-signal-amber: var(--ritwik-color-signal-amber);
+  --color-signal-blue: var(--ritwik-color-signal-blue);
   --color-success: var(--ritwik-color-success);
   --color-warning: var(--ritwik-color-warning);
   --color-focus-ring: var(--ritwik-color-focus-ring);

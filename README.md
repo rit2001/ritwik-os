@@ -4,7 +4,7 @@
 
 RITWIK OS is a production-grade engineering platform and personal engineering brand. It is designed to showcase engineering work, present flagship projects, document ongoing builds, publish technical writing, demonstrate architecture thinking, and create a memorable recruiter experience.
 
-This repository contains the planning foundation, the Phase 1 Next.js project foundation, the Phase 2 repository/design-system foundation, the Phase 3 identity/brand shell prototype, the Phase 4 full homepage control plane, the final Phase 4 motion/interaction polish, and the Phase 5 static content pipeline with the first TraceForge case study.
+This repository contains the V1 baseline and the current V2 experience on `feat/ritwik-os-v2`. The homepage visual system is frozen at H1.9; subsequent work must preserve that approved structure unless a regression is found.
 
 ## What This Project Is
 
@@ -50,14 +50,18 @@ Current status:
 - Semantic CSS design tokens and base global styles are implemented.
 - Minimal layout primitives and the global application shell are implemented.
 - Typed canonical identity and external link data are implemented.
-- The app currently renders a complete single-page RITWIK OS homepage control plane.
-- A restrained Motion-powered interaction, scroll rhythm, and final homepage polish layer is implemented.
+- The app renders the V2 static-first homepage hierarchy with editorial flagship systems, evidence placement, professional topology, concise experience, capability mapping, Foundations, and contact.
+- H1.9 is the frozen homepage baseline, including its approved first-entry motion, project diagrams, responsive behavior, and anchor navigation.
+- H1.2 implements a living signal system across the homepage: a lazy direct-Three.js professional globe, linked journey timeline, distinct flagship system stages, expandable evidence, connected experience and capability networks, and a routed contact finale.
+- Static semantic content remains server-rendered; WebGL and interactive visual stages are bounded client enhancements with reduced-motion, intersection, and page-visibility controls.
 - The official Next.js MDX pipeline is implemented for local Work content.
-- `/work` and `/work/traceforge` are implemented as static-first App Router routes.
-- TraceForge is the first validated Work case study and remains documented as an in-development build with no public repository or demo.
-- Stateful Agentic AI Assistant is the second validated Work case study and remains documented as a completed implementation with qualified deployment status.
+- `/work` plus the ThesisLens, TraceForge, Converge, and Stateful Agentic AI Assistant case studies are implemented as static-first App Router routes.
+- TraceForge is evidence-audited at public Experimental Beta `v0.4.1`; its case study centers exact offline replay and qualifies its optional local Go/Kafka/kind/Terraform path.
+- Converge is evidence-audited at source commit `966525d`; its case study centers board-local PostgreSQL ordering, atomic authority, durable pending intent, at-least-once Redis delivery, and verified recovery.
+- ThesisLens, TraceForge, and Converge use distinct interactive case-study covers while preserving their audited MDX narratives and limitations.
+- Stateful Agentic AI Assistant remains documented as a completed implementation with qualified deployment status.
 - Production-hardening foundations are implemented: centralized launch metadata, generated Open Graph image, JSON-LD, robots, sitemap, custom 404, route integrity checks, and launch checklist.
-- Screenshots, Writing, Builds, Architecture, and additional case studies have not been implemented yet.
+- Screenshots, Writing, Builds, and Architecture have not been implemented yet.
 
 ## Source Structure
 
@@ -67,6 +71,7 @@ Current implemented structure:
 src/
   app/
   components/
+    home/
     layout/
     motion/
     ui/
@@ -93,7 +98,9 @@ Research files should capture source-backed evidence before a public case study 
 
 ## Canonical Identity Data
 
-Personal identity, availability, resume path, and current build metadata are centralized in `src/data/profile.ts`.
+Personal identity, availability, education, and resume path are centralized in `src/data/profile.ts`. This is the authoritative public identity record; launch metadata derives from it.
+
+The canonical public portfolio URL is `https://ritwik-os.vercel.app/`. SEO metadata, JSON-LD, robots, and sitemap output must resolve against that URL unless an explicit production URL environment variable overrides it.
 
 External professional links are centralized in `src/data/social-links.ts`. GitHub and LinkedIn are primary public links. LeetCode and Codeforces appear as algorithm evidence; X remains stored for later placement and is not shown in the homepage header, hero, or primary footer.
 
@@ -107,13 +114,23 @@ src/data/competitive-programming.ts
 src/data/recruiter-brief.ts
 ```
 
-The current public email is `biswas.ritwik2001@gmail.com`. Do not display a phone number or secondary email unless the product direction changes.
+The current public email is `thisisritwikbiswas@gmail.com`; the current base is Kolkata, India. Do not display a phone number, secondary email, private job-search process, or unapproved geography signals.
 
-The resume PDF is expected at:
+The V2 portfolio hierarchy is ThesisLens, TraceForge, and Converge (flagship); Stateful Agentic AI Assistant and AI Mock Interview Platform (selected); and Real-Time Collaborative Whiteboard (archive, superseded by Converge). Only real registered MDX entries receive Work routes.
+
+The Work index presents those tiers from the canonical project registry. Published
+case-study metadata owns each page's header facts and table of contents; previous
+and next links operate only across the four registered MDX case studies:
+ThesisLens, TraceForge, Converge, and Stateful Agentic AI Assistant. AI Mock
+Interview Platform remains a portfolio entry without a placeholder route.
+
+The public resume PDF is served from:
 
 ```text
 public/resume/ritwik-biswas-resume.pdf
 ```
+
+The maintainable XeLaTeX source lives at `resume/ritwik-biswas-resume.tex`, with build instructions in `resume/README.md`. Its claims derive from `docs/RESUME_RECONCILIATION.md`. The public PDF is the manually approved launch artifact and must not be regenerated or replaced automatically; any future replacement requires explicit human approval plus visual and extracted-text verification.
 
 ## Navigation Principle
 
@@ -121,20 +138,20 @@ Keep navigation immediately understandable to recruiters. Use RITWIK OS terminol
 
 The Phase 3 prototype intentionally does not use a profile photograph. The brand remains typography-led until a stronger visual asset strategy is approved.
 
-The Phase 4 homepage uses recruiter-friendly internal anchor navigation:
+The current homepage uses recruiter-friendly internal anchor navigation:
 
 - `overview`
 - `systems`
 - `experience`
 - `capabilities`
-- `algorithms`
+- `foundations`
 - `contact`
 
-TraceForge is the current flagship build, but its repository is not published yet. Do not add a TraceForge GitHub or demo link until a real project-specific destination exists.
+TraceForge has a verified public repository at `https://github.com/rit2001/traceforge`. Its public claims must follow `docs/research/traceforge-evidence.md`; no hosted demo or production deployment is claimed.
 
 Project presentation is currently text-first. Screenshots are deferred until polished recaptures or case-study assets are available.
 
-The Stateful Agentic AI Assistant is registered as the second Work case study. Its public stack uses HuggingFace Embeddings and FAISS based on the audited repository. It has a real GitHub repository link and no continuously hosted demo.
+The Stateful Agentic AI Assistant is a registered selected Work case study. Its public stack uses HuggingFace Embeddings and FAISS based on the audited repository. HITL applies to the verified simulated-purchase flow, and its AWS EC2 deployment is on demand rather than continuously hosted.
 
 ## Content Pipeline
 
@@ -144,8 +161,14 @@ Work entries use separated metadata and body content:
 
 ```text
 src/content/work/
+  thesislens.meta.ts
+  thesislens.mdx
   traceforge.meta.ts
   traceforge.mdx
+  converge.meta.ts
+  converge.mdx
+  stateful-agentic-ai-assistant.meta.ts
+  stateful-agentic-ai-assistant.mdx
 
 src/lib/content/
   schemas.ts
@@ -189,7 +212,7 @@ Ongoing-project copy should use one prominent scope/status note near the beginni
 
 Completed project case studies should still qualify deployment, persistence, testing, and reliability claims when the repository evidence requires it. Placeholder CI steps must not be described as real tests.
 
-The homepage is frozen after Phase 4. Homepage updates during content phases should be limited to truthful links to real content, such as the TraceForge case-study link.
+The V2 homepage hierarchy is stable. Content phases may reconcile canonical evidence and automatically derived presentation, but must not redesign that hierarchy.
 
 ## Motion System
 
@@ -206,7 +229,7 @@ Motion rules:
 - Section reveals are one-time and use opacity plus small vertical transforms.
 - Scroll-linked motion is limited to the top progress line, restrained desktop hero response, and Experience timeline progress.
 - Reduced-motion users receive immediately visible content without vertical movement, parallax, or stagger delays.
-- The site does not use scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, animated backgrounds, or continuous animation.
+- The site does not use scroll hijacking, decorative ripple effects, custom cursors, magnetic buttons, animated backgrounds, or an unbounded global animation loop. Existing semantic ambient visuals are bounded by visibility and reduced-motion controls.
 - Content remains visible before and without JavaScript; motion progressively enhances visible content.
 - Interactive surfaces are only used for real actions. Static surfaces such as education and non-linked information panels do not lift or pretend to be links.
 - Project and algorithm cards with real destinations use card-level accessible anchors.

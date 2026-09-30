@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { HeaderSectionNav } from "@/components/motion/HeaderSectionNav";
@@ -68,8 +69,19 @@ export function HeaderNavigation({
       <>
         <HeaderSectionNav links={sectionLinks} />
 
-        <nav className="order-2 lg:order-3" aria-label="Primary external links">
+        <nav
+          className="order-2 hidden sm:block lg:order-3"
+          aria-label="Primary external links"
+        >
           <ul className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <li>
+              <Link
+                className="inline-flex min-h-11 items-center rounded-sm px-2.5 py-2 font-mono text-[length:var(--text-label-size)] leading-none font-semibold tracking-[0.08em] text-foreground-secondary uppercase transition-colors duration-[var(--duration-base)] hover:text-foreground sm:px-3"
+                href="/work"
+              >
+                Work
+              </Link>
+            </li>
             {github ? (
               <li>
                 <a

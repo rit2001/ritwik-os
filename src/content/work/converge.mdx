@@ -1,0 +1,449 @@
+import { CaseStudySection } from "@/components/work/CaseStudySection";
+import {
+  AuthorityInvariant,
+  CatchUpEvidence,
+  CommandEvidence,
+  CompactionEvidence,
+  ConflictUndoEvidence,
+  ConsistencyEvidence,
+  ConvergeAuthorityFlow,
+  ConvergeCurrentStatus,
+  ConvergeFailureEvidence,
+  ConvergeLimitations,
+  ConvergeRecoveryFlow,
+  ConvergeTestEvidence,
+  DeliveryTradeoff,
+  DeploymentEvidence,
+  OfflineEvidence,
+  PerformanceEvidence,
+  PresenceAuthorizationEvidence,
+  ProductEvidence,
+  RedisEvidence,
+} from "@/components/work/ConvergeBlocks";
+import { CaseStudyCopy } from "@/components/work/TraceForgeBlocks";
+
+<CaseStudySection id="overview" title="Overview">
+  <CaseStudyCopy>
+    Converge is a collaborative system built around a narrower question than
+    “how do several browsers draw on the same canvas?” The engineering problem
+    is deciding which state is authoritative, preserving a single board-local
+    order under concurrent commands, and giving offline clients a safe path back
+    to that order after retries, reloads, missed events, and replica failures.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  PostgreSQL is the authority. A browser first persists a stable command
+  identity in IndexedDB, then applies an optimistic overlay. The API commits an
+  accepted operation, projection changes, immutable receipt, board heads, undo
+  evidence, and an outbox event in one transaction. Redis and Socket.IO
+  distribute that committed evidence at least once; they do not decide whether
+  the edit happened.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The audited repository includes a recorded production deployment and release
+    acceptance pass, but the portfolio status remains In Development. Production
+    evidence covers one API and one worker. Two-replica behavior is exercised by
+    local failure suites, not by a horizontal production-scale claim.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="consistency-model" title="Consistency Model">
+  <CaseStudyCopy>
+    Converge uses a server-authoritative optimistic model. The client may render
+    pending intent immediately, but the optimistic state is not committed state.
+    PostgreSQL acknowledgement establishes the accepted operation and sequence.
+    Rejection removes or reconciles the overlay without rewriting history as if
+    the command had committed.
+  </CaseStudyCopy>
+
+<ConsistencyEvidence />
+
+  <CaseStudyCopy>
+    “Deterministic” is equally bounded. The shared reducer consumes a versioned
+    command and one contiguous authoritative sequence. For the implemented
+    operation set, the same ordered stream produces the same projection. That
+    does not make network arrival deterministic; it makes arrival order
+    irrelevant once the system has recovered the canonical board sequence.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="system-architecture" title="System Architecture">
+  <CaseStudyCopy>
+    The browser, API, database, worker, and delivery plane each own a different
+    responsibility. The browser owns durable pending intent. The API owns
+    validation and authorization. PostgreSQL owns acceptance and order. The
+    worker owns asynchronous publication. Redis carries retained delivery
+    evidence to every API replica, and each replica serves its local sockets.
+  </CaseStudyCopy>
+
+<ConvergeAuthorityFlow />
+
+  <CaseStudyCopy>
+    This separation is why an edit can remain committed when Redis is interrupted
+    or an API replica restarts. The realtime path may become stale; it cannot
+    revoke a database transaction. A replica that observes a delivery gap stops
+    applying that board and asks PostgreSQL for the missing durable range.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="command-protocol" title="Command Protocol">
+  <CaseStudyCopy>
+    A command carries a protocol version, board identity, stable operation ID,
+    and command-specific payload. The server parses a strict union rather than
+    trusting browser state. That boundary supports single-object mutations,
+    bounded atomic change sets, relationship changes, and supported undo/redo
+    while keeping the operation log replayable by the shared reducer.
+  </CaseStudyCopy>
+
+<CommandEvidence />
+
+  <CaseStudyCopy>
+    The client creates the operation identity before submission because network
+    uncertainty is normal. A timeout cannot tell the browser whether the server
+    committed. Retrying the same command must therefore discover the original
+    receipt rather than create another logical mutation.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="ordering-and-atomic-commit"
+  title="Board-Local Ordering and Atomic Commit"
+>
+  <CaseStudyCopy>
+    The command transaction acquires a PostgreSQL advisory transaction lock
+    derived from the board ID and locks the board row. It reauthorizes the actor
+    inside that transaction, reads the current heads, allocates the next board
+    sequence and delivery sequence, applies the reducer, and writes the result.
+    The lock is released automatically when the transaction commits or rolls
+    back.
+  </CaseStudyCopy>
+
+<AuthorityInvariant />
+
+<CaseStudyCopy>
+  The guarantee is a strict monotonic total order per board. It is not global
+  ordering across the service. This makes each active board a deliberate
+  single-writer stream while allowing different boards to execute concurrently.
+  A very hot board can therefore encounter lock contention; the design chooses
+  an explicit correctness boundary over unconstrained parallel mutation.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Atomic change sets apply the same idea to several related object mutations.
+    One command receives one sequence, and every projection write either commits
+    or rolls back. Forced mid-write failures in the integration suite verify that
+    the system does not expose half of a multi-object transition.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="idempotency" title="Idempotency">
+  <CaseStudyCopy>
+    Converge stores an immutable receipt under the board and operation ID. An
+    exact retry from the same actor with the same normalized command returns the
+    stored result without allocating another sequence or outbox entry. Reusing
+    that identity with different intent or another actor is a conflict, not a
+    retry.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Receipts remain after covered operations and outbox entries are compacted,
+    so a delayed browser retry can still be recognized after historical evidence
+    has moved behind a snapshot floor. This is application-level idempotency. It
+    does not make Redis or Socket.IO exactly once, and it does not prevent the
+    transport from presenting the same committed evidence more than once.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="redis-and-multiple-replicas"
+  title="Redis Delivery and Multiple Replicas"
+>
+  <CaseStudyCopy>
+    After PostgreSQL commits, a worker claims the next eligible outbox record for
+    one board and appends its stable event to a Redis Stream. Each API replica
+    reads the stream independently with `XREAD`, so the event reaches every
+    replica that may own local Socket.IO rooms. Consumer groups are intentionally
+    not used because dividing messages among replicas would strand clients on
+    the replicas that did not receive an event.
+  </CaseStudyCopy>
+
+<RedisEvidence />
+
+<DeliveryTradeoff />
+
+  <CaseStudyCopy>
+    Failure tests run two independent APIs and cover publication interruption,
+    duplicate events, a stopped and restarted replica, board-local ordering,
+    PostgreSQL catch-up, handler isolation, and revocation propagation. They
+    establish multi-replica-aware behavior in the tested topology. They do not
+    establish production high availability or a throughput ceiling.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="offline-first-client" title="Offline-First Client">
+  <CaseStudyCopy>
+    “Offline first” means the browser does not forget uncommitted intent when a
+    socket drops or the page reloads. Before a command enters the optimistic
+    projection, Converge writes it to a board-scoped IndexedDB queue. The same
+    operation ID is preserved across submission attempts and removed only after
+    commitment is proved.
+  </CaseStudyCopy>
+
+<OfflineEvidence />
+
+  <CaseStudyCopy>
+    The guarantee is intentionally local. IndexedDB does not synchronize pending
+    work to another device, and an offline command has not been accepted by the
+    server. Membership revocation, object deletion, or a stale precondition may
+    make the intent invalid by the time connectivity returns.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="reconnect-and-catch-up" title="Reconnect and Catch-Up">
+  <CaseStudyCopy>
+    Reconnection creates two races. A late response from the previous socket may
+    mutate new state, and live operations may continue arriving while historical
+    catch-up is still running. Converge addresses them separately.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  First, every board session and synchronization attempt carries a monotonic
+  generation and nonce. Reconnect increments the generation, aborts older work,
+  and ignores any old-generation completion that still arrives. Second, join
+  captures a fixed authoritative watermark. Historical range queries stop at
+  that head while later live events buffer for an ordered drain.
+</CaseStudyCopy>
+
+  <CatchUpEvidence />
+</CaseStudySection>
+
+<CaseStudySection
+  id="recovery-and-canonical-state"
+  title="Snapshot, Tail, and Canonical State"
+>
+  <CaseStudyCopy>
+    A normal range catch-up is insufficient when retained history begins after
+    the client's last sequence. The recovery service instead captures a fixed
+    head under the board lock, chooses a verified versioned snapshot at or above
+    the retention floors, and loads a contiguous operation tail through that
+    head.
+  </CaseStudyCopy>
+
+<ConvergeRecoveryFlow />
+
+<CaseStudyCopy>
+  The shared reducer reconstructs state from that material. Canonicalization
+  orders the authoritative visible projection, recursively sorts keys, removes
+  undefined values, and normalizes negative zero before SHA-256. The digest is a
+  consistency check: recovery proceeds only when rebuilt state agrees with the
+  authoritative projection. It is not a signature or trust mechanism.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    After verification, the client atomically replaces committed state and
+    reapplies its durable pending overlay under the current generation fence.
+    This is state reconstruction and recovery—not a complete user-facing version
+    history or arbitrary historical restore feature.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="compaction" title="Compaction">
+  <CaseStudyCopy>
+    Indefinite operation and outbox retention would make recovery cost grow with
+    every board edit. Converge implements a safety-gated compaction coordinator
+    that reasons about verified snapshots, published outbox coverage, retention
+    floors, and immutable receipts before deleting covered history.
+  </CaseStudyCopy>
+
+<CompactionEvidence />
+
+  <CaseStudyCopy>
+    The implementation and tests do not make compaction an active production
+    claim. The recorded deployment keeps it disabled until backup and restore
+    operations satisfy the required gate. This is a case where source capability
+    and operational readiness intentionally have different statuses.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="presence-and-authorization"
+  title="Presence, Authorization, and Revocation"
+>
+  <CaseStudyCopy>
+    Durable collaboration and ephemeral awareness use different systems.
+    PostgreSQL membership determines who may read or mutate a board. Redis
+    presence carries cursors, selections, activity, and session liveness. A
+    presence outage should make collaborators temporarily invisible, not make
+    committed canvas state unavailable or change authority.
+  </CaseStudyCopy>
+
+<PresenceAuthorizationEvidence />
+
+  <CaseStudyCopy>
+    Revocation is itself an ordered board event. Removing membership under the
+    board lock advances delivery order and emits a content-free outbox record.
+    Each replica evicts matching local sockets when it consumes that event, while
+    in-transaction reauthorization prevents a raced write from relying only on
+    an earlier socket admission.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="conflicts-and-undo" title="Conflict Handling and Undo">
+  <CaseStudyCopy>
+    Converge does not claim a general CRDT. The server order settles the operation
+    stream, while field sequence evidence narrows selected stale-write and undo
+    hazards. Text updates can reject an outdated expected text sequence without
+    preventing an independent transform from proceeding. Deleted objects do not
+    accept later stale updates.
+  </CaseStudyCopy>
+
+<ConflictUndoEvidence />
+
+  <CaseStudyCopy>
+    Undo and redo are new forward operations, not a private browser rewind. The
+    history is actor-scoped and bounded. The database verifies that the fields or
+    objects still match the expected state under the board lock; concurrent
+    invalidation refuses the entire inverse instead of partially applying it.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="product-surface" title="Product Surface as Systems Evidence">
+  <CaseStudyCopy>
+    The canvas includes enough product depth to exercise the protocol with more
+    than toy coordinates. Connectors bind to moving objects, freehand strokes
+    carry larger payloads, multi-select and copy/paste create atomic groups, and
+    style or text changes may touch different field sequences. The architecture
+    library makes these workflows concrete for system-design diagrams.
+  </CaseStudyCopy>
+
+<ProductEvidence />
+
+  <CaseStudyCopy>
+    The current registry contains 39 architecture presets built from 12 visual
+    primitives. That corrects the earlier “25+” portfolio figure. The count is
+    supporting product evidence; ordering, recovery, and failure behavior remain
+    the flagship engineering story.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="testing-and-failure-evidence"
+  title="Testing and Failure Evidence"
+>
+  <CaseStudyCopy>
+    The repository's release record separates ordinary workspace checks from
+    database integration, browser, and failure-injection gates. The portfolio
+    audit uses those committed results rather than turning file counts into test
+    claims or implying that every possible failure has been simulated.
+  </CaseStudyCopy>
+
+<ConvergeTestEvidence />
+
+<ConvergeFailureEvidence />
+
+  <CaseStudyCopy>
+    The evidence is strongest around the seams: database commit versus later
+    publication, duplicate or missing transport evidence, API restart, recovery
+    floors, and membership revocation. One empty recovery placeholder is skipped,
+    so the 59-scenario result is reported as named coverage rather than universal
+    fault tolerance.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="controlled-performance-evidence"
+  title="Controlled Performance Evidence"
+>
+  <CaseStudyCopy>
+    Converge has a real k6 harness and committed result artifacts, but only one
+    bounded run is suitable for publication. The environment used one API, one
+    worker, local PostgreSQL and Redis, and ten virtual editors on one machine.
+    It is useful for checking acknowledgement, matching live delivery, and
+    duplicate suppression under a repeatable workload.
+  </CaseStudyCopy>
+
+<PerformanceEvidence />
+
+  <CaseStudyCopy>
+    Architecture that permits several API replicas is not itself scale evidence.
+    The case study therefore does not convert this local baseline into a user
+    capacity, availability target, or performance promise.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="operations-and-deployment" title="Operations and Deployment">
+  <CaseStudyCopy>
+    Local infrastructure and deployed infrastructure differ. Docker Compose
+    starts PostgreSQL and Redis for development and tests; no application
+    Dockerfiles were found. The deployment record instead uses Vercel for the
+    web application and Railway for one API, one worker, and private data
+    services.
+  </CaseStudyCopy>
+
+<DeploymentEvidence />
+
+  <CaseStudyCopy>
+    GitHub Actions is a CI gate, not deployment automation. The separate release
+    record documents a human production acceptance pass. Point-in-time recovery
+    is enabled, but attempted restore verification did not complete because of a
+    provider temporary-volume constraint. Claiming disaster recovery, RPO, or
+    RTO would therefore be premature.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="limitations" title="Limitations">
+  <CaseStudyCopy>
+    The architecture has deliberate constraints and unresolved operational work.
+    Naming them matters because “server authoritative,” “offline first,” and
+    “multi replica” can otherwise imply much broader guarantees than the source
+    demonstrates.
+  </CaseStudyCopy>
+
+<ConvergeLimitations />
+
+  <CaseStudyCopy>
+    There is also no evidence of commercial traffic, customer adoption,
+    multi-region operation, high availability, or a production SLA. Playwright
+    evidence is Chromium-specific. The conflict model handles specific stale
+    writes and supported inverses; it is not an automatic merge of arbitrary
+    offline edits.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="current-status" title="Current Status">
+  <CaseStudyCopy>
+    Converge remains In Development. The core consistency path is implemented,
+    the named release gates are recorded, and a bounded single-API deployment
+    passed acceptance. Operational maturity is not flattened into the same
+    status as source capability.
+  </CaseStudyCopy>
+
+  <ConvergeCurrentStatus />
+</CaseStudySection>
+
+<CaseStudySection id="lessons" title="Lessons">
+  <CaseStudyCopy>
+    The first lesson is that realtime transport should not own truth. Committing
+    authority before publication makes interruption recoverable, but it also
+    forces duplicates, gaps, and acknowledgement semantics into the protocol
+    rather than hiding them behind Socket.IO.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  The second is that offline support begins with identity, not caching. A
+  durable operation ID, immutable receipt, and persistence-before-optimism rule
+  let the browser retry uncertain work without guessing whether it committed.
+  The server can then remain authoritative without treating disconnection as
+  data loss.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Finally, recovery needs a proof boundary. Fixed watermarks, versioned
+    snapshots, contiguous tails, canonical hashing, and fail-closed behavior
+    turn “reload the board” into a testable consistency protocol. They also make
+    the non-guarantees visible: one board is serialized, Redis is not durable
+    authority, and current production evidence does not establish horizontal
+    scale or disaster recovery.
+  </CaseStudyCopy>
+</CaseStudySection>

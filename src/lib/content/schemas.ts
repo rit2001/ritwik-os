@@ -11,6 +11,7 @@ const optionalUrl = z.string().url().optional();
 
 export const workMetaSchema = z
   .object({
+    projectId: z.string().trim().min(1),
     slug: z
       .string()
       .trim()
@@ -41,6 +42,25 @@ export const workMetaSchema = z
     draft: z.boolean(),
     relatedProjectSlugs: z.array(z.string().trim().min(1)).optional(),
     currentMilestone: z.string().trim().min(1).optional(),
+    toc: z
+      .array(
+        z.object({
+          href: z
+            .string()
+            .trim()
+            .regex(/^#[a-z0-9]+(?:-[a-z0-9]+)*$/),
+          label: z.string().trim().min(1),
+        }),
+      )
+      .min(1),
+    headerFacts: z
+      .array(
+        z.object({
+          label: z.string().trim().min(1),
+          value: z.string().trim().min(1),
+        }),
+      )
+      .optional(),
   })
   .superRefine((meta, ctx) => {
     if (meta.ongoing && meta.status !== "in-development") {
@@ -57,5 +77,17 @@ export const workMetaSchema = z
         message: "caseStudyPath must match slug",
         path: ["caseStudyPath"],
       });
+    }
+
+    const tocHrefs = new Set<string>();
+    for (const item of meta.toc) {
+      if (tocHrefs.has(item.href)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "TOC hrefs must be unique",
+          path: ["toc"],
+        });
+      }
+      tocHrefs.add(item.href);
     }
   });

@@ -1,0 +1,346 @@
+import { CaseStudySection } from "@/components/work/CaseStudySection";
+import {
+  BenchmarkResults,
+  BenchmarkSetup,
+  CitationInvariant,
+  OperationsEvidence,
+  RerankerTradeoff,
+  RerankerTrainingEvidence,
+  RetrievalModeTable,
+  RoutingEvidence,
+  ThesisLensArchitecture,
+  ThesisLensIngestionFlow,
+  ThesisLensLimitations,
+} from "@/components/work/ThesisLensBlocks";
+import { CaseStudyCopy } from "@/components/work/TraceForgeBlocks";
+
+<CaseStudySection id="overview" title="Overview">
+  <CaseStudyCopy>
+    ThesisLens is an in-development financial-research system that turns annual
+    filings into structured KPIs, report-filtered retrieval, cited research
+    answers, and evidence-aware investment-thesis sections. The implementation
+    separates deterministic facts in PostgreSQL from qualitative filing
+    evidence in Azure AI Search, then makes that boundary visible in the API.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The repository also contains a bounded local retrieval experiment. A
+    fine-tuned MiniLM cross-encoder improved graded ranking depth on an
+    eight-query frozen holdout, but worsened first-result metrics and added
+    substantial CPU latency. That mixed result kept the reranker out of the
+    serving path and preserved lexical retrieval as the default.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="problem-and-scope" title="Problem and Scope">
+  <CaseStudyCopy>
+    Financial filings combine exact statement values with narrative evidence.
+    Treating both as undifferentiated text makes it difficult to answer a direct
+    KPI question consistently, explain a reported change, preserve report
+    boundaries, and show which passage supports a generated statement.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    ThesisLens addresses that problem as research tooling—not autonomous
+    investment advice. Its scope is filing ingestion, structured extraction,
+    report-aware retrieval, evidence provenance, and measured retrieval
+    evaluation. It does not add market prices, valuation models, analyst
+    ratings, expected returns, or investment recommendations.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="system-architecture" title="System Architecture">
+  <CaseStudyCopy>
+    The architecture has two durable evidence stores. Azure AI Search holds
+    report chunks with lexical fields, vectors, and stable chunk coordinates.
+    PostgreSQL holds an allowlisted financial-metric record. Research requests
+    choose one or both stores before any generated response is accepted.
+  </CaseStudyCopy>
+
+<ThesisLensArchitecture />
+
+  <CaseStudyCopy>
+    This separation is deliberate. Exact values that have already passed the
+    extraction contract do not benefit from probabilistic retrieval on every
+    question. Risks, strategy, demand, and management commentary remain filing
+    evidence and require fresh retrieval.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="ingestion-and-kpi-pipeline"
+  title="Ingestion and KPI Pipeline"
+>
+  <CaseStudyCopy>
+    Uploaded PDFs are converted to Markdown with `pymupdf4llm`. LangChain's
+    `SemanticChunker` uses the configured Azure OpenAI embedding client to find
+    semantic boundaries. A deterministic safety stage then splits only chunks
+    above 24,000 UTF-8 bytes, preferring headings, paragraphs, sentences, and
+    whitespace without cutting a character.
+  </CaseStudyCopy>
+
+<ThesisLensIngestionFlow />
+
+<CaseStudyCopy>
+  Each final chunk receives company, fiscal year, source file, semantic-chunk
+  index, and child-chunk index metadata. Azure Search document IDs are
+  deterministic UUIDs derived from those coordinates, so retrying the same chunk
+  preserves its identity. Embeddings use the configured Azure OpenAI
+  `text-embedding-3-small` deployment, and the declared Search schema expects
+  1,536 dimensions.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    KPI extraction runs targeted lexical searches for income statement, balance
+    sheet, cash flow, risk, and growth evidence. Azure OpenAI returns a strict
+    `FinancialMetrics` schema. Missing or ambiguous fields become null, and a
+    field is also nulled when its targeted evidence group retrieved no chunk.
+    PostgreSQL persistence uses a company/year update-or-insert transaction for
+    six structured KPIs plus risk and growth text. A bounded two-filing check
+    matched all 12 Apple and Tesla FY2024 KPI fields; it is not evidence of
+    general extraction accuracy.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="retrieval-architecture" title="Retrieval Architecture">
+  <CaseStudyCopy>
+    The serving system and the reranker experiment are separate paths. Runtime
+    chat defaults to Azure AI Search lexical retrieval. Optional hybrid mode
+    sends the question text and one query vector to Azure Search, which performs
+    native lexical/vector fusion. The application does not hand-tune a fusion
+    weight.
+  </CaseStudyCopy>
+
+<RetrievalModeTable />
+
+  <CaseStudyCopy>
+    Every runtime result is filtered to the selected company and fiscal year,
+    normalized into a common evidence shape, deduplicated by document ID, and
+    kept in Search's ranked order. Hybrid mode is selected explicitly through
+    configuration. If its embedding call fails, the request fails closed rather
+    than silently changing retrieval semantics.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="benchmark-design" title="Benchmark Design">
+  <CaseStudyCopy>
+    The relevance dataset is small by design. It covers the complete local
+    23-chunk snapshot for each of two FY2024 filings. Every question therefore
+    judges all 23 same-company chunks rather than only the documents returned by
+    a retriever.
+  </CaseStudyCopy>
+
+<BenchmarkSetup />
+
+<CaseStudyCopy>
+  Grades distinguish direct evidence (`2`), useful contextual evidence (`1`),
+  and non-relevant passages (`0`). Grades 1 and 2 count as relevant for Recall,
+  Precision, and MRR; nDCG preserves the graded distinction. The labels are
+  content-adjudicated after local passage inspection, but none was independently
+  human-verified.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The eight-query final holdout contains four Apple and four Tesla questions.
+    It was frozen before valid training, protected by dataset and split digests,
+    and opened only after the model and configuration lock. Related query groups
+    cannot cross partitions, and the legacy six-query evaluation set is kept
+    outside the final claim because an earlier experiment had exposed it.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="cross-encoder-training" title="Cross-Encoder Training">
+  <CaseStudyCopy>
+    The experiment fine-tuned
+    `cross-encoder/ms-marco-MiniLM-L6-v2` locally. Training was pointwise: grade
+    0 mapped to 0.0, grade 1 to 0.5, and grade 2 to 1.0 under a
+    BCE-with-logits objective. Only the train partition updated weights;
+    validation selected the locked checkpoint.
+  </CaseStudyCopy>
+
+<RerankerTrainingEvidence />
+
+  <CaseStudyCopy>
+    Candidate generation remained deterministic local BM25. For each query,
+    BM25 selected ten candidates from the 23-chunk same-company corpus. Long
+    candidates were divided into overlapping word windows, and the maximum
+    cross-encoder window score became the passage score. Azure AI Search and
+    Azure OpenAI embeddings were not involved in this experiment.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="measured-results" title="Measured Results">
+  <CaseStudyCopy>
+    The deltas below compare local BM25 order with the fine-tuned cross-encoder
+    order over identical top-10 candidate pools. They are macro-averages across
+    the eight frozen holdout queries—not production-impact measurements and not
+    averages over all 44 dataset questions.
+  </CaseStudyCopy>
+
+<BenchmarkResults />
+
+  <CaseStudyCopy>
+    Recall@K is the fraction of known grade-1/2 chunks recovered by K.
+    Precision@K keeps K as the denominator. MRR uses the first grade-1/2 result.
+    nDCG uses graded gain `2^grade - 1` with logarithmic rank discount and an
+    ideal ordering computed per query.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="ranking-latency-tradeoff"
+  title="Ranking and Latency Trade-off"
+>
+  <CaseStudyCopy>
+    Graded depth improved, but the first result became less reliable. MRR moved
+    from 1.0000 to 0.9375 and Precision@1 from 1.0000 to 0.8750. Mean
+    cross-encoder time was 3,188 ms/query on a local arm64 Mac CPU, compared
+    with 5.1 ms/query for local BM25.
+  </CaseStudyCopy>
+
+<RerankerTradeoff />
+
+  <CaseStudyCopy>
+    The cross-encoder timing is reranking-only and excludes shared BM25
+    candidate generation. It is an eight-query mean, with p50 3,343 ms and p95
+    3,858 ms. The artifact does not separate warm and cold execution, and no
+    concurrency or production-load benchmark was run.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="routing-and-research" title="Routing and Research">
+  <CaseStudyCopy>
+    A local deterministic router classifies each question before collecting
+    evidence. It recognizes an allowlist of six financial metrics, qualitative
+    report language, explanation intent, and short follow-ups. It makes no LLM
+    call and never converts user text into SQL.
+  </CaseStudyCopy>
+
+<RoutingEvidence />
+
+  <CaseStudyCopy>
+    Conversations are bounded and process-local. Their recent questions help
+    clarify a follow-up, but facts are collected again for every evidence-
+    bearing turn. A conversation ID is fixed to one company and fiscal year; an
+    attempt to reuse it for another report is rejected.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="evidence-validation" title="Evidence Validation">
+  <CaseStudyCopy>
+    Retrieval passages receive fresh `E1...En` identifiers only for the current
+    request. The model returns a structured answer plus the identifiers it used.
+    The server removes unknown IDs, duplicates, and any evidence outside the
+    selected report. If an answer claims support but no valid ID survives, the
+    response is replaced with a deterministic insufficient-evidence answer.
+  </CaseStudyCopy>
+
+<CitationInvariant />
+
+  <CaseStudyCopy>
+    This is provenance validation, not an independent semantic-entailment
+    model. A surviving ID proves that the model cited an available current-
+    request passage for the correct report. It does not, by itself, prove that
+    every word of the generated claim follows from that passage. The case study
+    uses this narrower wording intentionally.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection
+  id="investment-thesis-engine"
+  title="Investment-Thesis Engine"
+>
+  <CaseStudyCopy>
+    The on-demand thesis workflow is independent of chat history. It loads the
+    six allowlisted KPIs from PostgreSQL, runs targeted retrieval for growth,
+    risks, catalysts, management outlook, profitability, and liquidity, merges
+    repeated chunks, and asks Azure OpenAI for a strict structured response.
+  </CaseStudyCopy>
+
+<CaseStudyCopy>
+  The response separates thesis summary, bull case, bear case, catalysts, risks,
+  management outlook, uncertainties, and structured KPI sources. Management's
+  reported statement and ThesisLens interpretation occupy separate fields. Every
+  qualitative claim must cite a valid current-request filing ID; claims without
+  one are omitted and counted as unsupported.
+</CaseStudyCopy>
+
+  <CaseStudyCopy>
+    The service also rejects claims containing recommendation, price-target,
+    valuation, expected-return, and similar market language. Its purpose is to
+    organize filing-grounded research evidence, not to produce autonomous
+    investment advice.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="operations-and-testing" title="Operations and Testing">
+  <CaseStudyCopy>
+    FastAPI owns the HTTP boundary. Request-scoped UUID traces record dependency
+    calls, latency, retry counts, safe failure categories, and token usage when
+    the SDK exposes it. Aggregate metrics are bounded and process-local, and the
+    metrics endpoint is disabled unless explicitly enabled.
+  </CaseStudyCopy>
+
+<OperationsEvidence />
+
+  <CaseStudyCopy>
+    The audited zero-cloud suite contains 221 tests across ingestion, retrieval,
+    routing, citation handling, KPI extraction, thesis generation,
+    observability, database resilience, evaluation, reranking, probes, and
+    container configuration. The suite passed at the audited commit. CI runs
+    those tests and verifies a Docker build without publishing or deploying an
+    image.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="limitations" title="Limitations">
+  <CaseStudyCopy>
+    The implementation and benchmark are intentionally bounded. The most
+    important constraints are evaluation breadth, label provenance, reranker
+    latency, citation semantics, process-local state, and reliance on configured
+    external services.
+  </CaseStudyCopy>
+
+<ThesisLensLimitations />
+
+  <CaseStudyCopy>
+    Deployment readiness currently means a reproducible single-worker image,
+    explicit health contracts, and zero-cloud CI. The repository does not prove
+    continuous hosting, production traffic, multi-replica state sharing, high
+    availability, customer adoption, or financial-domain generalization.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="current-status" title="Current Status">
+  <CaseStudyCopy>
+    Implemented today: filing ingestion, semantic and safety chunking, Azure
+    Search indexing, lexical and optional hybrid retrieval, evidence-guarded KPI
+    extraction, PostgreSQL persistence, deterministic query routing, report-
+    scoped chat, structured thesis generation, current-request citation-ID
+    validation, request observability, probes, Docker, and CI.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Experimental: the local MiniLM cross-encoder and its Apple/Tesla FY2024
+    relevance benchmark. The mixed holdout result is retained as engineering
+    evidence, but the model is excluded from the serving image and runtime.
+    Next-step work should expand independently reviewed judgments and evaluation
+    breadth before reconsidering integration.
+  </CaseStudyCopy>
+</CaseStudySection>
+
+<CaseStudySection id="lessons" title="Lessons">
+  <CaseStudyCopy>
+    Retrieval quality is multi-dimensional. Better nDCG@5 and Recall@3 did not
+    compensate automatically for worse MRR, worse Precision@1, and three seconds
+    of reranking time. A measured improvement can still be the wrong product
+    decision.
+  </CaseStudyCopy>
+
+  <CaseStudyCopy>
+    Grounding also needs precise language. Validating a citation ID and report
+    boundary is useful, testable provenance control, but it is not semantic
+    proof. Keeping that distinction explicit makes both the implementation and
+    the public case study more credible.
+  </CaseStudyCopy>
+</CaseStudySection>

@@ -13,11 +13,16 @@ html {
   scroll-behavior: smooth;
 }
 
+.section-anchor {
+  scroll-margin-top: var(--layout-anchor-offset);
+}
+
 body {
   min-height: 100vh;
   margin: 0;
   overflow-x: clip;
   background:
+    radial-gradient(circle at 78% 8%, rgb(25 96 180 / 0.13), transparent 34rem),
     linear-gradient(
       180deg,
       var(--ritwik-color-background-elevated) 0%,
@@ -31,6 +36,523 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes signal-route {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+@keyframes signal-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.72);
+  }
+  55% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+@keyframes signal-travel {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  12%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes signal-sweep-x {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  12%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes signal-sweep-y {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  12%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes thesis-split-arrive {
+  0%,
+  9% {
+    opacity: 0.32;
+  }
+  18%,
+  84% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.32;
+  }
+}
+
+@keyframes thesis-selection-flash {
+  0%,
+  72%,
+  100% {
+    filter: drop-shadow(0 0 0 rgb(94 231 247 / 0));
+  }
+  80% {
+    filter: drop-shadow(0 0 8px rgb(94 231 247 / 0.85));
+  }
+}
+
+@keyframes trace-capture-flash {
+  0%,
+  12% {
+    opacity: 0.28;
+  }
+  22%,
+  82% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgb(94 231 247 / 0.7));
+  }
+  100% {
+    opacity: 0.28;
+    filter: none;
+  }
+}
+
+@keyframes trace-seal {
+  0%,
+  66%,
+  100% {
+    opacity: 0.16;
+    transform: scale(0.9);
+  }
+  76% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+  88% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes converge-ack {
+  0%,
+  18% {
+    opacity: 0.28;
+  }
+  27%,
+  68% {
+    opacity: 1;
+    filter: drop-shadow(0 0 7px rgb(94 231 247 / 0.68));
+  }
+  80%,
+  100% {
+    opacity: 0.28;
+    filter: none;
+  }
+}
+
+@keyframes capability-path-reveal {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes capability-packet-travel {
+  from {
+    left: 0;
+    opacity: 0;
+  }
+  18%,
+  82% {
+    opacity: 1;
+  }
+  to {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes knight-traversal {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  15%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes rank-climb {
+  from {
+    transform: translateY(5.4rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ambient-arrival {
+  0%,
+  100% {
+    opacity: 0;
+    filter: drop-shadow(0 0 0 rgb(94 231 247 / 0));
+  }
+  18%,
+  76% {
+    opacity: 1;
+    filter: drop-shadow(0 0 7px rgb(94 231 247 / 0.72));
+  }
+}
+
+@keyframes ambient-ring {
+  0%,
+  58%,
+  100% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  72% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  90% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes ambient-scan {
+  0%,
+  100% {
+    opacity: 0.28;
+    stroke-dashoffset: 28;
+  }
+  45%,
+  72% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 5px rgb(94 231 247 / 0.7));
+  }
+}
+
+@keyframes institutional-shimmer {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(210%);
+  }
+}
+
+@keyframes contact-photon-travel {
+  0%,
+  18% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+  30%,
+  64% {
+    opacity: 0.7;
+  }
+  78%,
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+.signal-grid {
+  background-image:
+    linear-gradient(rgb(102 168 255 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(102 168 255 / 0.055) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 18%,
+    black 82%,
+    transparent
+  );
+}
+
+.signal-route {
+  stroke-dasharray: 4 8;
+  animation: signal-route var(--duration-signal) linear infinite;
+}
+
+.signal-ripple {
+  animation: signal-pulse 1.2s var(--ease-standard) 1;
+  transform-origin: center;
+}
+
+.signal-sweep-x {
+  animation: signal-sweep-x 3.2s var(--ease-standard) infinite;
+}
+
+.signal-sweep-y {
+  animation: signal-sweep-y 3.2s var(--ease-standard) infinite;
+}
+
+.thesis-split {
+  animation: thesis-split-arrive 1.1s var(--ease-standard) 1 both;
+}
+
+.thesis-selected {
+  animation: thesis-selection-flash 1.2s var(--ease-standard) 1 both;
+}
+
+.trace-capture-event {
+  animation: trace-capture-flash 1.1s var(--ease-standard) 1 both;
+}
+
+.trace-seal-pulse {
+  animation: trace-seal 1.15s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.trace-layer-build {
+  animation: trace-capture-flash 0.9s var(--ease-standard) 1 both;
+}
+
+.converge-reconnect {
+  animation: signal-route 1.1s linear 1 both;
+}
+
+.converge-sequence-token {
+  animation: converge-ack 1.1s var(--ease-standard) 1 both;
+}
+
+.capability-path {
+  animation: capability-path-reveal 0.44s var(--ease-standard) 1 both;
+  transform-origin: left center;
+}
+
+.capability-path-delay {
+  animation-delay: 0.28s;
+}
+
+.capability-packet {
+  animation: capability-packet-travel 0.48s var(--ease-standard) 1 both;
+}
+
+.capability-packet-delay {
+  animation-delay: 0.28s;
+}
+
+.leetcode-knight-travel {
+  offset-path: path("M0 66 L28 48 L12 24 L48 0");
+}
+
+.algorithm-module:hover .leetcode-knight-travel,
+.algorithm-module:focus-visible .leetcode-knight-travel {
+  animation: knight-traversal 0.9s var(--ease-standard) 1 both;
+}
+
+.codeforces-module:hover .codeforces-rank-signal,
+.codeforces-module:focus-visible .codeforces-rank-signal {
+  animation: rank-climb 0.8s var(--ease-standard) 1 both;
+}
+
+.system-diagram text {
+  paint-order: stroke fill;
+  stroke: rgb(4 7 13 / 0.68);
+  stroke-width: 1px;
+  stroke-linejoin: round;
+}
+
+.thesis-ambient-candidate,
+.trace-ambient-event,
+.converge-ambient-operation,
+.converge-ambient-operation-label {
+  animation: ambient-arrival 2.9s var(--ease-standard) 1 both;
+}
+
+.thesis-ambient-rerank,
+.trace-ambient-scan,
+.trace-ambient-compare,
+.converge-queue-ambient {
+  animation: ambient-scan 2.8s var(--ease-standard) 1 both;
+}
+
+.thesis-ambient-answer,
+.converge-ambient-ack {
+  animation: ambient-ring 3.1s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.trace-ambient-event {
+  animation-duration: 1.5s;
+}
+
+.trace-ambient-scan {
+  stroke-dasharray: 8 7;
+}
+
+.trace-ambient-compare {
+  animation-delay: 1.35s;
+}
+
+.converge-ambient-ack {
+  animation-delay: 1.35s;
+}
+
+.experience-ambient-packet,
+.earlier-system-packet,
+.agentic-ambient-request {
+  animation: ambient-arrival 3.4s var(--ease-standard) 1 both;
+}
+
+.experience-ambient-ripple {
+  animation: ambient-ring 1.15s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.agentic-hitl-ack,
+.agentic-response-ack {
+  animation: ambient-ring 3.7s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.agentic-hitl-ack {
+  animation-delay: 1.7s;
+}
+
+.agentic-response-ack {
+  animation-delay: 2.55s;
+}
+
+.foundation-panel:hover .foundation-shimmer,
+.foundation-panel:focus-visible .foundation-shimmer {
+  animation: institutional-shimmer 2.8s var(--ease-standard) 1 both;
+}
+
+.contact-route {
+  transition:
+    opacity 240ms var(--ease-standard),
+    stroke-width 240ms var(--ease-standard);
+  opacity: 0.45;
+}
+
+.contact-finale[data-ambient-active="false"] .contact-route {
+  opacity: 0;
+}
+
+.contact-finale:hover .contact-route,
+.contact-finale:focus-within .contact-route {
+  opacity: 0.92;
+  stroke-width: 2.4;
+}
+
+.contact-endpoint-ring {
+  opacity: 0.28;
+}
+
+.contact-finale:hover .contact-endpoint-ring,
+.contact-finale:focus-within .contact-endpoint-ring {
+  animation: ambient-ring 1.1s var(--ease-standard) 1 both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.contact-photon {
+  animation: contact-photon-travel 9.6s linear infinite;
+  animation-delay: 0.55s;
+}
+
+.contact-finale[data-ambient-active="false"] .contact-photon {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-route,
+  .signal-ripple,
+  .signal-sweep-x,
+  .signal-sweep-y,
+  .thesis-split,
+  .thesis-selected,
+  .trace-capture-event,
+  .trace-layer-build,
+  .trace-seal-pulse,
+  .converge-reconnect,
+  .converge-sequence-token,
+  .capability-path,
+  .capability-packet,
+  .leetcode-knight-travel,
+  .codeforces-rank-signal {
+    animation: none !important;
+  }
+  .thesis-ambient-candidate,
+  .thesis-ambient-rerank,
+  .thesis-ambient-answer,
+  .trace-ambient-event,
+  .trace-ambient-scan,
+  .trace-ambient-compare,
+  .converge-ambient-operation,
+  .converge-ambient-operation-label,
+  .converge-ambient-ack,
+  .converge-queue-ambient,
+  .experience-ambient-packet,
+  .experience-ambient-ripple,
+  .earlier-system-packet,
+  .agentic-ambient-request,
+  .agentic-hitl-ack,
+  .agentic-response-ack,
+  .foundation-shimmer {
+    animation: none !important;
+  }
+  .contact-photon {
+    display: none;
+  }
+  .contact-endpoint-ring {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 body,
@@ -73,15 +595,4 @@ a {
 :focus-visible {
   outline: var(--border-width-strong) solid var(--ritwik-color-focus-ring);
   outline-offset: 0.25rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
 }
